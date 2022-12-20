@@ -8,6 +8,7 @@
 #include <SDL2/SDL_mixer.h>
 
 #include "singleton_systeme.hpp"
+#include "texte.hpp"
 
 typedef void(*eventFunction)(SingletonSysteme*);
 
@@ -28,8 +29,9 @@ class Bouton
         SDL_Rect position;
         eventFunction funcPtr; //pointeur sur la fonction qui sera lancée quand il y aura un clic sur le bouton
         etat_bouton etat;
+        Texte texte;
 
-        Bouton(SDL_Color couleur_idle, SDL_Color couleur_hover, SDL_Color couleur_click, SDL_Rect position, eventFunction funcPtr);
+        Bouton(SDL_Color couleur_idle, SDL_Color couleur_hover, SDL_Color couleur_click, SDL_Rect position, eventFunction funcPtr, std::string texte);
         void Draw(SDL_Renderer* rendu);
         void HandleEvents(SDL_Event e, SingletonSysteme* sing_syst);
         bool collision(SDL_Rect dest_joueur, int x, int y);

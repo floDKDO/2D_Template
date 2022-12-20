@@ -14,6 +14,7 @@ enum etat_jeu
 {
     MENU_PRINCIPAL,
     MENU_OPTIONS,
+    DEMANDE_NOM,
     EN_JEU
 };
 

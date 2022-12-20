@@ -1,6 +1,7 @@
 #include "bouton.hpp"
 
-Bouton::Bouton(SDL_Color couleur_idle, SDL_Color couleur_hover, SDL_Color couleur_click, SDL_Rect position, eventFunction funcPtr)
+Bouton::Bouton(SDL_Color couleur_idle, SDL_Color couleur_hover, SDL_Color couleur_click, SDL_Rect position, eventFunction funcPtr, std::string texte)
+:texte(texte, "./font/lazy.ttf", {255, 255, 255, 255}, position)
 {
     this->couleur_idle = couleur_idle;
     this->couleur_hover = couleur_hover;
@@ -59,6 +60,7 @@ void Bouton::Draw(SDL_Renderer* rendu)
         std::cerr << SDL_GetError() << std::endl;
         exit(EXIT_FAILURE);
     }
+    texte.Draw(rendu);
 }
 
 void Bouton::HandleEvents(SDL_Event e, SingletonSysteme* sing_syst)

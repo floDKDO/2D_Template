@@ -10,6 +10,10 @@
 #include "texte.hpp"
 #include "joueur.hpp"
 
+//TODO pas de variables globales
+std::string nom_joueur;
+bool donner_nom = false;
+////////////////////////////////
 
 SDL_Texture* init_texture(std::string image, SDL_Renderer* rendu)
 {
@@ -74,7 +78,17 @@ void redimensionner_fenetre(SDL_Window* fenetre, int x, int y)
 void fonc_bouton_jouer(SingletonSysteme* sing_syst)
 {
     std::cout << "click jouer" << std::endl;
-    sing_syst->etat = EN_JEU;
+    sing_syst->etat = DEMANDE_NOM;
+}
+
+void fonc_bouton_fin_demande_nom(SingletonSysteme* sing_syst)
+{
+    std::cout << "click jouer" << std::endl;
+    if(nom_joueur.length() > 0)
+    {
+        donner_nom = true;
+        sing_syst->etat = EN_JEU;
+    }
 }
 
 void fonc_bouton_options(SingletonSysteme* sing_syst)
@@ -126,22 +140,23 @@ int main(int argc, char* argv[])
 
     SingletonSysteme::instance().Init();
 
-    Bouton bouton_jouer({255, 0, 0, 255}, {0, 255, 0, 255}, {0, 0, 255, 255}, {800, 100, 100, 100}, &fonc_bouton_jouer);
-    Bouton bouton_options({255, 0, 0, 255}, {0, 255, 0, 255}, {0, 0, 255, 255}, {800, 250, 100, 100}, &fonc_bouton_options);
-    Bouton bouton_quitter({255, 0, 0, 255}, {0, 255, 0, 255}, {0, 0, 255, 255}, {800, 400, 100, 100}, &fonc_bouton_quitter);
+    Bouton bouton_jouer({255, 0, 0, 255}, {0, 255, 0, 255}, {0, 0, 255, 255}, {800, 100, 200, 100}, &fonc_bouton_jouer, "JOUER");
+    Bouton bouton_options({255, 0, 0, 255}, {0, 255, 0, 255}, {0, 0, 255, 255}, {800, 250, 200, 100}, &fonc_bouton_options, "OPTIONS");
+    Bouton bouton_quitter({255, 0, 0, 255}, {0, 255, 0, 255}, {0, 0, 255, 255}, {800, 400, 200, 100}, &fonc_bouton_quitter, "QUITTER");
 
-    Bouton bouton_options_retour({255, 0, 0, 255}, {0, 255, 0, 255}, {0, 0, 255, 255}, {300, 250, 100, 100}, &fonc_bouton_options_retour);
-    Bouton bouton_options_plein_ecran({255, 0, 0, 255}, {0, 255, 0, 255}, {0, 0, 255, 255}, {300, 400, 100, 100}, &fonc_bouton_options_plein_ecran);
-    Bouton bouton_options_mode_fenetre({255, 0, 0, 255}, {0, 255, 0, 255}, {0, 0, 255, 255}, {300, 550, 100, 100}, &fonc_bouton_options_mode_fenetre);
-    Inputfield inputfield("./lazy.ttf", {255, 0, 0, 255}, {200, 200, 200, 50});
-    Inputfield inputfield2("./lazy.ttf", {255, 0, 0, 255}, {400, 300, 200, 50});
-    Inputfield inputfield3("./lazy.ttf", {255, 0, 0, 255}, {600, 400, 200, 50});
+    Bouton bouton_options_retour({255, 0, 0, 255}, {0, 255, 0, 255}, {0, 0, 255, 255}, {300, 250, 200, 100}, &fonc_bouton_options_retour, "RETOUR");
+    Bouton bouton_options_plein_ecran({255, 0, 0, 255}, {0, 255, 0, 255}, {0, 0, 255, 255}, {300, 400, 200, 100}, &fonc_bouton_options_plein_ecran, "PLEIN ECRAN");
+    Bouton bouton_options_mode_fenetre({255, 0, 0, 255}, {0, 255, 0, 255}, {0, 0, 255, 255}, {300, 550, 200, 100}, &fonc_bouton_options_mode_fenetre, "MODE FENETRE");
 
-    //Texte texte("toto", "./lazy.ttf", {255, 0, 0, 255}, {500, 200, 200, 50});
+    Inputfield inputfield("./font/lazy.ttf", {255, 0, 0, 255}, {300, 400, 200, 50});
+    Texte demande_nom("Ecrivez votre nom", "./font/lazy.ttf", {255, 255, 255, 255}, {300, 200, 300, 150});
+    Bouton bouton_valider({255, 0, 0, 255}, {0, 255, 0, 255}, {0, 0, 255, 255}, {300, 550, 200, 100}, &fonc_bouton_fin_demande_nom, "VALIDER");
+
+    Texte titre("Titre du jeu", "./font/lazy.ttf", {255, 255, 255, 255}, {300, 200, 300, 150});
 
     Joueur joueur(100, {0, 0, 255, 255}, {800, 96, 32, 32}, VUE_DESSUS);
 
-    SDL_Texture* texture = init_texture("fond.png", SingletonSysteme::instance().rendu);
+    SDL_Texture* texture = init_texture("./img/fond.png", SingletonSysteme::instance().rendu);
     SDL_Rect dest = init_rect_from_image(0, 0, texture);
 
     Uint32 timeStep = SDL_GetTicks();
@@ -149,8 +164,6 @@ int main(int argc, char* argv[])
     bool quitter = false;
     while(quitter == false)
     {
-        //bool texte_modifie = false;
-
         SDL_Event e;
         while(SDL_PollEvent(&e) != 0)
         {
@@ -183,15 +196,27 @@ int main(int argc, char* argv[])
                 bouton_options_retour.HandleEvents(e, &SingletonSysteme::instance());
                 bouton_options_plein_ecran.HandleEvents(e, &SingletonSysteme::instance());
                 bouton_options_mode_fenetre.HandleEvents(e, &SingletonSysteme::instance());
+            }
+            else if(SingletonSysteme::instance().etat == DEMANDE_NOM)
+            {
+                bouton_valider.HandleEvents(e, &SingletonSysteme::instance());
                 inputfield.HandleEvents(e);
-                inputfield2.HandleEvents(e);
-                inputfield3.HandleEvents(e);
             }
             else if(SingletonSysteme::instance().etat == EN_JEU)
             {
                 joueur.HandleEvents(e);
             }
         }
+
+        // A ameliorer/////////////////
+        nom_joueur = inputfield.texte;
+        if(donner_nom == true)
+        {
+            joueur.nom = nom_joueur;
+            donner_nom = false;
+        }
+        ///////////////////////////////
+
         //fond
         if(SDL_SetRenderDrawColor(SingletonSysteme::instance().rendu, 0, 0, 0, 255) < 0)
         {
@@ -210,15 +235,19 @@ int main(int argc, char* argv[])
             bouton_jouer.Draw(SingletonSysteme::instance().rendu);
             bouton_options.Draw(SingletonSysteme::instance().rendu);
             bouton_quitter.Draw(SingletonSysteme::instance().rendu);
+            titre.Draw(SingletonSysteme::instance().rendu);
         }
         else if(SingletonSysteme::instance().etat == MENU_OPTIONS)
         {
             bouton_options_retour.Draw(SingletonSysteme::instance().rendu);
             bouton_options_plein_ecran.Draw(SingletonSysteme::instance().rendu);
             bouton_options_mode_fenetre.Draw(SingletonSysteme::instance().rendu);
+        }
+        else if(SingletonSysteme::instance().etat == DEMANDE_NOM)
+        {
+            bouton_valider.Draw(SingletonSysteme::instance().rendu);
+            demande_nom.Draw(SingletonSysteme::instance().rendu);
             inputfield.Draw(SingletonSysteme::instance().rendu);
-            inputfield2.Draw(SingletonSysteme::instance().rendu);
-            inputfield3.Draw(SingletonSysteme::instance().rendu);
         }
         else if(SingletonSysteme::instance().etat == EN_JEU)
         {
@@ -230,8 +259,6 @@ int main(int argc, char* argv[])
             joueur.Draw(SingletonSysteme::instance().rendu);
             joueur.Update(timeStep);
         }
-
-        //texte.Draw(rendu);
 
         SDL_RenderPresent(SingletonSysteme::instance().rendu);
     }

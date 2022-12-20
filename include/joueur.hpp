@@ -29,6 +29,7 @@ class Joueur
         unsigned int pv;
         unsigned int multiplication_vitesse;
         mode_affichage mode;
+        std::string nom;
 
         // Que pour mode vue de cote
         bool surSol;

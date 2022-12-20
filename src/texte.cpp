@@ -2,7 +2,7 @@
 
 Texte::Texte(std::string texte, std::string police, SDL_Color couleur, SDL_Rect position)
 {
-    if((this->police = TTF_OpenFont(police.c_str(), 50)) == nullptr)
+    if((this->police = TTF_OpenFont(police.c_str(), 30)) == nullptr)
     {
         std::cerr << TTF_GetError() << std::endl;
         exit(EXIT_FAILURE);
@@ -23,8 +23,10 @@ void Texte::Draw(SDL_Renderer* rendu)
             std::cerr << SDL_GetError() << std::endl;
             exit(EXIT_FAILURE);
         }
-        position.w = surface->w;
-        position.h = surface->h;
     }
-    SDL_RenderCopy(rendu, texture, nullptr, &position);
+    if(SDL_RenderCopy(rendu, texture, nullptr, &position) < 0)
+    {
+        std::cerr << SDL_GetError() << std::endl;
+        exit(EXIT_FAILURE);
+    }
 }
