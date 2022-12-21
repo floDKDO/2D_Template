@@ -28,6 +28,12 @@ void SingletonSysteme::Init(void)
         exit(EXIT_FAILURE);
     }
 
+    if(Mix_OpenAudio(MIX_DEFAULT_FREQUENCY, MIX_DEFAULT_FORMAT, MIX_CHANNELS, 1024) < 0)
+    {
+        std::cerr << Mix_GetError() << std::endl;
+        exit(EXIT_FAILURE);
+    }
+
     if((this->fenetre = SDL_CreateWindow("Mon jeu", SDL_WINDOWPOS_CENTERED, SDL_WINDOWPOS_CENTERED, LONGUEUR_FENETRE, HAUTEUR_FENETRE, SDL_WINDOW_RESIZABLE)) == nullptr)
     {
         std::cerr << SDL_GetError() << std::endl;
@@ -50,6 +56,9 @@ void SingletonSysteme::Init(void)
     SDL_StartTextInput();
 
     this->etat = MENU_PRINCIPAL;
+    this->son_active = true;
+    this->musique_activee = true;
+    this->mode_fenetre = FENETRE;
 }
 
 //nettoyage

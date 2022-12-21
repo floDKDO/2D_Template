@@ -18,6 +18,12 @@ enum etat_jeu
     EN_JEU
 };
 
+enum mode_fenetre
+{
+    FENETRE,
+    PLEIN_ECRAN
+};
+
 class SingletonSysteme
 {
     public:
@@ -33,6 +39,10 @@ class SingletonSysteme
         SDL_Window* fenetre;
         SDL_Renderer* rendu;
         etat_jeu etat;
+        mode_fenetre mode_fenetre;
+        bool son_active;
+        bool musique_activee;
+
 
     protected:
 

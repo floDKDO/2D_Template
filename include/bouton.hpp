@@ -10,8 +10,6 @@
 #include "singleton_systeme.hpp"
 #include "texte.hpp"
 
-typedef void(*eventFunction)(SingletonSysteme*);
-
 enum etat_bouton
 {
     IDLE,
@@ -27,9 +25,17 @@ class Bouton
         SDL_Color couleur_hover;
         SDL_Color couleur_click;
         SDL_Rect position;
+
+        typedef void(*eventFunction)(SingletonSysteme*, Bouton*);
         eventFunction funcPtr; //pointeur sur la fonction qui sera lancée quand il y aura un clic sur le bouton
+
         etat_bouton etat;
         Texte texte;
+
+        //hover sound, click sound
+        Mix_Chunk* hover_sound;
+        Mix_Chunk* click_sound;
+        bool son_joue = false;
 
         Bouton(SDL_Color couleur_idle, SDL_Color couleur_hover, SDL_Color couleur_click, SDL_Rect position, eventFunction funcPtr, std::string texte);
         void Draw(SDL_Renderer* rendu);

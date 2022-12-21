@@ -9,6 +9,7 @@
 #include "bouton.hpp"
 #include "texte.hpp"
 #include "joueur.hpp"
+#include "toggle.hpp"
 
 //TODO pas de variables globales
 std::string nom_joueur;
@@ -68,21 +69,39 @@ void ecran_fenetre(SDL_Window* fenetre)
     }
 }
 
-void redimensionner_fenetre(SDL_Window* fenetre, int x, int y)
+//cette fonction se lance lorsque le bouton de changement de mode d'affichage est enclenché
+void reglage_fenetre(SingletonSysteme* sing_syst)
+{
+    Uint32 mask_window = SDL_GetWindowFlags(sing_syst->fenetre);
+    if(mask_window & SDL_WINDOW_FULLSCREEN) //si la fenetre est en plein ecran
+    {
+        ecran_fenetre(sing_syst->fenetre);
+        sing_syst->mode_fenetre = FENETRE;
+    }
+    else //si la fenetre est en mode fenetre
+    {
+        plein_ecran(sing_syst->fenetre);
+        sing_syst->mode_fenetre = PLEIN_ECRAN;
+    }
+}
+
+/*void redimensionner_fenetre(SDL_Window* fenetre, int x, int y)
 {
     SDL_SetWindowSize(fenetre, x, y);
     SDL_SetWindowPosition(fenetre, SDL_WINDOWPOS_CENTERED, SDL_WINDOWPOS_CENTERED);
-}
+}*/
 
 
-void fonc_bouton_jouer(SingletonSysteme* sing_syst)
+void fonc_bouton_jouer(SingletonSysteme* sing_syst, Bouton* bouton)
 {
+    (void)bouton;
     std::cout << "click jouer" << std::endl;
     sing_syst->etat = DEMANDE_NOM;
 }
 
-void fonc_bouton_fin_demande_nom(SingletonSysteme* sing_syst)
+void fonc_bouton_fin_demande_nom(SingletonSysteme* sing_syst, Bouton* bouton)
 {
+    (void)bouton;
     std::cout << "click jouer" << std::endl;
     if(nom_joueur.length() > 0)
     {
@@ -91,35 +110,52 @@ void fonc_bouton_fin_demande_nom(SingletonSysteme* sing_syst)
     }
 }
 
-void fonc_bouton_options(SingletonSysteme* sing_syst)
+void fonc_bouton_options(SingletonSysteme* sing_syst, Bouton* bouton)
 {
+    (void)bouton;
     std::cout << "click options" << std::endl;
     sing_syst->etat = MENU_OPTIONS;
 }
 
-void fonc_bouton_options_retour(SingletonSysteme* sing_syst)
+void fonc_bouton_options_retour(SingletonSysteme* sing_syst, Bouton* bouton)
 {
+    (void)bouton;
     std::cout << "click options retour" << std::endl;
     sing_syst->etat = MENU_PRINCIPAL;
 }
 
-void fonc_bouton_options_plein_ecran(SingletonSysteme* sing_syst)
+void fonc_bouton_options_fenetre(SingletonSysteme* sing_syst, Bouton* bouton)
 {
-    std::cout << "click options plein ecran" << std::endl;
-    plein_ecran(sing_syst->fenetre); //=> passer le parametre
+    std::cout << "click options fenetre" << std::endl;
+    reglage_fenetre(sing_syst); //=> passer le parametre
+    if(sing_syst->mode_fenetre == FENETRE)
+    {
+        bouton->texte.texte = "FENETRE";
+    }
+    else if(sing_syst->mode_fenetre == PLEIN_ECRAN)
+    {
+        bouton->texte.texte = "PLEIN-ECRAN";
+    }
 }
 
-void fonc_bouton_options_mode_fenetre(SingletonSysteme* sing_syst)
+void fonc_bouton_quitter(SingletonSysteme* sing_syst, Bouton* bouton)
 {
-    std::cout << "click options mode fenetre" << std::endl;
-    ecran_fenetre(sing_syst->fenetre); //=> passer le parametre
-}
-
-void fonc_bouton_quitter(SingletonSysteme* sing_syst)
-{
+    (void)bouton;
     std::cout << "click quitter" << std::endl;
     sing_syst->Destroy(); //il faut tout clean...
     exit(EXIT_SUCCESS);
+}
+
+void fonc_toggle_son(SingletonSysteme* sing_syst)
+{
+    std::cout << "click toggle son" << std::endl;
+    sing_syst->son_active = !(sing_syst->son_active);
+}
+
+void fonc_toggle_musique(SingletonSysteme* sing_syst)
+{
+    std::cout << "click toggle musique" << std::endl;
+    sing_syst->musique_activee = !(sing_syst->musique_activee);
 }
 
 
@@ -140,24 +176,32 @@ int main(int argc, char* argv[])
 
     SingletonSysteme::instance().Init();
 
-    Bouton bouton_jouer({255, 0, 0, 255}, {0, 255, 0, 255}, {0, 0, 255, 255}, {800, 100, 200, 100}, &fonc_bouton_jouer, "JOUER");
-    Bouton bouton_options({255, 0, 0, 255}, {0, 255, 0, 255}, {0, 0, 255, 255}, {800, 250, 200, 100}, &fonc_bouton_options, "OPTIONS");
-    Bouton bouton_quitter({255, 0, 0, 255}, {0, 255, 0, 255}, {0, 0, 255, 255}, {800, 400, 200, 100}, &fonc_bouton_quitter, "QUITTER");
+    // MENU PRINCIPAL /////////////////////////////////////////////////////////////////////////////////////////////////////////////////
+    Texte titre("Titre du jeu", "./font/lazy.ttf", {255, 255, 255, 255}, {400, 0, 500, 200});
+    Bouton bouton_jouer({255, 0, 0, 255}, {0, 255, 0, 255}, {0, 0, 255, 255}, {550, 200, 200, 100}, &fonc_bouton_jouer, "JOUER");
+    Bouton bouton_options({255, 0, 0, 255}, {0, 255, 0, 255}, {0, 0, 255, 255}, {550, 350, 200, 100}, &fonc_bouton_options, "OPTIONS");
+    Bouton bouton_quitter({255, 0, 0, 255}, {0, 255, 0, 255}, {0, 0, 255, 255}, {550, 500, 200, 100}, &fonc_bouton_quitter, "QUITTER");
+    ///////////////////////////////////////////////////////////////////////////////////////////////////////////////////////////////////
 
-    Bouton bouton_options_retour({255, 0, 0, 255}, {0, 255, 0, 255}, {0, 0, 255, 255}, {300, 250, 200, 100}, &fonc_bouton_options_retour, "RETOUR");
-    Bouton bouton_options_plein_ecran({255, 0, 0, 255}, {0, 255, 0, 255}, {0, 0, 255, 255}, {300, 400, 200, 100}, &fonc_bouton_options_plein_ecran, "PLEIN ECRAN");
-    Bouton bouton_options_mode_fenetre({255, 0, 0, 255}, {0, 255, 0, 255}, {0, 0, 255, 255}, {300, 550, 200, 100}, &fonc_bouton_options_mode_fenetre, "MODE FENETRE");
+    // MENU OPTIONS ////////////////////////////////////////////////////////////////////////////////////////////////////////////////////////////////////
+    Bouton bouton_options_retour({255, 0, 0, 255}, {0, 255, 0, 255}, {0, 0, 255, 255}, {50, 550, 200, 100}, &fonc_bouton_options_retour, "RETOUR");
+    Texte mode_ecran("MODE ECRAN", "./font/lazy.ttf", {255, 255, 255, 255}, {1000, 450, 200, 100});
+    Bouton bouton_options_fenetre({255, 0, 0, 255}, {0, 255, 0, 255}, {0, 0, 255, 255}, {1000, 550, 200, 100}, &fonc_bouton_options_fenetre, "FENETRE");
+    Toggle toggle_sound({0, 255, 0, 255}, {255, 0, 0, 255}, {255, 255, 255, 255}, {300, 200, 200, 100}, "SON", &fonc_toggle_son);
+    Toggle toggle_musique({0, 255, 0, 255}, {255, 0, 0, 255}, {255, 255, 255, 255}, {800, 200, 200, 100}, "MUSIQUE", &fonc_toggle_musique);
+    ////////////////////////////////////////////////////////////////////////////////////////////////////////////////////////////////////////////////////
 
+    // MENU CHOIX DU NOM //////////////////////////////////////////////////////////////////////////////////////////////////////////////////////
     Inputfield inputfield("./font/lazy.ttf", {255, 0, 0, 255}, {300, 400, 200, 50});
     Texte demande_nom("Ecrivez votre nom", "./font/lazy.ttf", {255, 255, 255, 255}, {300, 200, 300, 150});
     Bouton bouton_valider({255, 0, 0, 255}, {0, 255, 0, 255}, {0, 0, 255, 255}, {300, 550, 200, 100}, &fonc_bouton_fin_demande_nom, "VALIDER");
+    ///////////////////////////////////////////////////////////////////////////////////////////////////////////////////////////////////////////
 
-    Texte titre("Titre du jeu", "./font/lazy.ttf", {255, 255, 255, 255}, {300, 200, 300, 150});
-
+    // EN JEU ////////////////////////////////////////////////////////////////////////////////
     Joueur joueur(100, {0, 0, 255, 255}, {800, 96, 32, 32}, VUE_DESSUS);
-
     SDL_Texture* texture = init_texture("./img/fond.png", SingletonSysteme::instance().rendu);
     SDL_Rect dest = init_rect_from_image(0, 0, texture);
+    //////////////////////////////////////////////////////////////////////////////////////////
 
     Uint32 timeStep = SDL_GetTicks();
 
@@ -194,8 +238,9 @@ int main(int argc, char* argv[])
             else if(SingletonSysteme::instance().etat == MENU_OPTIONS)
             {
                 bouton_options_retour.HandleEvents(e, &SingletonSysteme::instance());
-                bouton_options_plein_ecran.HandleEvents(e, &SingletonSysteme::instance());
-                bouton_options_mode_fenetre.HandleEvents(e, &SingletonSysteme::instance());
+                bouton_options_fenetre.HandleEvents(e, &SingletonSysteme::instance());
+                toggle_sound.HandleEvents(e, &SingletonSysteme::instance());
+                toggle_musique.HandleEvents(e, &SingletonSysteme::instance());
             }
             else if(SingletonSysteme::instance().etat == DEMANDE_NOM)
             {
@@ -240,8 +285,10 @@ int main(int argc, char* argv[])
         else if(SingletonSysteme::instance().etat == MENU_OPTIONS)
         {
             bouton_options_retour.Draw(SingletonSysteme::instance().rendu);
-            bouton_options_plein_ecran.Draw(SingletonSysteme::instance().rendu);
-            bouton_options_mode_fenetre.Draw(SingletonSysteme::instance().rendu);
+            mode_ecran.Draw(SingletonSysteme::instance().rendu);
+            bouton_options_fenetre.Draw(SingletonSysteme::instance().rendu);
+            toggle_sound.Draw(SingletonSysteme::instance().rendu);
+            toggle_musique.Draw(SingletonSysteme::instance().rendu);
         }
         else if(SingletonSysteme::instance().etat == DEMANDE_NOM)
         {

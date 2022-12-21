@@ -1,47 +1,39 @@
-#include "bouton.hpp"
+#include "toggle.hpp"
 
-Bouton::Bouton(SDL_Color couleur_idle, SDL_Color couleur_hover, SDL_Color couleur_click, SDL_Rect position, eventFunction funcPtr, std::string texte)
-:texte(texte, "./font/lazy.ttf", {255, 255, 255, 255}, position)
+Toggle::Toggle(SDL_Color couleur_checked, SDL_Color couleur_unchecked, SDL_Color couleur_hover, SDL_Rect position, std::string texte, eventFunction funcPtr)
+:texte(texte, "./font/lazy.ttf", {255, 255, 255, 255}, {position.x, position.y - position.h, position.w, position.h})
 {
-    this->couleur_idle = couleur_idle;
+    this->isChecked = true;
+    this->etat = CHECKED;
+    this->couleur_checked = couleur_checked;
+    this->couleur_unchecked = couleur_unchecked;
     this->couleur_hover = couleur_hover;
-    this->couleur_click = couleur_click;
     this->position = position;
-    this->funcPtr = funcPtr; //pointeur sur la fonction qui sera lancée quand il y aura un clic sur le bouton
-    this->etat = IDLE; //etat de base
-    this->clicAvantCollision = false; //protection
+    this->funcPtr = funcPtr;
     this->hover_sound = Mix_LoadWAV("./hover.ogg");
     this->click_sound = Mix_LoadWAV("./select.ogg");
 }
 
 
-bool Bouton::collision(SDL_Rect dest_joueur, int x, int y)
+void Toggle::Draw(SDL_Renderer* rendu)
 {
-    //si pas de collision
-    if(dest_joueur.y + dest_joueur.h > y
-    && dest_joueur.y < y
-    && dest_joueur.x + dest_joueur.w > x
-    && dest_joueur.x < x)
+    if(this->etat == CHECKED)
     {
-        return true;
-    }
-    else
-    {
-        return false;
-    }
-}
-
-void Bouton::Draw(SDL_Renderer* rendu)
-{
-    if(this->etat == IDLE)
-    {
-        if(SDL_SetRenderDrawColor(rendu, this->couleur_idle.r, this->couleur_idle.g, this->couleur_idle.b, this->couleur_idle.a) < 0)
+        if(SDL_SetRenderDrawColor(rendu, this->couleur_checked.r, this->couleur_checked.g, this->couleur_checked.b, this->couleur_checked.a) < 0)
         {
             std::cerr << SDL_GetError() << std::endl;
             exit(EXIT_FAILURE);
         }
     }
-    else if(this->etat == HOVERED)
+    else if(this->etat == UNCHECKED)
+    {
+        if(SDL_SetRenderDrawColor(rendu, this->couleur_unchecked.r, this->couleur_unchecked.g, this->couleur_unchecked.b, this->couleur_unchecked.a) < 0)
+        {
+            std::cerr << SDL_GetError() << std::endl;
+            exit(EXIT_FAILURE);
+        }
+    }
+    else if(this->etat == HOVERED1)
     {
         if(SDL_SetRenderDrawColor(rendu, this->couleur_hover.r, this->couleur_hover.g, this->couleur_hover.b, this->couleur_hover.a) < 0)
         {
@@ -49,15 +41,6 @@ void Bouton::Draw(SDL_Renderer* rendu)
             exit(EXIT_FAILURE);
         }
     }
-    else if(this->etat == CLICKED)
-    {
-        if(SDL_SetRenderDrawColor(rendu, this->couleur_click.r, this->couleur_click.g, this->couleur_click.b, this->couleur_click.a) < 0)
-        {
-            std::cerr << SDL_GetError() << std::endl;
-            exit(EXIT_FAILURE);
-        }
-    }
-
     if(SDL_RenderFillRect(rendu, &(this->position)) < 0)
     {
         std::cerr << SDL_GetError() << std::endl;
@@ -67,7 +50,8 @@ void Bouton::Draw(SDL_Renderer* rendu)
     texte.Draw(rendu);
 }
 
-void Bouton::HandleEvents(SDL_Event e, SingletonSysteme* sing_syst)
+
+void Toggle::HandleEvents(SDL_Event e, SingletonSysteme* sing_syst)
 {
     int x, y; //position x et y de la souris
     SDL_GetMouseState(&x, &y);
@@ -82,7 +66,7 @@ void Bouton::HandleEvents(SDL_Event e, SingletonSysteme* sing_syst)
         {
             if(collision(this->position, x, y) == true)
             {
-                this->etat = HOVERED;
+                this->etat = HOVERED1;
                 if(son_joue == false && sing_syst->son_active == true)
                 {
                     Mix_PlayChannel(1, hover_sound, 0);
@@ -91,7 +75,9 @@ void Bouton::HandleEvents(SDL_Event e, SingletonSysteme* sing_syst)
             }
             else
             {
-                this->etat = IDLE;
+                if(isChecked == true)
+                    this->etat = CHECKED;
+                else this->etat = UNCHECKED;
                 son_joue = false;
             }
         }
@@ -101,7 +87,7 @@ void Bouton::HandleEvents(SDL_Event e, SingletonSysteme* sing_syst)
             {
                 if(collision(this->position, x, y) == true)
                 {
-                    this->etat = CLICKED;
+                    this->etat = HOVERED1;
                     if(son_joue == false && sing_syst->son_active == true)
                     {
                         Mix_PlayChannel(1, hover_sound, 0);
@@ -110,7 +96,9 @@ void Bouton::HandleEvents(SDL_Event e, SingletonSysteme* sing_syst)
                 }
                 else
                 {
-                    this->etat = IDLE;
+                    if(isChecked == true)
+                        this->etat = CHECKED;
+                    else this->etat = UNCHECKED;
                     son_joue = false;
                 }
             }
@@ -122,13 +110,9 @@ void Bouton::HandleEvents(SDL_Event e, SingletonSysteme* sing_syst)
         {
             if(collision(this->position, x, y) == true)
             {
-                this->etat = CLICKED;
                 clicAvantCollision = false; //protection
             }
-            else
-            {
-                clicAvantCollision = true; //protection
-            }
+            else clicAvantCollision = true; //protection
         }
     }
     else if(e.type == SDL_MOUSEBUTTONUP)
@@ -137,16 +121,34 @@ void Bouton::HandleEvents(SDL_Event e, SingletonSysteme* sing_syst)
         {
             if(collision(this->position, x, y) == true && clicAvantCollision == false) //empecher de cliquer avant d'etre sur le bouton
             {
-                this->etat = IDLE;
+                isChecked = !isChecked;
+                if(isChecked == true)
+                    this->etat = CHECKED;
+                else this->etat = UNCHECKED;
                 if(sing_syst->son_active == true)
-                {
                     Mix_PlayChannel(1, click_sound, 0);
-                }
                 if(funcPtr != nullptr)
                 {
-                    funcPtr(sing_syst, this);
+                    funcPtr(sing_syst);
                 }
             }
         }
+    }
+}
+
+
+bool Toggle::collision(SDL_Rect dest_joueur, int x, int y)
+{
+    //si pas de collision
+    if(dest_joueur.y + dest_joueur.h > y
+    && dest_joueur.y < y
+    && dest_joueur.x + dest_joueur.w > x
+    && dest_joueur.x < x)
+    {
+        return true;
+    }
+    else
+    {
+        return false;
     }
 }
