@@ -22,7 +22,7 @@ enum etat_toggle
 class Toggle
 {
     public:
-        Toggle(SDL_Color couleur_checked, SDL_Color couleur_unchecked, SDL_Color couleur_hover, SDL_Rect position, std::string texte, eventFunction funcPtr);
+        Toggle(SDL_Color couleur_checked, SDL_Color couleur_unchecked, SDL_Color couleur_hover, SDL_Rect position, std::string texte, eventFunction funcPtr, bool isCheckedSave);
 
         Texte texte;
         SDL_Color couleur_checked;

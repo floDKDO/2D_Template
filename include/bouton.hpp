@@ -17,7 +17,6 @@ enum etat_bouton
     CLICKED
 };
 
-
 class Bouton
 {
     public:

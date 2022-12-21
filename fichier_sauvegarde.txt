@@ -1,0 +1,8 @@
+//Nom joueur
+
+//Mode fenetre
+1
+//Musique activee ?
+1
+//Son active ?
+1

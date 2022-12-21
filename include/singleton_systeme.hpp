@@ -5,6 +5,7 @@
 #define HAUTEUR_FENETRE 704 //720!
 
 #include <iostream>
+#include <fstream>
 #include <SDL2/SDL.h>
 #include <SDL2/SDL_image.h>
 #include <SDL2/SDL_ttf.h>
@@ -34,6 +35,8 @@ class SingletonSysteme
         }
 
         void Init();
+        void Sauvegarder();
+        void Charger();
         void Destroy();
 
         SDL_Window* fenetre;
@@ -42,7 +45,8 @@ class SingletonSysteme
         mode_fenetre mode_fenetre;
         bool son_active;
         bool musique_activee;
-
+        std::string nom_joueur;
+        std::fstream fichier_sauvegarde;
 
     protected:
 

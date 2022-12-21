@@ -12,7 +12,6 @@
 #include "toggle.hpp"
 
 //TODO pas de variables globales
-std::string nom_joueur;
 bool donner_nom = false;
 ////////////////////////////////
 
@@ -103,7 +102,7 @@ void fonc_bouton_fin_demande_nom(SingletonSysteme* sing_syst, Bouton* bouton)
 {
     (void)bouton;
     std::cout << "click jouer" << std::endl;
-    if(nom_joueur.length() > 0)
+    if(sing_syst->nom_joueur.length() > 0)
     {
         donner_nom = true;
         sing_syst->etat = EN_JEU;
@@ -142,6 +141,7 @@ void fonc_bouton_quitter(SingletonSysteme* sing_syst, Bouton* bouton)
 {
     (void)bouton;
     std::cout << "click quitter" << std::endl;
+    sing_syst->Sauvegarder();
     sing_syst->Destroy(); //il faut tout clean...
     exit(EXIT_SUCCESS);
 }
@@ -174,7 +174,18 @@ int main(int argc, char* argv[])
     (void)argc;
     (void)argv;
 
+    SingletonSysteme::instance().Charger();
     SingletonSysteme::instance().Init();
+
+    std::string mode;
+    if(SingletonSysteme::instance().mode_fenetre == PLEIN_ECRAN)
+    {
+        mode = "PLEIN ECRAN";
+    }
+    else if(SingletonSysteme::instance().mode_fenetre == FENETRE)
+    {
+        mode = "FENETRE";
+    }
 
     // MENU PRINCIPAL /////////////////////////////////////////////////////////////////////////////////////////////////////////////////
     Texte titre("Titre du jeu", "./font/lazy.ttf", {255, 255, 255, 255}, {400, 0, 500, 200});
@@ -186,9 +197,9 @@ int main(int argc, char* argv[])
     // MENU OPTIONS ////////////////////////////////////////////////////////////////////////////////////////////////////////////////////////////////////
     Bouton bouton_options_retour({255, 0, 0, 255}, {0, 255, 0, 255}, {0, 0, 255, 255}, {50, 550, 200, 100}, &fonc_bouton_options_retour, "RETOUR");
     Texte mode_ecran("MODE ECRAN", "./font/lazy.ttf", {255, 255, 255, 255}, {1000, 450, 200, 100});
-    Bouton bouton_options_fenetre({255, 0, 0, 255}, {0, 255, 0, 255}, {0, 0, 255, 255}, {1000, 550, 200, 100}, &fonc_bouton_options_fenetre, "FENETRE");
-    Toggle toggle_sound({0, 255, 0, 255}, {255, 0, 0, 255}, {255, 255, 255, 255}, {300, 200, 200, 100}, "SON", &fonc_toggle_son);
-    Toggle toggle_musique({0, 255, 0, 255}, {255, 0, 0, 255}, {255, 255, 255, 255}, {800, 200, 200, 100}, "MUSIQUE", &fonc_toggle_musique);
+    Bouton bouton_options_fenetre({255, 0, 0, 255}, {0, 255, 0, 255}, {0, 0, 255, 255}, {1000, 550, 200, 100}, &fonc_bouton_options_fenetre, mode);
+    Toggle toggle_sound({0, 255, 0, 255}, {255, 0, 0, 255}, {255, 255, 255, 255}, {300, 200, 200, 100}, "SON", &fonc_toggle_son, SingletonSysteme::instance().son_active);
+    Toggle toggle_musique({0, 255, 0, 255}, {255, 0, 0, 255}, {255, 255, 255, 255}, {800, 200, 200, 100}, "MUSIQUE", &fonc_toggle_musique, SingletonSysteme::instance().musique_activee);
     ////////////////////////////////////////////////////////////////////////////////////////////////////////////////////////////////////////////////////
 
     // MENU CHOIX DU NOM //////////////////////////////////////////////////////////////////////////////////////////////////////////////////////
@@ -254,10 +265,9 @@ int main(int argc, char* argv[])
         }
 
         // A ameliorer/////////////////
-        nom_joueur = inputfield.texte;
         if(donner_nom == true)
         {
-            joueur.nom = nom_joueur;
+            SingletonSysteme::instance().nom_joueur = inputfield.texte;
             donner_nom = false;
         }
         ///////////////////////////////
@@ -309,6 +319,7 @@ int main(int argc, char* argv[])
 
         SDL_RenderPresent(SingletonSysteme::instance().rendu);
     }
+    SingletonSysteme::instance().Sauvegarder();
     SingletonSysteme::instance().Destroy();
     return EXIT_SUCCESS;
 }

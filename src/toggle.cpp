@@ -1,10 +1,12 @@
 #include "toggle.hpp"
 
-Toggle::Toggle(SDL_Color couleur_checked, SDL_Color couleur_unchecked, SDL_Color couleur_hover, SDL_Rect position, std::string texte, eventFunction funcPtr)
+Toggle::Toggle(SDL_Color couleur_checked, SDL_Color couleur_unchecked, SDL_Color couleur_hover, SDL_Rect position, std::string texte, eventFunction funcPtr, bool isCheckedSave)
 :texte(texte, "./font/lazy.ttf", {255, 255, 255, 255}, {position.x, position.y - position.h, position.w, position.h})
 {
-    this->isChecked = true;
-    this->etat = CHECKED;
+    this->isChecked = isCheckedSave;
+    if(this->isChecked == true)
+        this->etat = CHECKED;
+    else this->etat = UNCHECKED;
     this->couleur_checked = couleur_checked;
     this->couleur_unchecked = couleur_unchecked;
     this->couleur_hover = couleur_hover;
