@@ -1,7 +1,7 @@
 //Nom joueur
-
+test
 //Mode fenetre
-1
+0
 //Musique activee ?
 1
 //Son active ?

@@ -1,6 +1,6 @@
 #include "inputfield.hpp"
 
-Inputfield::Inputfield(std::string police, SDL_Color couleur, SDL_Rect position)
+Inputfield::Inputfield(std::string police, SDL_Color couleur, SDL_Rect position, eventFunction funcPtr)
 {
     if((this->police = TTF_OpenFont(police.c_str(), 50)) == nullptr)
     {
@@ -12,6 +12,7 @@ Inputfield::Inputfield(std::string police, SDL_Color couleur, SDL_Rect position)
     this->zone_de_texte = {fond_de_texte.x, fond_de_texte.y, 0, 0};
     this->mode_edition = false;
     this->texte_modifie = false;
+    this->funcPtr = funcPtr;
 
     SDL_SetTextInputRect(&(this->zone_de_texte));
 }
@@ -79,7 +80,7 @@ void Inputfield::Draw(SDL_Renderer* rendu)
     }
 }
 
-void Inputfield::HandleEvents(SDL_Event e)
+void Inputfield::HandleEvents(SDL_Event e, SingletonSysteme* sing_syst)
 {
     int x, y; //position x et y de la souris
     SDL_GetMouseState(&x, &y);
@@ -93,6 +94,8 @@ void Inputfield::HandleEvents(SDL_Event e)
         else if(e.key.keysym.sym == SDLK_RETURN && mode_edition == true)
         {   //si on appuie sur entrée lors de la modification de la chaine, quitte l'inputfield
             mode_edition = false;
+            if(funcPtr != nullptr)
+                funcPtr(sing_syst, this); //si on appui sur entree, la fonction se lance
         }
     }
     else if(e.type == SDL_MOUSEBUTTONDOWN)
@@ -104,6 +107,8 @@ void Inputfield::HandleEvents(SDL_Event e)
         else if(e.button.button == SDL_BUTTON_LEFT && collision(fond_de_texte, x, y) == false && mode_edition == true)
         {   //si on clique autre part que sur l'inputfield et qu'on est en mode édition
             mode_edition = false;
+            if(funcPtr != nullptr)
+                funcPtr(sing_syst, this); //si on clic en dehors de l'inputfield alors qu'on le modifie, la fonction se lance
         }
     }
     else if(e.type == SDL_TEXTINPUT)

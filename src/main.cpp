@@ -11,9 +11,6 @@
 #include "joueur.hpp"
 #include "toggle.hpp"
 
-//TODO pas de variables globales
-bool donner_nom = false;
-////////////////////////////////
 
 SDL_Texture* init_texture(std::string image, SDL_Renderer* rendu)
 {
@@ -95,7 +92,9 @@ void fonc_bouton_jouer(SingletonSysteme* sing_syst, Bouton* bouton)
 {
     (void)bouton;
     std::cout << "click jouer" << std::endl;
-    sing_syst->etat = DEMANDE_NOM;
+    if(sing_syst->nom_joueur.empty() == true)
+        sing_syst->etat = DEMANDE_NOM;
+    else sing_syst->etat = EN_JEU;
 }
 
 void fonc_bouton_fin_demande_nom(SingletonSysteme* sing_syst, Bouton* bouton)
@@ -104,9 +103,14 @@ void fonc_bouton_fin_demande_nom(SingletonSysteme* sing_syst, Bouton* bouton)
     std::cout << "click jouer" << std::endl;
     if(sing_syst->nom_joueur.length() > 0)
     {
-        donner_nom = true;
         sing_syst->etat = EN_JEU;
     }
+}
+
+void fonc_inputfield_nom_joueur(SingletonSysteme* sing_syst, Inputfield* inputfield)
+{
+    sing_syst->nom_joueur = inputfield->texte;
+    std::cout << sing_syst->nom_joueur << std::endl;
 }
 
 void fonc_bouton_options(SingletonSysteme* sing_syst, Bouton* bouton)
@@ -203,7 +207,7 @@ int main(int argc, char* argv[])
     ////////////////////////////////////////////////////////////////////////////////////////////////////////////////////////////////////////////////////
 
     // MENU CHOIX DU NOM //////////////////////////////////////////////////////////////////////////////////////////////////////////////////////
-    Inputfield inputfield("./font/lazy.ttf", {255, 0, 0, 255}, {300, 400, 200, 50});
+    Inputfield inputfield("./font/lazy.ttf", {255, 0, 0, 255}, {300, 400, 200, 50}, &fonc_inputfield_nom_joueur);
     Texte demande_nom("Ecrivez votre nom", "./font/lazy.ttf", {255, 255, 255, 255}, {300, 200, 300, 150});
     Bouton bouton_valider({255, 0, 0, 255}, {0, 255, 0, 255}, {0, 0, 255, 255}, {300, 550, 200, 100}, &fonc_bouton_fin_demande_nom, "VALIDER");
     ///////////////////////////////////////////////////////////////////////////////////////////////////////////////////////////////////////////
@@ -227,13 +231,19 @@ int main(int argc, char* argv[])
                 case SDL_WINDOWEVENT:
 
                     if(e.window.event == SDL_WINDOWEVENT_CLOSE)
+                    {
+                        SingletonSysteme::instance().Sauvegarder();
                         quitter = true;
+                    }
                     break;
 
                 case SDL_KEYDOWN:
 
                     if(e.key.keysym.sym == SDLK_ESCAPE)
+                    {
+                        SingletonSysteme::instance().Sauvegarder();
                         quitter = true;
+                    }
                     break;
 
                 default :
@@ -256,21 +266,13 @@ int main(int argc, char* argv[])
             else if(SingletonSysteme::instance().etat == DEMANDE_NOM)
             {
                 bouton_valider.HandleEvents(e, &SingletonSysteme::instance());
-                inputfield.HandleEvents(e);
+                inputfield.HandleEvents(e, &SingletonSysteme::instance());
             }
             else if(SingletonSysteme::instance().etat == EN_JEU)
             {
                 joueur.HandleEvents(e);
             }
         }
-
-        // A ameliorer/////////////////
-        if(donner_nom == true)
-        {
-            SingletonSysteme::instance().nom_joueur = inputfield.texte;
-            donner_nom = false;
-        }
-        ///////////////////////////////
 
         //fond
         if(SDL_SetRenderDrawColor(SingletonSysteme::instance().rendu, 0, 0, 0, 255) < 0)
