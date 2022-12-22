@@ -12,8 +12,16 @@ Toggle::Toggle(SDL_Color couleur_checked, SDL_Color couleur_unchecked, SDL_Color
     this->couleur_hover = couleur_hover;
     this->position = position;
     this->funcPtr = funcPtr;
-    this->hover_sound = Mix_LoadWAV("./sound/hover.ogg");
-    this->click_sound = Mix_LoadWAV("./sound/select.ogg");
+    if((this->hover_sound = Mix_LoadWAV("./sound/hover.ogg")) == nullptr)
+    {
+        std::cerr << Mix_GetError() << std::endl;
+        exit(EXIT_FAILURE);
+    }
+    if((this->click_sound = Mix_LoadWAV("./sound/select.ogg")) == nullptr)
+    {
+        std::cerr << Mix_GetError() << std::endl;
+        exit(EXIT_FAILURE);
+    }
 
     this->hasImage = false;
 }
@@ -54,8 +62,16 @@ Toggle::Toggle(std::string image_checked, std::string image_unchecked, std::stri
     }
     this->position = {position.x, position.y, w, h};
     this->funcPtr = funcPtr;
-    this->hover_sound = Mix_LoadWAV("./sound/hover.ogg");
-    this->click_sound = Mix_LoadWAV("./sound/select.ogg");
+    if((this->hover_sound = Mix_LoadWAV("./sound/hover.ogg")) == nullptr)
+    {
+        std::cerr << Mix_GetError() << std::endl;
+        exit(EXIT_FAILURE);
+    }
+    if((this->click_sound = Mix_LoadWAV("./sound/select.ogg")) == nullptr)
+    {
+        std::cerr << Mix_GetError() << std::endl;
+        exit(EXIT_FAILURE);
+    }
 
     this->hasImage = true;
 }
@@ -154,7 +170,11 @@ void Toggle::HandleEvents(SDL_Event e, SingletonSysteme* sing_syst)
                 this->etat = HOVERED1;
                 if(son_joue == false && sing_syst->son_active == true)
                 {
-                    Mix_PlayChannel(1, hover_sound, 0);
+                    if(Mix_PlayChannel(1, hover_sound, 0) < 0)
+                    {
+                        std::cerr << Mix_GetError() << std::endl;
+                        exit(EXIT_FAILURE);
+                    }
                     son_joue = true;
                 }
             }
@@ -175,7 +195,11 @@ void Toggle::HandleEvents(SDL_Event e, SingletonSysteme* sing_syst)
                     this->etat = HOVERED1;
                     if(son_joue == false && sing_syst->son_active == true)
                     {
-                        Mix_PlayChannel(1, hover_sound, 0);
+                        if(Mix_PlayChannel(1, hover_sound, 0) < 0)
+                        {
+                            std::cerr << Mix_GetError() << std::endl;
+                            exit(EXIT_FAILURE);
+                        }
                         son_joue = true;
                     }
                 }
@@ -211,7 +235,13 @@ void Toggle::HandleEvents(SDL_Event e, SingletonSysteme* sing_syst)
                     this->etat = CHECKED;
                 else this->etat = UNCHECKED;
                 if(sing_syst->son_active == true)
-                    Mix_PlayChannel(1, click_sound, 0);
+                {
+                    if(Mix_PlayChannel(1, click_sound, 0) < 0)
+                    {
+                        std::cerr << Mix_GetError() << std::endl;
+                        exit(EXIT_FAILURE);
+                    }
+                }
                 if(funcPtr != nullptr)
                 {
                     funcPtr(sing_syst);

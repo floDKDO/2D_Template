@@ -10,8 +10,16 @@ Bouton::Bouton(SDL_Color couleur_idle, SDL_Color couleur_hover, SDL_Color couleu
     this->funcPtr = funcPtr; //pointeur sur la fonction qui sera lancée quand il y aura un clic sur le bouton
     this->etat = IDLE; //etat de base
     this->clicAvantCollision = false; //protection
-    this->hover_sound = Mix_LoadWAV("./sound/hover.ogg");
-    this->click_sound = Mix_LoadWAV("./sound/select.ogg");
+    if((this->hover_sound = Mix_LoadWAV("./sound/hover.ogg")) == nullptr)
+    {
+        std::cerr << Mix_GetError() << std::endl;
+        exit(EXIT_FAILURE);
+    }
+    if((this->click_sound = Mix_LoadWAV("./sound/select.ogg")) == nullptr)
+    {
+        std::cerr << Mix_GetError() << std::endl;
+        exit(EXIT_FAILURE);
+    }
 
     this->hasImage = false;
 }
@@ -44,8 +52,16 @@ Bouton::Bouton(std::string image_idle, std::string image_hover, std::string imag
     this->funcPtr = funcPtr; //pointeur sur la fonction qui sera lancée quand il y aura un clic sur le bouton
     this->etat = IDLE; //etat de base
     this->clicAvantCollision = false; //protection
-    this->hover_sound = Mix_LoadWAV("./sound/hover.ogg");
-    this->click_sound = Mix_LoadWAV("./sound/select.ogg");
+    if((this->hover_sound = Mix_LoadWAV("./sound/hover.ogg")) == nullptr)
+    {
+        std::cerr << Mix_GetError() << std::endl;
+        exit(EXIT_FAILURE);
+    }
+    if((this->click_sound = Mix_LoadWAV("./sound/select.ogg")) == nullptr)
+    {
+        std::cerr << Mix_GetError() << std::endl;
+        exit(EXIT_FAILURE);
+    }
 
     this->hasImage = true;
 }
@@ -150,7 +166,11 @@ void Bouton::HandleEvents(SDL_Event e, SingletonSysteme* sing_syst)
                 this->etat = HOVERED;
                 if(son_joue == false && sing_syst->son_active == true)
                 {
-                    Mix_PlayChannel(1, hover_sound, 0);
+                    if(Mix_PlayChannel(1, hover_sound, 0) < 0)
+                    {
+                        std::cerr << Mix_GetError() << std::endl;
+                        exit(EXIT_FAILURE);
+                    }
                     son_joue = true;
                 }
             }
@@ -169,7 +189,11 @@ void Bouton::HandleEvents(SDL_Event e, SingletonSysteme* sing_syst)
                     this->etat = CLICKED;
                     if(son_joue == false && sing_syst->son_active == true)
                     {
-                        Mix_PlayChannel(1, hover_sound, 0);
+                        if(Mix_PlayChannel(1, hover_sound, 0) < 0)
+                        {
+                            std::cerr << Mix_GetError() << std::endl;
+                            exit(EXIT_FAILURE);
+                        }
                         son_joue = true;
                     }
                 }
@@ -205,7 +229,11 @@ void Bouton::HandleEvents(SDL_Event e, SingletonSysteme* sing_syst)
                 this->etat = IDLE;
                 if(sing_syst->son_active == true)
                 {
-                    Mix_PlayChannel(1, click_sound, 0);
+                    if(Mix_PlayChannel(1, click_sound, 0) < 0)
+                    {
+                        std::cerr << Mix_GetError() << std::endl;
+                        exit(EXIT_FAILURE);
+                    }
                 }
                 if(funcPtr != nullptr)
                 {

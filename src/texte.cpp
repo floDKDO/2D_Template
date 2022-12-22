@@ -14,16 +14,18 @@ Texte::Texte(std::string texte, std::string police, SDL_Color couleur, SDL_Rect 
 
 void Texte::Draw(SDL_Renderer* rendu)
 {
-    this->surface = TTF_RenderText_Solid(police, texte.c_str(), couleur);
-
-    if(surface != nullptr)
+    if((this->surface = TTF_RenderText_Solid(police, texte.c_str(), couleur)) == nullptr)
     {
-        if((texture = SDL_CreateTextureFromSurface(rendu, surface)) == nullptr)
-        {
-            std::cerr << SDL_GetError() << std::endl;
-            exit(EXIT_FAILURE);
-        }
+        std::cerr << TTF_GetError() << std::endl;
+        exit(EXIT_FAILURE);
     }
+
+    if((texture = SDL_CreateTextureFromSurface(rendu, surface)) == nullptr)
+    {
+        std::cerr << SDL_GetError() << std::endl;
+        exit(EXIT_FAILURE);
+    }
+
     if(SDL_RenderCopy(rendu, texture, nullptr, &position) < 0)
     {
         std::cerr << SDL_GetError() << std::endl;

@@ -52,17 +52,14 @@ void Inputfield::Draw(SDL_Renderer* rendu)
         }
     }
 
-
-    if(surface != nullptr)
+    if((texture = SDL_CreateTextureFromSurface(rendu, surface)) == nullptr)
     {
-        if((texture = SDL_CreateTextureFromSurface(rendu, surface)) == nullptr)
-        {
-            std::cerr << SDL_GetError() << std::endl;
-            exit(EXIT_FAILURE);
-        }
-        zone_de_texte.w = surface->w;
-        zone_de_texte.h = surface->h;
+        std::cerr << SDL_GetError() << std::endl;
+        exit(EXIT_FAILURE);
     }
+    zone_de_texte.w = surface->w;
+    zone_de_texte.h = surface->h;
+
     if(SDL_SetRenderDrawColor(rendu, 255, 255, 255, 255) < 0)
     {
         std::cerr << SDL_GetError() << std::endl;
@@ -86,29 +83,35 @@ void Inputfield::HandleEvents(SDL_Event e, SingletonSysteme* sing_syst)
     SDL_GetMouseState(&x, &y);
     if(e.type == SDL_KEYDOWN)
     {
-        if(e.key.keysym.sym == SDLK_BACKSPACE && texte.length() > 0 && mode_edition == true)
-        {   //si on appuie sur la touche <- (supprimer), que la chaine n'est pas vide et qu'on est en mode édition
-            texte.pop_back();
-            texte_modifie = true;
-        }
-        else if(e.key.keysym.sym == SDLK_RETURN && mode_edition == true)
-        {   //si on appuie sur entrée lors de la modification de la chaine, quitte l'inputfield
-            mode_edition = false;
-            if(funcPtr != nullptr)
-                funcPtr(sing_syst, this); //si on appui sur entree, la fonction se lance
+        if(mode_edition == true)
+        {
+            if(e.key.keysym.sym == SDLK_BACKSPACE && texte.length() > 0)
+            {   //si on appuie sur la touche <- (supprimer), que la chaine n'est pas vide et qu'on est en mode édition
+                texte.pop_back();
+                texte_modifie = true;
+            }
+            else if(e.key.keysym.sym == SDLK_RETURN)
+            {   //si on appuie sur entrée lors de la modification de la chaine, quitte l'inputfield
+                mode_edition = false;
+                if(funcPtr != nullptr)
+                    funcPtr(sing_syst, this); //si on appui sur entree, la fonction se lance
+            }
         }
     }
     else if(e.type == SDL_MOUSEBUTTONDOWN)
     {
-        if(e.button.button == SDL_BUTTON_LEFT && collision(fond_de_texte, x, y) == true && mode_edition == false)
-        {   //si on clique sur l'inputfield et qu'on est pas en mode édition
-            mode_edition = true;
-        }
-        else if(e.button.button == SDL_BUTTON_LEFT && collision(fond_de_texte, x, y) == false && mode_edition == true)
-        {   //si on clique autre part que sur l'inputfield et qu'on est en mode édition
-            mode_edition = false;
-            if(funcPtr != nullptr)
-                funcPtr(sing_syst, this); //si on clic en dehors de l'inputfield alors qu'on le modifie, la fonction se lance
+        if(e.button.button == SDL_BUTTON_LEFT)
+        {
+            if(collision(fond_de_texte, x, y) == true && mode_edition == false)
+            {   //si on clique sur l'inputfield et qu'on est pas en mode édition
+                mode_edition = true;
+            }
+            else if(collision(fond_de_texte, x, y) == false && mode_edition == true)
+            {   //si on clique autre part que sur l'inputfield et qu'on est en mode édition
+                mode_edition = false;
+                if(funcPtr != nullptr)
+                    funcPtr(sing_syst, this); //si on clic en dehors de l'inputfield alors qu'on le modifie, la fonction se lance
+            }
         }
     }
     else if(e.type == SDL_TEXTINPUT)
@@ -120,4 +123,3 @@ void Inputfield::HandleEvents(SDL_Event e, SingletonSysteme* sing_syst)
         }
     }
 }
-

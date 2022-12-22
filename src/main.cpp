@@ -200,15 +200,13 @@ int main(int argc, char* argv[])
     else if(SingletonSysteme::instance().mode_fenetre == FENETRE)
         mode = "FENETRE";
 
-    Bouton bouton_continuer(ROUGE, VERT, BLEU, {550, 150, 200, 100}, &fonc_bouton_continuer, "Continuer");
-    Texte texte_nom_joueur(SingletonSysteme::instance().nom_joueur, "./font/lazy.ttf", {255, 255, 255, 255}, {300, 150, 200, 100});
     // MENU PRINCIPAL /////////////////////////////////////////////////////////////////////////////////////////////////////////////////
+    Bouton bouton_continuer(ROUGE, VERT, BLEU, {550, 225, 200, 100}, &fonc_bouton_continuer, "Continuer");
+    Texte texte_nom_joueur(SingletonSysteme::instance().nom_joueur, "./font/lazy.ttf", BLANC, {300, 225, 200, 100});
     Texte titre("Titre du jeu", "./font/lazy.ttf", BLANC, {400, 0, 500, 200});
-    Bouton bouton_nouvelle_partie(ROUGE, VERT, BLEU, {550, 300, 200, 100}, &fonc_bouton_nouvelle_partie, "NOUVELLE PARTIE");
-    Bouton bouton_options(ROUGE, VERT, BLEU, {550, 450, 200, 100}, &fonc_bouton_options, "OPTIONS");
+    Bouton bouton_nouvelle_partie(ROUGE, VERT, BLEU, {550, 350, 200, 100}, &fonc_bouton_nouvelle_partie, "NOUVELLE PARTIE");
+    Bouton bouton_options(ROUGE, VERT, BLEU, {550, 475, 200, 100}, &fonc_bouton_options, "OPTIONS");
     Bouton bouton_quitter(ROUGE, VERT, BLEU, {550, 600, 200, 100}, &fonc_bouton_quitter, "QUITTER");
-    Bouton bouton_image("./img/bouton_idle.png", "./img/bouton_hover.png", "./img/bouton_clic.png", {100, 600, 200, 100}, nullptr, "TEST", SingletonSysteme::instance().rendu);
-    Toggle toggle_image("./img/toggle_checked.png", "./img/toggle_unchecked.png", "./img/toggle_hover_checked.png", "./img/toggle_hover_unchecked.png", {100, 400, 200, 100}, "TEST", nullptr, false, SingletonSysteme::instance().rendu);
     ///////////////////////////////////////////////////////////////////////////////////////////////////////////////////////////////////
 
     // MENU OPTIONS ////////////////////////////////////////////////////////////////////////////////////////////////////////////////////////////////////
@@ -270,8 +268,6 @@ int main(int argc, char* argv[])
                 bouton_nouvelle_partie.HandleEvents(e, &SingletonSysteme::instance());
                 bouton_options.HandleEvents(e, &SingletonSysteme::instance());
                 bouton_quitter.HandleEvents(e, &SingletonSysteme::instance());
-                bouton_image.HandleEvents(e, &SingletonSysteme::instance());
-                toggle_image.HandleEvents(e, &SingletonSysteme::instance());
             }
             else if(SingletonSysteme::instance().etat == MENU_OPTIONS)
             {
@@ -315,8 +311,6 @@ int main(int argc, char* argv[])
             bouton_options.Draw(SingletonSysteme::instance().rendu);
             bouton_quitter.Draw(SingletonSysteme::instance().rendu);
             titre.Draw(SingletonSysteme::instance().rendu);
-            bouton_image.Draw(SingletonSysteme::instance().rendu);
-            toggle_image.Draw(SingletonSysteme::instance().rendu);
         }
         else if(SingletonSysteme::instance().etat == MENU_OPTIONS)
         {
@@ -345,6 +339,7 @@ int main(int argc, char* argv[])
 
         SDL_RenderPresent(SingletonSysteme::instance().rendu);
     }
+    SDL_DestroyTexture(texture);
     SingletonSysteme::instance().Sauvegarder();
     SingletonSysteme::instance().Destroy();
     return EXIT_SUCCESS;
