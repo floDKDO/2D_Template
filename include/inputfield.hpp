@@ -13,7 +13,7 @@ class Inputfield
     public:
 
         typedef void(*eventFunction)(SingletonSysteme*, Inputfield*);
-        eventFunction funcPtr; //pointeur sur la fonction qui sera lancée quand il y aura un clic sur le bouton
+        eventFunction funcPtr; //pointeur sur la fonction qui sera lancée quand il y aura un appuie sur entrée ou un clic en dehors de l'inputfield
 
         std::string texte;
         bool mode_edition;

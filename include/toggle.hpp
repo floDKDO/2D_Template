@@ -23,11 +23,20 @@ class Toggle
 {
     public:
         Toggle(SDL_Color couleur_checked, SDL_Color couleur_unchecked, SDL_Color couleur_hover, SDL_Rect position, std::string texte, eventFunction funcPtr, bool isCheckedSave);
+        Toggle(std::string image_checked, std::string image_unchecked, std::string image_hover_checked, std::string image_hover_unchecked, SDL_Rect position, std::string texte, eventFunction funcPtr, bool isCheckedSave, SDL_Renderer* rendu);
 
         Texte texte;
         SDL_Color couleur_checked;
         SDL_Color couleur_unchecked;
         SDL_Color couleur_hover;
+
+        SDL_Texture* image_checked;
+        SDL_Texture* image_unchecked;
+        SDL_Texture* image_hover_checked;
+        SDL_Texture* image_hover_unchecked;
+
+        bool hasImage;
+
         SDL_Rect position;
         bool isChecked;
         etat_toggle etat;

@@ -11,7 +11,6 @@
 #include "joueur.hpp"
 #include "toggle.hpp"
 
-
 SDL_Texture* init_texture(std::string image, SDL_Renderer* rendu)
 {
     SDL_Texture* texture = nullptr;
@@ -88,13 +87,22 @@ void reglage_fenetre(SingletonSysteme* sing_syst)
 }*/
 
 
-void fonc_bouton_jouer(SingletonSysteme* sing_syst, Bouton* bouton)
+void fonc_bouton_nouvelle_partie(SingletonSysteme* sing_syst, Bouton* bouton)
+{
+    (void)bouton;
+    std::cout << "click nouvelle partie" << std::endl;
+    if(sing_syst->nom_joueur.empty() == false)
+    {
+        sing_syst->Supprimmer();
+    }
+    sing_syst->etat = DEMANDE_NOM;
+}
+
+void fonc_bouton_continuer(SingletonSysteme* sing_syst, Bouton* bouton)
 {
     (void)bouton;
     std::cout << "click jouer" << std::endl;
-    if(sing_syst->nom_joueur.empty() == true)
-        sing_syst->etat = DEMANDE_NOM;
-    else sing_syst->etat = EN_JEU;
+    sing_syst->etat = EN_JEU;
 }
 
 void fonc_bouton_fin_demande_nom(SingletonSysteme* sing_syst, Bouton* bouton)
@@ -110,7 +118,6 @@ void fonc_bouton_fin_demande_nom(SingletonSysteme* sing_syst, Bouton* bouton)
 void fonc_inputfield_nom_joueur(SingletonSysteme* sing_syst, Inputfield* inputfield)
 {
     sing_syst->nom_joueur = inputfield->texte;
-    std::cout << sing_syst->nom_joueur << std::endl;
 }
 
 void fonc_bouton_options(SingletonSysteme* sing_syst, Bouton* bouton)
@@ -178,42 +185,48 @@ int main(int argc, char* argv[])
     (void)argc;
     (void)argv;
 
+    const SDL_Color ROUGE = {255, 0, 0, 255};
+    const SDL_Color VERT = {0, 255, 0, 255};
+    const SDL_Color BLEU = {0, 0, 255, 255};
+    const SDL_Color BLANC = {255, 255, 255, 255};
+    //const SDL_Color NOIR = {0, 0, 0, 255};
+
     SingletonSysteme::instance().Charger();
     SingletonSysteme::instance().Init();
 
     std::string mode;
     if(SingletonSysteme::instance().mode_fenetre == PLEIN_ECRAN)
-    {
         mode = "PLEIN ECRAN";
-    }
     else if(SingletonSysteme::instance().mode_fenetre == FENETRE)
-    {
         mode = "FENETRE";
-    }
 
+    Bouton bouton_continuer(ROUGE, VERT, BLEU, {550, 150, 200, 100}, &fonc_bouton_continuer, "Continuer");
+    Texte texte_nom_joueur(SingletonSysteme::instance().nom_joueur, "./font/lazy.ttf", {255, 255, 255, 255}, {300, 150, 200, 100});
     // MENU PRINCIPAL /////////////////////////////////////////////////////////////////////////////////////////////////////////////////
-    Texte titre("Titre du jeu", "./font/lazy.ttf", {255, 255, 255, 255}, {400, 0, 500, 200});
-    Bouton bouton_jouer({255, 0, 0, 255}, {0, 255, 0, 255}, {0, 0, 255, 255}, {550, 200, 200, 100}, &fonc_bouton_jouer, "JOUER");
-    Bouton bouton_options({255, 0, 0, 255}, {0, 255, 0, 255}, {0, 0, 255, 255}, {550, 350, 200, 100}, &fonc_bouton_options, "OPTIONS");
-    Bouton bouton_quitter({255, 0, 0, 255}, {0, 255, 0, 255}, {0, 0, 255, 255}, {550, 500, 200, 100}, &fonc_bouton_quitter, "QUITTER");
+    Texte titre("Titre du jeu", "./font/lazy.ttf", BLANC, {400, 0, 500, 200});
+    Bouton bouton_nouvelle_partie(ROUGE, VERT, BLEU, {550, 300, 200, 100}, &fonc_bouton_nouvelle_partie, "NOUVELLE PARTIE");
+    Bouton bouton_options(ROUGE, VERT, BLEU, {550, 450, 200, 100}, &fonc_bouton_options, "OPTIONS");
+    Bouton bouton_quitter(ROUGE, VERT, BLEU, {550, 600, 200, 100}, &fonc_bouton_quitter, "QUITTER");
+    Bouton bouton_image("./img/bouton_idle.png", "./img/bouton_hover.png", "./img/bouton_clic.png", {100, 600, 200, 100}, nullptr, "TEST", SingletonSysteme::instance().rendu);
+    Toggle toggle_image("./img/toggle_checked.png", "./img/toggle_unchecked.png", "./img/toggle_hover_checked.png", "./img/toggle_hover_unchecked.png", {100, 400, 200, 100}, "TEST", nullptr, false, SingletonSysteme::instance().rendu);
     ///////////////////////////////////////////////////////////////////////////////////////////////////////////////////////////////////
 
     // MENU OPTIONS ////////////////////////////////////////////////////////////////////////////////////////////////////////////////////////////////////
-    Bouton bouton_options_retour({255, 0, 0, 255}, {0, 255, 0, 255}, {0, 0, 255, 255}, {50, 550, 200, 100}, &fonc_bouton_options_retour, "RETOUR");
-    Texte mode_ecran("MODE ECRAN", "./font/lazy.ttf", {255, 255, 255, 255}, {1000, 450, 200, 100});
-    Bouton bouton_options_fenetre({255, 0, 0, 255}, {0, 255, 0, 255}, {0, 0, 255, 255}, {1000, 550, 200, 100}, &fonc_bouton_options_fenetre, mode);
-    Toggle toggle_sound({0, 255, 0, 255}, {255, 0, 0, 255}, {255, 255, 255, 255}, {300, 200, 200, 100}, "SON", &fonc_toggle_son, SingletonSysteme::instance().son_active);
-    Toggle toggle_musique({0, 255, 0, 255}, {255, 0, 0, 255}, {255, 255, 255, 255}, {800, 200, 200, 100}, "MUSIQUE", &fonc_toggle_musique, SingletonSysteme::instance().musique_activee);
+    Bouton bouton_options_retour(ROUGE, VERT, BLEU, {50, 550, 200, 100}, &fonc_bouton_options_retour, "RETOUR");
+    Texte mode_ecran("MODE ECRAN", "./font/lazy.ttf", BLANC, {1000, 450, 200, 100});
+    Bouton bouton_options_fenetre(ROUGE, VERT, BLEU, {1000, 550, 200, 100}, &fonc_bouton_options_fenetre, mode);
+    Toggle toggle_sound(VERT, ROUGE, BLANC, {300, 200, 200, 100}, "SON", &fonc_toggle_son, SingletonSysteme::instance().son_active);
+    Toggle toggle_musique(VERT, ROUGE, BLANC, {800, 200, 200, 100}, "MUSIQUE", &fonc_toggle_musique, SingletonSysteme::instance().musique_activee);
     ////////////////////////////////////////////////////////////////////////////////////////////////////////////////////////////////////////////////////
 
     // MENU CHOIX DU NOM //////////////////////////////////////////////////////////////////////////////////////////////////////////////////////
-    Inputfield inputfield("./font/lazy.ttf", {255, 0, 0, 255}, {300, 400, 200, 50}, &fonc_inputfield_nom_joueur);
-    Texte demande_nom("Ecrivez votre nom", "./font/lazy.ttf", {255, 255, 255, 255}, {300, 200, 300, 150});
-    Bouton bouton_valider({255, 0, 0, 255}, {0, 255, 0, 255}, {0, 0, 255, 255}, {300, 550, 200, 100}, &fonc_bouton_fin_demande_nom, "VALIDER");
+    Inputfield inputfield("./font/lazy.ttf", ROUGE, {300, 400, 200, 50}, &fonc_inputfield_nom_joueur);
+    Texte demande_nom("Ecrivez votre nom", "./font/lazy.ttf", BLANC, {300, 200, 300, 150});
+    Bouton bouton_valider(ROUGE, VERT, BLEU, {300, 550, 200, 100}, &fonc_bouton_fin_demande_nom, "VALIDER");
     ///////////////////////////////////////////////////////////////////////////////////////////////////////////////////////////////////////////
 
     // EN JEU ////////////////////////////////////////////////////////////////////////////////
-    Joueur joueur(100, {0, 0, 255, 255}, {800, 96, 32, 32}, VUE_DESSUS);
+    Joueur joueur(100, BLEU, {800, 96, 32, 32}, VUE_DESSUS);
     SDL_Texture* texture = init_texture("./img/fond.png", SingletonSysteme::instance().rendu);
     SDL_Rect dest = init_rect_from_image(0, 0, texture);
     //////////////////////////////////////////////////////////////////////////////////////////
@@ -252,9 +265,13 @@ int main(int argc, char* argv[])
 
             if(SingletonSysteme::instance().etat == MENU_PRINCIPAL)
             {
-                bouton_jouer.HandleEvents(e, &SingletonSysteme::instance());
+                if(SingletonSysteme::instance().nom_joueur.empty() == false)
+                    bouton_continuer.HandleEvents(e, &SingletonSysteme::instance());
+                bouton_nouvelle_partie.HandleEvents(e, &SingletonSysteme::instance());
                 bouton_options.HandleEvents(e, &SingletonSysteme::instance());
                 bouton_quitter.HandleEvents(e, &SingletonSysteme::instance());
+                bouton_image.HandleEvents(e, &SingletonSysteme::instance());
+                toggle_image.HandleEvents(e, &SingletonSysteme::instance());
             }
             else if(SingletonSysteme::instance().etat == MENU_OPTIONS)
             {
@@ -289,10 +306,17 @@ int main(int argc, char* argv[])
 
         if(SingletonSysteme::instance().etat == MENU_PRINCIPAL)
         {
-            bouton_jouer.Draw(SingletonSysteme::instance().rendu);
+            if(SingletonSysteme::instance().nom_joueur.empty() == false)
+            {
+                bouton_continuer.Draw(SingletonSysteme::instance().rendu);
+                texte_nom_joueur.Draw(SingletonSysteme::instance().rendu);
+            }
+            bouton_nouvelle_partie.Draw(SingletonSysteme::instance().rendu);
             bouton_options.Draw(SingletonSysteme::instance().rendu);
             bouton_quitter.Draw(SingletonSysteme::instance().rendu);
             titre.Draw(SingletonSysteme::instance().rendu);
+            bouton_image.Draw(SingletonSysteme::instance().rendu);
+            toggle_image.Draw(SingletonSysteme::instance().rendu);
         }
         else if(SingletonSysteme::instance().etat == MENU_OPTIONS)
         {

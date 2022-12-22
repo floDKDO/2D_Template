@@ -23,6 +23,13 @@ class Bouton
         SDL_Color couleur_idle;
         SDL_Color couleur_hover;
         SDL_Color couleur_click;
+
+        SDL_Texture* image_idle;
+        SDL_Texture* image_hover;
+        SDL_Texture* image_click;
+
+        bool hasImage;
+
         SDL_Rect position;
 
         typedef void(*eventFunction)(SingletonSysteme*, Bouton*);
@@ -37,6 +44,7 @@ class Bouton
         bool son_joue = false;
 
         Bouton(SDL_Color couleur_idle, SDL_Color couleur_hover, SDL_Color couleur_click, SDL_Rect position, eventFunction funcPtr, std::string texte);
+        Bouton(std::string image_idle, std::string image_hover, std::string image_click, SDL_Rect position, eventFunction funcPtr, std::string texte, SDL_Renderer* rendu);
         void Draw(SDL_Renderer* rendu);
         void HandleEvents(SDL_Event e, SingletonSysteme* sing_syst);
         bool collision(SDL_Rect dest_joueur, int x, int y);

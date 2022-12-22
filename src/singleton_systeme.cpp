@@ -134,6 +134,13 @@ void SingletonSysteme::Sauvegarder(void)
     fichier_sauvegarde.close();
 }
 
+void SingletonSysteme::Supprimmer(void)
+{
+    fichier_sauvegarde.open("./fichier_sauvegarde.txt", std::ios::out | std::ios::trunc); //ouvrir le fichier en écriture et supprimer ce qu'il contient s'il n'est pas vide
+    this->nom_joueur = "";
+    fichier_sauvegarde.close();
+}
+
 
 //nettoyage
 void SingletonSysteme::Destroy(void)

@@ -12,43 +12,126 @@ Toggle::Toggle(SDL_Color couleur_checked, SDL_Color couleur_unchecked, SDL_Color
     this->couleur_hover = couleur_hover;
     this->position = position;
     this->funcPtr = funcPtr;
-    this->hover_sound = Mix_LoadWAV("./hover.ogg");
-    this->click_sound = Mix_LoadWAV("./select.ogg");
+    this->hover_sound = Mix_LoadWAV("./sound/hover.ogg");
+    this->click_sound = Mix_LoadWAV("./sound/select.ogg");
+
+    this->hasImage = false;
 }
 
-
-void Toggle::Draw(SDL_Renderer* rendu)
+Toggle::Toggle(std::string image_checked, std::string image_unchecked, std::string image_hover_checked, std::string image_hover_unchecked, SDL_Rect position, std::string texte, eventFunction funcPtr, bool isCheckedSave, SDL_Renderer* rendu)
+:texte(texte, "./font/lazy.ttf", {255, 255, 255, 255}, {position.x, position.y - position.h, position.w, position.h})
 {
-    if(this->etat == CHECKED)
+    this->isChecked = isCheckedSave;
+    if(this->isChecked == true)
+        this->etat = CHECKED;
+    else this->etat = UNCHECKED;
+
+    if((this->image_checked = IMG_LoadTexture(rendu, image_checked.c_str())) == nullptr)
     {
-        if(SDL_SetRenderDrawColor(rendu, this->couleur_checked.r, this->couleur_checked.g, this->couleur_checked.b, this->couleur_checked.a) < 0)
-        {
-            std::cerr << SDL_GetError() << std::endl;
-            exit(EXIT_FAILURE);
-        }
+        std::cerr << IMG_GetError() << std::endl;
+        exit(EXIT_FAILURE);
     }
-    else if(this->etat == UNCHECKED)
+    if((this->image_unchecked = IMG_LoadTexture(rendu, image_unchecked.c_str())) == nullptr)
     {
-        if(SDL_SetRenderDrawColor(rendu, this->couleur_unchecked.r, this->couleur_unchecked.g, this->couleur_unchecked.b, this->couleur_unchecked.a) < 0)
-        {
-            std::cerr << SDL_GetError() << std::endl;
-            exit(EXIT_FAILURE);
-        }
+        std::cerr << IMG_GetError() << std::endl;
+        exit(EXIT_FAILURE);
     }
-    else if(this->etat == HOVERED1)
+    if((this->image_hover_checked = IMG_LoadTexture(rendu, image_hover_checked.c_str())) == nullptr)
     {
-        if(SDL_SetRenderDrawColor(rendu, this->couleur_hover.r, this->couleur_hover.g, this->couleur_hover.b, this->couleur_hover.a) < 0)
-        {
-            std::cerr << SDL_GetError() << std::endl;
-            exit(EXIT_FAILURE);
-        }
+        std::cerr << IMG_GetError() << std::endl;
+        exit(EXIT_FAILURE);
     }
-    if(SDL_RenderFillRect(rendu, &(this->position)) < 0)
+    if((this->image_hover_unchecked = IMG_LoadTexture(rendu, image_hover_unchecked.c_str())) == nullptr)
+    {
+        std::cerr << IMG_GetError() << std::endl;
+        exit(EXIT_FAILURE);
+    }
+    int w, h;
+    if(SDL_QueryTexture(this->image_checked, nullptr, nullptr, &w, &h) < 0)
     {
         std::cerr << SDL_GetError() << std::endl;
         exit(EXIT_FAILURE);
     }
+    this->position = {position.x, position.y, w, h};
+    this->funcPtr = funcPtr;
+    this->hover_sound = Mix_LoadWAV("./sound/hover.ogg");
+    this->click_sound = Mix_LoadWAV("./sound/select.ogg");
 
+    this->hasImage = true;
+}
+
+void Toggle::Draw(SDL_Renderer* rendu)
+{
+    if(this->hasImage == false)
+    {
+        if(this->etat == CHECKED)
+        {
+            if(SDL_SetRenderDrawColor(rendu, this->couleur_checked.r, this->couleur_checked.g, this->couleur_checked.b, this->couleur_checked.a) < 0)
+            {
+                std::cerr << SDL_GetError() << std::endl;
+                exit(EXIT_FAILURE);
+            }
+        }
+        else if(this->etat == UNCHECKED)
+        {
+            if(SDL_SetRenderDrawColor(rendu, this->couleur_unchecked.r, this->couleur_unchecked.g, this->couleur_unchecked.b, this->couleur_unchecked.a) < 0)
+            {
+                std::cerr << SDL_GetError() << std::endl;
+                exit(EXIT_FAILURE);
+            }
+        }
+        else if(this->etat == HOVERED1)
+        {
+            if(SDL_SetRenderDrawColor(rendu, this->couleur_hover.r, this->couleur_hover.g, this->couleur_hover.b, this->couleur_hover.a) < 0)
+            {
+                std::cerr << SDL_GetError() << std::endl;
+                exit(EXIT_FAILURE);
+            }
+        }
+        if(SDL_RenderFillRect(rendu, &(this->position)) < 0)
+        {
+            std::cerr << SDL_GetError() << std::endl;
+            exit(EXIT_FAILURE);
+        }
+    }
+    else
+    {
+        if(this->etat == CHECKED)
+        {
+            if(SDL_RenderCopy(rendu, image_checked, nullptr, &(this->position)) < 0)
+            {
+                std::cerr << SDL_GetError() << std::endl;
+                exit(EXIT_FAILURE);
+            }
+        }
+        else if(this->etat == UNCHECKED)
+        {
+            if(SDL_RenderCopy(rendu, image_unchecked, nullptr, &(this->position)) < 0)
+            {
+                std::cerr << SDL_GetError() << std::endl;
+                exit(EXIT_FAILURE);
+            }
+        }
+        else if(this->etat == HOVERED1)
+        {
+            if(this->isChecked == true)
+            {
+                if(SDL_RenderCopy(rendu, image_hover_checked, nullptr, &(this->position)) < 0)
+                {
+                    std::cerr << SDL_GetError() << std::endl;
+                    exit(EXIT_FAILURE);
+                }
+            }
+            else
+            {
+                if(SDL_RenderCopy(rendu, image_hover_unchecked, nullptr, &(this->position)) < 0)
+                {
+                    std::cerr << SDL_GetError() << std::endl;
+                    exit(EXIT_FAILURE);
+                }
+            }
+        }
+    }
     texte.Draw(rendu);
 }
 

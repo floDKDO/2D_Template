@@ -37,6 +37,7 @@ class SingletonSysteme
         void Init();
         void Sauvegarder();
         void Charger();
+        void Supprimmer();
         void Destroy();
 
         SDL_Window* fenetre;

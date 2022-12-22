@@ -10,8 +10,44 @@ Bouton::Bouton(SDL_Color couleur_idle, SDL_Color couleur_hover, SDL_Color couleu
     this->funcPtr = funcPtr; //pointeur sur la fonction qui sera lancée quand il y aura un clic sur le bouton
     this->etat = IDLE; //etat de base
     this->clicAvantCollision = false; //protection
-    this->hover_sound = Mix_LoadWAV("./hover.ogg");
-    this->click_sound = Mix_LoadWAV("./select.ogg");
+    this->hover_sound = Mix_LoadWAV("./sound/hover.ogg");
+    this->click_sound = Mix_LoadWAV("./sound/select.ogg");
+
+    this->hasImage = false;
+}
+
+Bouton::Bouton(std::string image_idle, std::string image_hover, std::string image_click, SDL_Rect position, eventFunction funcPtr, std::string texte, SDL_Renderer* rendu)
+:texte(texte, "./font/lazy.ttf", {255, 255, 255, 255}, position)
+{
+    if((this->image_idle = IMG_LoadTexture(rendu, image_idle.c_str())) == nullptr)
+    {
+        std::cerr << IMG_GetError() << std::endl;
+        exit(EXIT_FAILURE);
+    }
+    if((this->image_hover = IMG_LoadTexture(rendu, image_hover.c_str())) == nullptr)
+    {
+        std::cerr << IMG_GetError() << std::endl;
+        exit(EXIT_FAILURE);
+    }
+    if((this->image_click = IMG_LoadTexture(rendu, image_click.c_str())) == nullptr)
+    {
+        std::cerr << IMG_GetError() << std::endl;
+        exit(EXIT_FAILURE);
+    }
+    int w, h;
+    if(SDL_QueryTexture(this->image_idle, nullptr, nullptr, &w, &h) < 0)
+    {
+        std::cerr << SDL_GetError() << std::endl;
+        exit(EXIT_FAILURE);
+    }
+    this->position = {position.x, position.y, w, h};
+    this->funcPtr = funcPtr; //pointeur sur la fonction qui sera lancée quand il y aura un clic sur le bouton
+    this->etat = IDLE; //etat de base
+    this->clicAvantCollision = false; //protection
+    this->hover_sound = Mix_LoadWAV("./sound/hover.ogg");
+    this->click_sound = Mix_LoadWAV("./sound/select.ogg");
+
+    this->hasImage = true;
 }
 
 
@@ -33,37 +69,66 @@ bool Bouton::collision(SDL_Rect dest_joueur, int x, int y)
 
 void Bouton::Draw(SDL_Renderer* rendu)
 {
-    if(this->etat == IDLE)
+    if(this->hasImage == false)
     {
-        if(SDL_SetRenderDrawColor(rendu, this->couleur_idle.r, this->couleur_idle.g, this->couleur_idle.b, this->couleur_idle.a) < 0)
+        if(this->etat == IDLE)
         {
-            std::cerr << SDL_GetError() << std::endl;
-            exit(EXIT_FAILURE);
+            if(SDL_SetRenderDrawColor(rendu, this->couleur_idle.r, this->couleur_idle.g, this->couleur_idle.b, this->couleur_idle.a) < 0)
+            {
+                std::cerr << SDL_GetError() << std::endl;
+                exit(EXIT_FAILURE);
+            }
         }
-    }
-    else if(this->etat == HOVERED)
-    {
-        if(SDL_SetRenderDrawColor(rendu, this->couleur_hover.r, this->couleur_hover.g, this->couleur_hover.b, this->couleur_hover.a) < 0)
+        else if(this->etat == HOVERED)
         {
-            std::cerr << SDL_GetError() << std::endl;
-            exit(EXIT_FAILURE);
+            if(SDL_SetRenderDrawColor(rendu, this->couleur_hover.r, this->couleur_hover.g, this->couleur_hover.b, this->couleur_hover.a) < 0)
+            {
+                std::cerr << SDL_GetError() << std::endl;
+                exit(EXIT_FAILURE);
+            }
         }
-    }
-    else if(this->etat == CLICKED)
-    {
-        if(SDL_SetRenderDrawColor(rendu, this->couleur_click.r, this->couleur_click.g, this->couleur_click.b, this->couleur_click.a) < 0)
+        else if(this->etat == CLICKED)
         {
-            std::cerr << SDL_GetError() << std::endl;
-            exit(EXIT_FAILURE);
+            if(SDL_SetRenderDrawColor(rendu, this->couleur_click.r, this->couleur_click.g, this->couleur_click.b, this->couleur_click.a) < 0)
+            {
+                std::cerr << SDL_GetError() << std::endl;
+                exit(EXIT_FAILURE);
+            }
         }
-    }
 
-    if(SDL_RenderFillRect(rendu, &(this->position)) < 0)
-    {
-        std::cerr << SDL_GetError() << std::endl;
-        exit(EXIT_FAILURE);
+        if(SDL_RenderFillRect(rendu, &(this->position)) < 0)
+        {
+            std::cerr << SDL_GetError() << std::endl;
+            exit(EXIT_FAILURE);
+        }
     }
-
+    else
+    {
+        if(this->etat == IDLE)
+        {
+            if(SDL_RenderCopy(rendu, image_idle, nullptr, &(this->position)) < 0)
+            {
+                std::cerr << SDL_GetError() << std::endl;
+                exit(EXIT_FAILURE);
+            }
+        }
+        else if(this->etat == HOVERED)
+        {
+            if(SDL_RenderCopy(rendu, image_hover, nullptr, &(this->position)) < 0)
+            {
+                std::cerr << SDL_GetError() << std::endl;
+                exit(EXIT_FAILURE);
+            }
+        }
+        else if(this->etat == CLICKED)
+        {
+            if(SDL_RenderCopy(rendu, image_click, nullptr, &(this->position)) < 0)
+            {
+                std::cerr << SDL_GetError() << std::endl;
+                exit(EXIT_FAILURE);
+            }
+        }
+    }
     texte.Draw(rendu);
 }
 
