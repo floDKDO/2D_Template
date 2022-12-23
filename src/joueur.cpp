@@ -47,25 +47,25 @@ void Joueur::Draw(SDL_Renderer* rendu)
     }
 }
 
-void Joueur::HandleEvents(SDL_Event e)
+void Joueur::HandleEvents(SDL_Event e, SingletonSysteme* sing_syst)
 {
     if(this->mode == VUE_DESSUS)
     {
         if(e.type == SDL_KEYDOWN)
         {
-            if(e.key.keysym.sym == SDLK_UP || e.key.keysym.sym == SDLK_z)
+            if(e.key.keysym.sym == sing_syst->touches.dep_haut)
             {
                 SetValue(dep, 0);
             }
-            else if(e.key.keysym.sym == SDLK_DOWN || e.key.keysym.sym == SDLK_s)
+            else if(e.key.keysym.sym == sing_syst->touches.dep_bas)
             {
                 SetValue(dep, 1);
             }
-            else if(e.key.keysym.sym == SDLK_LEFT || e.key.keysym.sym == SDLK_q)
+            else if(e.key.keysym.sym == sing_syst->touches.dep_gauche)
             {
                 SetValue(dep, 2);
             }
-            else if(e.key.keysym.sym == SDLK_RIGHT || e.key.keysym.sym == SDLK_d)
+            else if(e.key.keysym.sym == sing_syst->touches.dep_droite)
             {
                 SetValue(dep, 3);
             }
@@ -79,11 +79,11 @@ void Joueur::HandleEvents(SDL_Event e)
     {
         if(e.type == SDL_KEYDOWN)
         {
-            if(e.key.keysym.sym == SDLK_LEFT || e.key.keysym.sym == SDLK_q)
+            if(e.key.keysym.sym == sing_syst->touches.dep_gauche)
             {
                 SetValue(dep, 2);
             }
-            else if(e.key.keysym.sym == SDLK_RIGHT || e.key.keysym.sym == SDLK_d)
+            else if(e.key.keysym.sym == sing_syst->touches.dep_droite)
             {
                 SetValue(dep, 3);
             }

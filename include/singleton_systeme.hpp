@@ -16,13 +16,22 @@ enum etat_jeu
     MENU_PRINCIPAL,
     MENU_OPTIONS,
     DEMANDE_NOM,
-    EN_JEU
+    EN_JEU,
+    TEST
 };
 
 enum mode_fenetre
 {
     FENETRE,
     PLEIN_ECRAN
+};
+
+struct touches_clavier
+{
+    SDL_Keycode dep_haut;
+    SDL_Keycode dep_bas;
+    SDL_Keycode dep_gauche;
+    SDL_Keycode dep_droite;
 };
 
 class SingletonSysteme
@@ -39,6 +48,8 @@ class SingletonSysteme
         void Charger();
         void Supprimmer();
         void Destroy();
+
+        touches_clavier touches;
 
         SDL_Window* fenetre;
         SDL_Renderer* rendu;

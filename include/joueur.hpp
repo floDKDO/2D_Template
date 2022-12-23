@@ -7,6 +7,8 @@
 #include <SDL2/SDL_ttf.h>
 #include <SDL2/SDL_mixer.h>
 
+#include "singleton_systeme.hpp"
+
 enum mode_affichage
 {
     VUE_DESSUS,
@@ -20,7 +22,7 @@ class Joueur
         void ResetAllValues(bool dep[4]);
         void SetValue(bool dep[4], int indice);
         void Draw(SDL_Renderer* rendu);
-        void HandleEvents(SDL_Event e);
+        void HandleEvents(SDL_Event e, SingletonSysteme* sing_syst);
         void Update(Uint32& timeStep);
 
         SDL_Color couleur;

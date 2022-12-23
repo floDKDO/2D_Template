@@ -6,3 +6,11 @@ toto
 1
 //Son active ?
 1
+//Touche déplacement haut
+Z
+//Touche déplacement bas
+S
+//Touche déplacement gauche
+Q
+//Touche déplacement droite
+D

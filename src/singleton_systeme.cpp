@@ -100,6 +100,38 @@ void SingletonSysteme::Charger(void)
                         this->son_active = std::stoi(ligne);
                         break;
 
+                    case 5: //touche deplacement haut
+                        if((this->touches.dep_haut = SDL_GetKeyFromName(ligne.c_str())) == SDLK_UNKNOWN)
+                        {
+                            std::cerr << SDL_GetError() << std::endl;
+                            exit(EXIT_FAILURE);
+                        }
+                        break;
+
+                    case 6: //touche deplacement bas
+                        if((this->touches.dep_bas = SDL_GetKeyFromName(ligne.c_str())) == SDLK_UNKNOWN)
+                        {
+                            std::cerr << SDL_GetError() << std::endl;
+                            exit(EXIT_FAILURE);
+                        }
+                        break;
+
+                    case 7: //touche deplacement gauche
+                        if((this->touches.dep_gauche = SDL_GetKeyFromName(ligne.c_str())) == SDLK_UNKNOWN)
+                        {
+                            std::cerr << SDL_GetError() << std::endl;
+                            exit(EXIT_FAILURE);
+                        }
+                        break;
+
+                    case 8: //touche deplacement droite
+                        if((this->touches.dep_droite = SDL_GetKeyFromName(ligne.c_str())) == SDLK_UNKNOWN)
+                        {
+                            std::cerr << SDL_GetError() << std::endl;
+                            exit(EXIT_FAILURE);
+                        }
+                        break;
+
                     default:
                         break;
                 }
@@ -111,6 +143,11 @@ void SingletonSysteme::Charger(void)
             this->mode_fenetre = FENETRE;
             this->son_active = true;
             this->musique_activee = true;
+
+            this->touches.dep_haut = SDLK_UP;
+            this->touches.dep_bas = SDLK_DOWN;
+            this->touches.dep_gauche = SDLK_LEFT;
+            this->touches.dep_droite = SDLK_RIGHT;
         }
     }
     fichier_sauvegarde.close();
@@ -130,6 +167,15 @@ void SingletonSysteme::Sauvegarder(void)
         fichier_sauvegarde << this->musique_activee << "\n";
         fichier_sauvegarde << "//Son active ?\n";
         fichier_sauvegarde << this->son_active << "\n";
+
+        fichier_sauvegarde << "//Touche déplacement haut\n";
+        fichier_sauvegarde << SDL_GetKeyName(this->touches.dep_haut) << "\n";
+        fichier_sauvegarde << "//Touche déplacement bas\n";
+        fichier_sauvegarde << SDL_GetKeyName(this->touches.dep_bas) << "\n";
+        fichier_sauvegarde << "//Touche déplacement gauche\n";
+        fichier_sauvegarde << SDL_GetKeyName(this->touches.dep_gauche) << "\n";
+        fichier_sauvegarde << "//Touche déplacement droite\n";
+        fichier_sauvegarde << SDL_GetKeyName(this->touches.dep_droite) << "\n";
     }
     fichier_sauvegarde.close();
 }

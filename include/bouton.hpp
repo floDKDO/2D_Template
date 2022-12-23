@@ -47,6 +47,7 @@ class Bouton
         Bouton(std::string image_idle, std::string image_hover, std::string image_click, SDL_Rect position, eventFunction funcPtr, std::string texte, SDL_Renderer* rendu);
         void Draw(SDL_Renderer* rendu);
         void HandleEvents(SDL_Event e, SingletonSysteme* sing_syst);
+        //void Update(SingletonSysteme* sing_syst);
         bool collision(SDL_Rect dest_joueur, int x, int y);
         bool clicAvantCollision;
 
