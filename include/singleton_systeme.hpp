@@ -58,6 +58,9 @@ class SingletonSysteme
         bool son_active;
         bool musique_activee;
         std::string nom_joueur;
+        int posX_joueur;
+        int posY_joueur;
+
         std::fstream fichier_sauvegarde;
 
     protected:

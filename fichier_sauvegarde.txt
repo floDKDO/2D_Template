@@ -14,3 +14,7 @@ S
 Q
 //Touche déplacement droite
 D
+//Position joueur en x
+0
+////Position joueur en y
+544

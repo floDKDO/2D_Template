@@ -69,6 +69,8 @@ void Joueur::HandleEvents(SDL_Event e, SingletonSysteme* sing_syst)
             {
                 SetValue(dep, 3);
             }
+            sing_syst->posX_joueur = this->position.x;
+            sing_syst->posY_joueur = this->position.y;
         }
         else if(e.type == SDL_KEYUP)
         {
@@ -95,6 +97,8 @@ void Joueur::HandleEvents(SDL_Event e, SingletonSysteme* sing_syst)
                     vitesseDeChute = -(this->hauteur_saut);
                 }
             }
+            sing_syst->posX_joueur = this->position.x;
+            sing_syst->posY_joueur = this->position.y;
         }
         else if(e.type == SDL_KEYUP)
         {
