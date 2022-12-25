@@ -10,13 +10,13 @@
 class Texte
 {
     public:
-        Texte(std::string texte, std::string police, SDL_Color couleur, SDL_Rect position);
+        Texte(std::string texte, std::string police, SDL_Color couleur, SDL_Rect position, SDL_Renderer* rendu);
         void Draw(SDL_Renderer* rendu);
 
+        SDL_Rect position;
         std::string texte;
         TTF_Font* police;
         SDL_Color couleur;
-        SDL_Rect position;
         SDL_Surface* surface;
         SDL_Texture* texture;
 

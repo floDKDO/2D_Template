@@ -1,18 +1,19 @@
 #include "inputfield.hpp"
 
-Inputfield::Inputfield(std::string police, SDL_Color couleur, SDL_Rect position, eventFunction funcPtr)
+Inputfield::Inputfield(std::string police, SDL_Color couleur, SDL_Rect position, eventFunction funcPtr, SDL_Renderer* rendu)
+:texte("", police, couleur, position, rendu)
 {
-    if((this->police = TTF_OpenFont(police.c_str(), 50)) == nullptr)
-    {
-        std::cerr << TTF_GetError() << std::endl;
-        exit(EXIT_FAILURE);
-    }
-    this->couleur = couleur;
     this->fond_de_texte = position;
     this->zone_de_texte = {fond_de_texte.x, fond_de_texte.y, 0, 0};
     this->mode_edition = false;
     this->texte_modifie = false;
     this->funcPtr = funcPtr;
+
+    if(TTF_SetFontSize(this->texte.police, 50) < 0)
+    {
+        std::cerr << TTF_GetError() << std::endl;
+        exit(EXIT_FAILURE);
+    }
 
     SDL_SetTextInputRect(&(this->zone_de_texte));
 }
@@ -35,9 +36,9 @@ bool Inputfield::collision(SDL_Rect dest_joueur, int x, int y)
 
 void Inputfield::Draw(SDL_Renderer* rendu)
 {
-    if(texte.length() > 0)
+    if(texte.texte.length() > 0)
     {
-        if((surface = TTF_RenderText_Solid(police, texte.c_str(), couleur)) == nullptr)
+        if((texte.surface = TTF_RenderText_Solid(texte.police, texte.texte.c_str(), texte.couleur)) == nullptr)
         {
             std::cerr << TTF_GetError() << std::endl;
             exit(EXIT_FAILURE);
@@ -45,20 +46,20 @@ void Inputfield::Draw(SDL_Renderer* rendu)
     }
     else
     {
-        if((surface = TTF_RenderText_Solid(police, " ", couleur)) == nullptr)
+        if((texte.surface = TTF_RenderText_Solid(texte.police, " ", texte.couleur)) == nullptr)
         {
             std::cerr << TTF_GetError() << std::endl;
             exit(EXIT_FAILURE);
         }
     }
 
-    if((texture = SDL_CreateTextureFromSurface(rendu, surface)) == nullptr)
+    if((texte.texture = SDL_CreateTextureFromSurface(rendu, texte.surface)) == nullptr)
     {
         std::cerr << SDL_GetError() << std::endl;
         exit(EXIT_FAILURE);
     }
-    zone_de_texte.w = surface->w;
-    zone_de_texte.h = surface->h;
+    zone_de_texte.w = texte.surface->w;
+    zone_de_texte.h = texte.surface->h;
 
     if(SDL_SetRenderDrawColor(rendu, 255, 255, 255, 255) < 0)
     {
@@ -70,7 +71,7 @@ void Inputfield::Draw(SDL_Renderer* rendu)
         std::cerr << SDL_GetError() << std::endl;
         exit(EXIT_FAILURE);
     }
-    if(SDL_RenderCopy(rendu, texture, nullptr, &zone_de_texte) < 0)
+    if(SDL_RenderCopy(rendu, texte.texture, nullptr, &zone_de_texte) < 0)
     {
         std::cerr << SDL_GetError() << std::endl;
         exit(EXIT_FAILURE);
@@ -85,9 +86,9 @@ void Inputfield::HandleEvents(SDL_Event e, SingletonSysteme* sing_syst)
     {
         if(mode_edition == true)
         {
-            if(e.key.keysym.sym == SDLK_BACKSPACE && texte.length() > 0)
+            if(e.key.keysym.sym == SDLK_BACKSPACE && texte.texte.length() > 0)
             {   //si on appuie sur la touche <- (supprimer), que la chaine n'est pas vide et qu'on est en mode édition
-                texte.pop_back();
+                texte.texte.pop_back();
                 texte_modifie = true;
             }
             else if(e.key.keysym.sym == SDLK_RETURN)
@@ -116,9 +117,9 @@ void Inputfield::HandleEvents(SDL_Event e, SingletonSysteme* sing_syst)
     }
     else if(e.type == SDL_TEXTINPUT)
     {
-        if(mode_edition == true && texte.length() < 7) //max 7 lettres
+        if(mode_edition == true && texte.texte.length() < 7) //max 7 lettres
         {
-            texte += e.text.text;
+            texte.texte += e.text.text;
             texte_modifie = true;
         }
     }

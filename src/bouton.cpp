@@ -1,14 +1,16 @@
 #include "bouton.hpp"
 
-Bouton::Bouton(SDL_Color couleur_idle, SDL_Color couleur_hover, SDL_Color couleur_click, SDL_Rect position, eventFunction funcPtr, std::string texte)
-:texte(texte, "./font/lazy.ttf", {255, 255, 255, 255}, position)
+Bouton::Bouton(SDL_Color couleur_normal, SDL_Color couleur_hover, SDL_Color couleur_click, SDL_Color couleur_selected, SDL_Rect position, eventFunction funcPtr, std::string texte, SDL_Renderer* rendu)
+:texte(texte, "./font/lazy.ttf", {255, 255, 255, 255}, position, rendu)
 {
-    this->couleur_idle = couleur_idle;
+    this->couleur_normal = couleur_normal;
     this->couleur_hover = couleur_hover;
     this->couleur_click = couleur_click;
+    this->couleur_selected = couleur_selected;
+    this->etat = NORMAL; //etat de base
+
     this->position = position;
     this->funcPtr = funcPtr; //pointeur sur la fonction qui sera lancée quand il y aura un clic sur le bouton
-    this->etat = IDLE; //etat de base
     this->clicAvantCollision = false; //protection
     if((this->hover_sound = Mix_LoadWAV("./sound/hover.ogg")) == nullptr)
     {
@@ -24,10 +26,12 @@ Bouton::Bouton(SDL_Color couleur_idle, SDL_Color couleur_hover, SDL_Color couleu
     this->hasImage = false;
 }
 
-Bouton::Bouton(std::string image_idle, std::string image_hover, std::string image_click, SDL_Rect position, eventFunction funcPtr, std::string texte, SDL_Renderer* rendu)
-:texte(texte, "./font/lazy.ttf", {255, 255, 255, 255}, position)
+Bouton::Bouton(std::string image_normal, std::string image_hover, std::string image_click, std::string image_selected, SDL_Rect position, eventFunction funcPtr, std::string texte, SDL_Renderer* rendu)
+:texte(texte, "./font/lazy.ttf", {255, 255, 255, 255}, position, rendu)
 {
-    if((this->image_idle = IMG_LoadTexture(rendu, image_idle.c_str())) == nullptr)
+    this->etat = NORMAL; //etat de base
+
+    if((this->image_normal = IMG_LoadTexture(rendu, image_normal.c_str())) == nullptr)
     {
         std::cerr << IMG_GetError() << std::endl;
         exit(EXIT_FAILURE);
@@ -42,15 +46,20 @@ Bouton::Bouton(std::string image_idle, std::string image_hover, std::string imag
         std::cerr << IMG_GetError() << std::endl;
         exit(EXIT_FAILURE);
     }
+    if((this->image_selected = IMG_LoadTexture(rendu, image_selected.c_str())) == nullptr)
+    {
+        std::cerr << IMG_GetError() << std::endl;
+        exit(EXIT_FAILURE);
+    }
+
     int w, h;
-    if(SDL_QueryTexture(this->image_idle, nullptr, nullptr, &w, &h) < 0)
+    if(SDL_QueryTexture(this->image_normal, nullptr, nullptr, &w, &h) < 0)
     {
         std::cerr << SDL_GetError() << std::endl;
         exit(EXIT_FAILURE);
     }
     this->position = {position.x, position.y, w, h};
     this->funcPtr = funcPtr; //pointeur sur la fonction qui sera lancée quand il y aura un clic sur le bouton
-    this->etat = IDLE; //etat de base
     this->clicAvantCollision = false; //protection
     if((this->hover_sound = Mix_LoadWAV("./sound/hover.ogg")) == nullptr)
     {
@@ -87,9 +96,9 @@ void Bouton::Draw(SDL_Renderer* rendu)
 {
     if(this->hasImage == false)
     {
-        if(this->etat == IDLE)
+        if(this->etat == NORMAL)
         {
-            if(SDL_SetRenderDrawColor(rendu, this->couleur_idle.r, this->couleur_idle.g, this->couleur_idle.b, this->couleur_idle.a) < 0)
+            if(SDL_SetRenderDrawColor(rendu, this->couleur_normal.r, this->couleur_normal.g, this->couleur_normal.b, this->couleur_normal.a) < 0)
             {
                 std::cerr << SDL_GetError() << std::endl;
                 exit(EXIT_FAILURE);
@@ -111,6 +120,14 @@ void Bouton::Draw(SDL_Renderer* rendu)
                 exit(EXIT_FAILURE);
             }
         }
+        else if(this->etat == SELECTED)
+        {
+            if(SDL_SetRenderDrawColor(rendu, this->couleur_selected.r, this->couleur_selected.g, this->couleur_selected.b, this->couleur_selected.a) < 0)
+            {
+                std::cerr << SDL_GetError() << std::endl;
+                exit(EXIT_FAILURE);
+            }
+        }
 
         if(SDL_RenderFillRect(rendu, &(this->position)) < 0)
         {
@@ -120,9 +137,9 @@ void Bouton::Draw(SDL_Renderer* rendu)
     }
     else
     {
-        if(this->etat == IDLE)
+        if(this->etat == NORMAL)
         {
-            if(SDL_RenderCopy(rendu, image_idle, nullptr, &(this->position)) < 0)
+            if(SDL_RenderCopy(rendu, image_normal, nullptr, &(this->position)) < 0)
             {
                 std::cerr << SDL_GetError() << std::endl;
                 exit(EXIT_FAILURE);
@@ -144,6 +161,14 @@ void Bouton::Draw(SDL_Renderer* rendu)
                 exit(EXIT_FAILURE);
             }
         }
+        else if(this->etat == SELECTED)
+        {
+            if(SDL_RenderCopy(rendu, image_selected, nullptr, &(this->position)) < 0)
+            {
+                std::cerr << SDL_GetError() << std::endl;
+                exit(EXIT_FAILURE);
+            }
+        }
     }
     texte.Draw(rendu);
 }
@@ -159,87 +184,122 @@ void Bouton::HandleEvents(SDL_Event e, SingletonSysteme* sing_syst)
     }
     else if(e.type == SDL_MOUSEMOTION)
     {
-        if(e.button.button != SDL_BUTTON_LEFT) //si on se trouve sur le bouton sans le clic enfonce
+        if(collision(this->position, x, y) == true)
         {
-            if(collision(this->position, x, y) == true)
-            {
-                this->etat = HOVERED;
-                if(son_joue == false && sing_syst->son_active == true)
-                {
-                    if(Mix_PlayChannel(1, hover_sound, 0) < 0)
-                    {
-                        std::cerr << Mix_GetError() << std::endl;
-                        exit(EXIT_FAILURE);
-                    }
-                    son_joue = true;
-                }
-            }
-            else
-            {
-                this->etat = IDLE;
-                son_joue = false;
-            }
+            this->onPointerEnter(e, sing_syst);
         }
-        else //si on se trouve sur le bouton avec le clic enfonce
+        else
         {
-            if(clicAvantCollision == false)
-            {
-                if(collision(this->position, x, y) == true)
-                {
-                    this->etat = CLICKED;
-                    if(son_joue == false && sing_syst->son_active == true)
-                    {
-                        if(Mix_PlayChannel(1, hover_sound, 0) < 0)
-                        {
-                            std::cerr << Mix_GetError() << std::endl;
-                            exit(EXIT_FAILURE);
-                        }
-                        son_joue = true;
-                    }
-                }
-                else
-                {
-                    this->etat = IDLE;
-                    son_joue = false;
-                }
-            }
+            this->onPointerExit(e, sing_syst);
         }
     }
     else if(e.type == SDL_MOUSEBUTTONDOWN)
     {
         if(e.button.button == SDL_BUTTON_LEFT)
         {
-            if(collision(this->position, x, y) == true)
-            {
-                this->etat = CLICKED;
-                clicAvantCollision = false; //protection
-            }
-            else
-            {
-                clicAvantCollision = true; //protection
-            }
+            this->onPointerDown(e, sing_syst);
         }
     }
     else if(e.type == SDL_MOUSEBUTTONUP)
     {
         if(e.button.button == SDL_BUTTON_LEFT)
         {
-            if(collision(this->position, x, y) == true && clicAvantCollision == false) //empecher de cliquer avant d'etre sur le bouton
+            this->onClick(e, sing_syst);
+        }
+    }
+}
+
+
+void Bouton::onPointerEnter(SDL_Event e, SingletonSysteme* sing_syst)
+{
+    if(e.button.button != SDL_BUTTON_LEFT) //si on se trouve sur le bouton sans le clic enfonce
+    {
+        this->etat = HOVERED;
+        if(son_joue == false && sing_syst->son_active == true)
+        {
+            if(Mix_PlayChannel(1, hover_sound, 0) < 0)
             {
-                this->etat = IDLE;
-                if(sing_syst->son_active == true)
+                std::cerr << Mix_GetError() << std::endl;
+                exit(EXIT_FAILURE);
+            }
+            son_joue = true;
+        }
+    }
+    else //si on se trouve sur le bouton avec le clic enfonce
+    {
+        if(clicAvantCollision == false)
+        {
+            this->etat = HOVERED;
+            if(son_joue == false && sing_syst->son_active == true)
+            {
+                if(Mix_PlayChannel(1, hover_sound, 0) < 0)
                 {
-                    if(Mix_PlayChannel(1, click_sound, 0) < 0)
-                    {
-                        std::cerr << Mix_GetError() << std::endl;
-                        exit(EXIT_FAILURE);
-                    }
+                    std::cerr << Mix_GetError() << std::endl;
+                    exit(EXIT_FAILURE);
                 }
-                if(funcPtr != nullptr)
-                {
-                    funcPtr(sing_syst, this);
-                }
+                son_joue = true;
             }
         }
     }
 }
+
+
+void Bouton::onPointerExit(SDL_Event e, SingletonSysteme* sing_syst)
+{
+    (void)sing_syst;
+    if(e.button.button != SDL_BUTTON_LEFT) //si on se trouve sur le bouton sans le clic enfonce
+    {
+        this->etat = NORMAL;
+        son_joue = false;
+    }
+    else //si on se trouve sur le bouton avec le clic enfonce
+    {
+        if(clicAvantCollision == false)
+        {
+            this->etat = NORMAL;
+            son_joue = false;
+        }
+    }
+}
+
+void Bouton::onClick(SDL_Event e, SingletonSysteme* sing_syst)
+{
+    (void)e;
+    int x, y; //position x et y de la souris
+    SDL_GetMouseState(&x, &y);
+    if(collision(this->position, x, y) == true && clicAvantCollision == false) //empecher de cliquer avant d'etre sur le bouton
+    {
+        this->etat = NORMAL;
+        if(sing_syst->son_active == true)
+        {
+            if(Mix_PlayChannel(1, click_sound, 0) < 0)
+            {
+                std::cerr << Mix_GetError() << std::endl;
+                exit(EXIT_FAILURE);
+            }
+        }
+        if(funcPtr != nullptr)
+        {
+            funcPtr(sing_syst, this);
+        }
+    }
+}
+
+
+void Bouton::onPointerDown(SDL_Event e, SingletonSysteme* sing_syst)
+{
+    (void)e;
+    (void)sing_syst;
+    int x, y; //position x et y de la souris
+    SDL_GetMouseState(&x, &y);
+    if(collision(this->position, x, y) == true)
+    {
+        this->etat = CLICKED;
+        clicAvantCollision = false; //protection
+    }
+    else
+    {
+        clicAvantCollision = true; //protection
+    }
+}
+

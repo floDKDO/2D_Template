@@ -132,13 +132,13 @@ void SingletonSysteme::Charger(void)
                         }
                         break;
 
-                    case 9: //position joueur en x
+                    /*case 9: //position joueur en x
                         this->posX_joueur = std::stoi(ligne);
                         break;
 
                     case 10: //position joueur en y
                         this->posY_joueur = std::stoi(ligne);
-                        break;
+                        break;*/
 
                     default:
                         break;
@@ -157,8 +157,8 @@ void SingletonSysteme::Charger(void)
             this->touches.dep_gauche = SDLK_LEFT;
             this->touches.dep_droite = SDLK_RIGHT;
 
-            this->posX_joueur = 800;
-            this->posY_joueur = 96;
+            /*this->posX_joueur = 800;
+            this->posY_joueur = 96;*/
         }
     }
     fichier_sauvegarde.close();
@@ -188,10 +188,10 @@ void SingletonSysteme::Sauvegarder(void)
         fichier_sauvegarde << "//Touche déplacement droite\n";
         fichier_sauvegarde << SDL_GetKeyName(this->touches.dep_droite) << "\n";
 
-        fichier_sauvegarde << "//Position joueur en x\n";
+        /*fichier_sauvegarde << "//Position joueur en x\n";
         fichier_sauvegarde << this->posX_joueur << "\n";
         fichier_sauvegarde << "////Position joueur en y\n";
-        fichier_sauvegarde << this->posY_joueur << "\n";
+        fichier_sauvegarde << this->posY_joueur << "\n";*/
     }
     fichier_sauvegarde.close();
 }
@@ -200,8 +200,8 @@ void SingletonSysteme::Supprimmer(void)
 {
     fichier_sauvegarde.open("./fichier_sauvegarde.txt", std::ios::out | std::ios::trunc); //ouvrir le fichier en écriture et supprimer ce qu'il contient s'il n'est pas vide
     this->nom_joueur = "";
-    this->posX_joueur = 800;
-    this->posY_joueur = 96;
+    /*this->posX_joueur = 800;
+    this->posY_joueur = 96;*/
     fichier_sauvegarde.close();
 }
 

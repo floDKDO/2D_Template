@@ -10,23 +10,26 @@
 #include "singleton_systeme.hpp"
 #include "texte.hpp"
 
-enum etat_bouton
+enum etat
 {
-    IDLE,
+    NORMAL,
     HOVERED,
-    CLICKED
+    CLICKED,
+    SELECTED
 };
 
 class Bouton
 {
     public:
-        SDL_Color couleur_idle;
+        SDL_Color couleur_normal;
         SDL_Color couleur_hover;
         SDL_Color couleur_click;
+        SDL_Color couleur_selected;
 
-        SDL_Texture* image_idle;
+        SDL_Texture* image_normal;
         SDL_Texture* image_hover;
         SDL_Texture* image_click;
+        SDL_Texture* image_selected;
 
         bool hasImage;
 
@@ -35,21 +38,25 @@ class Bouton
         typedef void(*eventFunction)(SingletonSysteme*, Bouton*);
         eventFunction funcPtr; //pointeur sur la fonction qui sera lancée quand il y aura un clic sur le bouton
 
-        etat_bouton etat;
+        etat etat;
         Texte texte;
 
-        //hover sound, click sound
         Mix_Chunk* hover_sound;
         Mix_Chunk* click_sound;
         bool son_joue = false;
 
-        Bouton(SDL_Color couleur_idle, SDL_Color couleur_hover, SDL_Color couleur_click, SDL_Rect position, eventFunction funcPtr, std::string texte);
-        Bouton(std::string image_idle, std::string image_hover, std::string image_click, SDL_Rect position, eventFunction funcPtr, std::string texte, SDL_Renderer* rendu);
+        Bouton(SDL_Color couleur_normal, SDL_Color couleur_hover, SDL_Color couleur_click, SDL_Color couleur_selected, SDL_Rect position, eventFunction funcPtr, std::string texte, SDL_Renderer* rendu);
+        Bouton(std::string image_normal, std::string image_hover, std::string image_click, std::string image_selected, SDL_Rect position, eventFunction funcPtr, std::string texte, SDL_Renderer* rendu);
         void Draw(SDL_Renderer* rendu);
         void HandleEvents(SDL_Event e, SingletonSysteme* sing_syst);
         //void Update(SingletonSysteme* sing_syst);
         bool collision(SDL_Rect dest_joueur, int x, int y);
         bool clicAvantCollision;
+
+        void onPointerEnter(SDL_Event e, SingletonSysteme* sing_syst);
+        void onPointerExit(SDL_Event e, SingletonSysteme* sing_syst);
+        void onPointerDown(SDL_Event e, SingletonSysteme* sing_syst);
+        void onClick(SDL_Event e, SingletonSysteme* sing_syst);
 
     protected:
 

@@ -117,7 +117,7 @@ void fonc_bouton_fin_demande_nom(SingletonSysteme* sing_syst, Bouton* bouton)
 
 void fonc_inputfield_nom_joueur(SingletonSysteme* sing_syst, Inputfield* inputfield)
 {
-    sing_syst->nom_joueur = inputfield->texte;
+    sing_syst->nom_joueur = inputfield->texte.texte;
 }
 
 void fonc_bouton_options(SingletonSysteme* sing_syst, Bouton* bouton)
@@ -330,14 +330,16 @@ void fonc_choix_touche_droite(SingletonSysteme* sing_syst, Bouton* bouton)
 }
 
 
-void fonc_toggle_son(SingletonSysteme* sing_syst)
+void fonc_toggle_son(SingletonSysteme* sing_syst, Bouton* bouton)
 {
+    (void)bouton;
     std::cout << "click toggle son" << std::endl;
     sing_syst->son_active = !(sing_syst->son_active);
 }
 
-void fonc_toggle_musique(SingletonSysteme* sing_syst)
+void fonc_toggle_musique(SingletonSysteme* sing_syst, Bouton* bouton)
 {
+    (void)bouton;
     std::cout << "click toggle musique" << std::endl;
     sing_syst->musique_activee = !(sing_syst->musique_activee);
 }
@@ -362,6 +364,7 @@ int main(int argc, char* argv[])
     const SDL_Color VERT = {0, 255, 0, 255};
     const SDL_Color BLEU = {0, 0, 255, 255};
     const SDL_Color BLANC = {255, 255, 255, 255};
+    const SDL_Color GRIS = {127, 127, 127, 255};
     //const SDL_Color NOIR = {0, 0, 0, 255};
 
     SingletonSysteme::instance().Charger();
@@ -374,40 +377,41 @@ int main(int argc, char* argv[])
         mode = "FENETRE";
 
     // MENU PRINCIPAL /////////////////////////////////////////////////////////////////////////////////////////////////////////////////
-    Bouton bouton_continuer(ROUGE, VERT, BLEU, {550, 225, 200, 100}, &fonc_bouton_continuer, "Continuer");
-    Texte texte_nom_joueur(SingletonSysteme::instance().nom_joueur, "./font/lazy.ttf", BLANC, {300, 225, 200, 100});
-    Texte titre("Titre du jeu", "./font/lazy.ttf", BLANC, {400, 0, 500, 200});
-    Bouton bouton_nouvelle_partie(ROUGE, VERT, BLEU, {550, 350, 200, 100}, &fonc_bouton_nouvelle_partie, "NOUVELLE PARTIE");
-    Bouton bouton_options(ROUGE, VERT, BLEU, {550, 475, 200, 100}, &fonc_bouton_options, "OPTIONS");
-    Bouton bouton_quitter(ROUGE, VERT, BLEU, {550, 600, 200, 100}, &fonc_bouton_quitter, "QUITTER");
+    Bouton bouton_continuer(ROUGE, VERT, BLEU, BLANC, {550, 225, 200, 100}, &fonc_bouton_continuer, "Continuer", SingletonSysteme::instance().rendu);
+    Texte texte_nom_joueur(SingletonSysteme::instance().nom_joueur, "./font/lazy.ttf", BLANC, {300, 225, 200, 100}, SingletonSysteme::instance().rendu);
+    Texte titre("Titre du jeu", "./font/lazy.ttf", BLANC, {400, 0, 500, 200}, SingletonSysteme::instance().rendu);
+    Bouton bouton_nouvelle_partie(ROUGE, VERT, BLEU, BLANC, {550, 350, 200, 100}, &fonc_bouton_nouvelle_partie, "NOUVELLE PARTIE", SingletonSysteme::instance().rendu);
+    Bouton bouton_options(ROUGE, VERT, BLEU, BLANC, {550, 475, 200, 100}, &fonc_bouton_options, "OPTIONS", SingletonSysteme::instance().rendu);
+    Bouton bouton_quitter(ROUGE, VERT, BLEU, BLANC, {550, 600, 200, 100}, &fonc_bouton_quitter, "QUITTER", SingletonSysteme::instance().rendu);
     ///////////////////////////////////////////////////////////////////////////////////////////////////////////////////////////////////
 
     // MENU OPTIONS ////////////////////////////////////////////////////////////////////////////////////////////////////////////////////////////////////
-    Bouton bouton_options_retour(ROUGE, VERT, BLEU, {100, 600, 200, 100}, &fonc_bouton_options_retour, "RETOUR");
-    Texte mode_ecran("MODE ECRAN", "./font/lazy.ttf", BLANC, {1000, 500, 200, 100});
-    Bouton bouton_options_fenetre(ROUGE, VERT, BLEU, {1000, 600, 200, 100}, &fonc_bouton_options_fenetre, mode);
+    Bouton bouton_options_retour(ROUGE, VERT, BLEU, BLANC, {100, 600, 200, 100}, &fonc_bouton_options_retour, "RETOUR", SingletonSysteme::instance().rendu);
+    Texte mode_ecran("MODE ECRAN", "./font/lazy.ttf", BLANC, {1000, 500, 200, 100}, SingletonSysteme::instance().rendu);
+    Bouton bouton_options_fenetre(ROUGE, VERT, BLEU, BLANC, {1000, 600, 200, 100}, &fonc_bouton_options_fenetre, mode, SingletonSysteme::instance().rendu);
 
-    Bouton bouton_options_touche_haut(ROUGE, VERT, BLEU, {600, 150, 200, 100}, &fonc_choix_touche_haut, SDL_GetKeyName(SingletonSysteme::instance().touches.dep_haut));
-    Bouton bouton_options_touche_bas(ROUGE, VERT, BLEU, {600, 300, 200, 100}, &fonc_choix_touche_bas, SDL_GetKeyName(SingletonSysteme::instance().touches.dep_bas));
-    Bouton bouton_options_touche_gauche(ROUGE, VERT, BLEU, {600, 450, 200, 100}, &fonc_choix_touche_gauche, SDL_GetKeyName(SingletonSysteme::instance().touches.dep_gauche));
-    Bouton bouton_options_touche_droite(ROUGE, VERT, BLEU, {600, 600, 200, 100}, &fonc_choix_touche_droite, SDL_GetKeyName(SingletonSysteme::instance().touches.dep_droite));
-    Texte texte_touche_haut("Haut", "./font/lazy.ttf", BLANC, {400, 150, 150, 100});
-    Texte texte_touche_bas("Bas", "./font/lazy.ttf", BLANC, {400, 300, 150, 100});
-    Texte texte_touche_gauche("Gauche", "./font/lazy.ttf", BLANC, {400, 450, 150, 100});
-    Texte texte_touche_droite("Droite", "./font/lazy.ttf", BLANC, {400, 600, 150, 100});
+    Bouton bouton_options_touche_haut(ROUGE, VERT, BLEU, BLANC, {600, 150, 200, 100}, &fonc_choix_touche_haut, SDL_GetKeyName(SingletonSysteme::instance().touches.dep_haut), SingletonSysteme::instance().rendu);
+    Bouton bouton_options_touche_bas(ROUGE, VERT, BLEU, BLANC, {600, 300, 200, 100}, &fonc_choix_touche_bas, SDL_GetKeyName(SingletonSysteme::instance().touches.dep_bas), SingletonSysteme::instance().rendu);
+    Bouton bouton_options_touche_gauche(ROUGE, VERT, BLEU, BLANC, {600, 450, 200, 100}, &fonc_choix_touche_gauche, SDL_GetKeyName(SingletonSysteme::instance().touches.dep_gauche), SingletonSysteme::instance().rendu);
+    Bouton bouton_options_touche_droite(ROUGE, VERT, BLEU, BLANC, {600, 600, 200, 100}, &fonc_choix_touche_droite, SDL_GetKeyName(SingletonSysteme::instance().touches.dep_droite), SingletonSysteme::instance().rendu);
+    Texte texte_touche_haut("Haut", "./font/lazy.ttf", BLANC, {400, 150, 150, 100}, SingletonSysteme::instance().rendu);
+    Texte texte_touche_bas("Bas", "./font/lazy.ttf", BLANC, {400, 300, 150, 100}, SingletonSysteme::instance().rendu);
+    Texte texte_touche_gauche("Gauche", "./font/lazy.ttf", BLANC, {400, 450, 150, 100}, SingletonSysteme::instance().rendu);
+    Texte texte_touche_droite("Droite", "./font/lazy.ttf", BLANC, {400, 600, 150, 100}, SingletonSysteme::instance().rendu);
 
-    Toggle toggle_sound(VERT, ROUGE, BLANC, {100, 100, 200, 100}, "SON", &fonc_toggle_son, SingletonSysteme::instance().son_active);
-    Toggle toggle_musique(VERT, ROUGE, BLANC, {1000, 100, 200, 100}, "MUSIQUE", &fonc_toggle_musique, SingletonSysteme::instance().musique_activee);
+    Toggle toggle_sound(BLANC, GRIS, BLANC, BLANC, {100, 100, 50, 50}, "SON", &fonc_toggle_son, SingletonSysteme::instance().son_active, SingletonSysteme::instance().rendu);
+    Toggle toggle_musique(BLANC, GRIS, BLANC, BLANC, {1000, 100, 50, 50}, "MUSIQUE", &fonc_toggle_musique, SingletonSysteme::instance().musique_activee, SingletonSysteme::instance().rendu);
+
     ////////////////////////////////////////////////////////////////////////////////////////////////////////////////////////////////////////////////////
 
     // MENU CHOIX DU NOM //////////////////////////////////////////////////////////////////////////////////////////////////////////////////////
-    Inputfield inputfield("./font/lazy.ttf", ROUGE, {300, 400, 200, 50}, &fonc_inputfield_nom_joueur);
-    Texte demande_nom("Ecrivez votre nom", "./font/lazy.ttf", BLANC, {300, 200, 300, 150});
-    Bouton bouton_valider(ROUGE, VERT, BLEU, {300, 550, 200, 100}, &fonc_bouton_fin_demande_nom, "VALIDER");
+    Inputfield inputfield("./font/lazy.ttf", ROUGE, {300, 400, 200, 50}, &fonc_inputfield_nom_joueur, SingletonSysteme::instance().rendu);
+    Texte demande_nom("Ecrivez votre nom", "./font/lazy.ttf", BLANC, {300, 200, 300, 150}, SingletonSysteme::instance().rendu);
+    Bouton bouton_valider(ROUGE, VERT, BLEU, BLANC, {300, 550, 200, 100}, &fonc_bouton_fin_demande_nom, "VALIDER", SingletonSysteme::instance().rendu);
     ///////////////////////////////////////////////////////////////////////////////////////////////////////////////////////////////////////////
 
     // EN JEU ////////////////////////////////////////////////////////////////////////////////
-    Joueur joueur(100, BLEU, {SingletonSysteme::instance().posX_joueur, SingletonSysteme::instance().posY_joueur, 32, 32}, VUE_DESSUS);
+    Joueur joueur(100, BLEU, {160, 160, 32, 32}, VUE_DESSUS);
     SDL_Texture* texture = init_texture("./img/fond.png", SingletonSysteme::instance().rendu);
     SDL_Rect dest = init_rect_from_image(0, 0, texture);
     //////////////////////////////////////////////////////////////////////////////////////////
