@@ -24,6 +24,7 @@ class Inputfield
         SDL_Surface* surface;
 
         Texte texte;
+        Texte texte_placeHolder;
 
         Inputfield(std::string police, SDL_Color couleur, SDL_Rect position, eventFunction funcPtr, SDL_Renderer* rendu);
         void Draw(SDL_Renderer* rendu);

@@ -1,7 +1,7 @@
 #include "inputfield.hpp"
 
 Inputfield::Inputfield(std::string police, SDL_Color couleur, SDL_Rect position, eventFunction funcPtr, SDL_Renderer* rendu)
-:texte("", police, couleur, position, rendu)
+:texte("", police, couleur, position, rendu), texte_placeHolder("Ecrire...", police, {127, 127, 127, 255}, position, rendu)
 {
     this->fond_de_texte = position;
     this->zone_de_texte = {fond_de_texte.x, fond_de_texte.y, 0, 0};
@@ -36,28 +36,8 @@ bool Inputfield::collision(SDL_Rect dest_joueur, int x, int y)
 
 void Inputfield::Draw(SDL_Renderer* rendu)
 {
-    if(texte.texte.length() > 0)
-    {
-        if((texte.surface = TTF_RenderText_Solid(texte.police, texte.texte.c_str(), texte.couleur)) == nullptr)
-        {
-            std::cerr << TTF_GetError() << std::endl;
-            exit(EXIT_FAILURE);
-        }
-    }
-    else
-    {
-        if((texte.surface = TTF_RenderText_Solid(texte.police, " ", texte.couleur)) == nullptr)
-        {
-            std::cerr << TTF_GetError() << std::endl;
-            exit(EXIT_FAILURE);
-        }
-    }
+    texte.Draw(rendu);
 
-    if((texte.texture = SDL_CreateTextureFromSurface(rendu, texte.surface)) == nullptr)
-    {
-        std::cerr << SDL_GetError() << std::endl;
-        exit(EXIT_FAILURE);
-    }
     zone_de_texte.w = texte.surface->w;
     zone_de_texte.h = texte.surface->h;
 
@@ -76,6 +56,9 @@ void Inputfield::Draw(SDL_Renderer* rendu)
         std::cerr << SDL_GetError() << std::endl;
         exit(EXIT_FAILURE);
     }
+
+    if(texte.texte.length() == 0)
+        texte_placeHolder.Draw(rendu);
 }
 
 void Inputfield::HandleEvents(SDL_Event e, SingletonSysteme* sing_syst)
