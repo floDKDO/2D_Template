@@ -7,15 +7,16 @@
 #include <SDL2/SDL_ttf.h>
 #include <SDL2/SDL_mixer.h>
 
+#include "selectionnable.hpp"
 #include "texte.hpp"
 #include "singleton_systeme.hpp"
 
-class Inputfield
+class Inputfield : public Selectionnable
 {
     public:
 
-        typedef void(*eventFunction)(SingletonSysteme*, Inputfield*);
-        eventFunction funcPtr; //pointeur sur la fonction qui sera lancée quand il y aura un appuie sur entrée ou un clic en dehors de l'inputfield
+        //typedef void(*eventFunction)(SingletonSysteme*, Inputfield*);
+        //eventFunction funcPtr; //pointeur sur la fonction qui sera lancée quand il y aura un appuie sur entrée ou un clic en dehors de l'inputfield
 
         bool mode_edition;
         SDL_Rect zone_de_texte;
@@ -30,6 +31,10 @@ class Inputfield
         void Draw(SDL_Renderer* rendu);
         void HandleEvents(SDL_Event e, SingletonSysteme* sing_syst);
         bool collision(SDL_Rect dest_joueur, int x, int y);
+
+        void setSelectedIfMove(Selectionnable* selectOnUp, Selectionnable* selectOnDown, Selectionnable* selectOnLeft, Selectionnable* selectOnRight);
+        void setSelected(Selectionnable* ui);
+        void setUnselected(Selectionnable* previous);
 
     protected:
 

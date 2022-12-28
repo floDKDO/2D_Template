@@ -159,7 +159,7 @@ void Joueur::Update(Uint32& timeStep)
         position.y += vitesseDeChute;
         vitesseDeChute += 0.5f; //gravite
 
-        if(position.y > 704 - 32) //si on touche le sol
+        if(position.y > 720 - 32) //si on touche le sol
         {
             position.y = 672;
             surSol = true;

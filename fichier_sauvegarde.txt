@@ -1,5 +1,5 @@
 //Nom joueur
-pseudo
+
 //Mode fenetre
 0
 //Musique activee ?

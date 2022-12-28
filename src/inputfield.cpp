@@ -1,7 +1,7 @@
 #include "inputfield.hpp"
 
 Inputfield::Inputfield(std::string police, SDL_Color couleur, SDL_Rect position, eventFunction funcPtr, SDL_Renderer* rendu)
-:texte("", police, couleur, position, rendu), texte_placeHolder("Ecrire...", police, {127, 127, 127, 255}, position, rendu)
+:texte("", police, couleur, position, rendu), texte_placeHolder("Votre nom...", police, {127, 127, 127, 255}, position, rendu)
 {
     this->fond_de_texte = position;
     this->zone_de_texte = {fond_de_texte.x, fond_de_texte.y, 0, 0};
@@ -81,6 +81,65 @@ void Inputfield::HandleEvents(SDL_Event e, SingletonSysteme* sing_syst)
                     funcPtr(sing_syst, this); //si on appui sur entree, la fonction se lance
             }
         }
+        else
+        {
+            if(e.key.keysym.sym == SDLK_UP)
+            {
+                if(this->selectOnUp != nullptr)
+                {
+                    this->setUnselected(this);
+                    this->setSelected(this->selectOnUp);
+                    /*if(sing_syst->son_active == true)
+                    {
+                        if(Mix_PlayChannel(1, this->bouton.hover_sound, 0) < 0)
+                        {
+                            std::cerr << Mix_GetError() << std::endl;
+                            exit(EXIT_FAILURE);
+                        }
+                    }*/
+                }
+            }
+            else if(e.key.keysym.sym == SDLK_DOWN)
+            {
+                if(this->selectOnDown != nullptr)
+                {
+                    this->setUnselected(this);
+                    this->setSelected(this->selectOnDown);
+                }
+            }
+            else if(e.key.keysym.sym == SDLK_LEFT)
+            {
+                if(this->selectOnLeft != nullptr)
+                {
+                    this->setUnselected(this);
+                    this->setSelected(this->selectOnLeft);
+                }
+            }
+            else if(e.key.keysym.sym == SDLK_RIGHT)
+            {
+                if(this->selectOnRight != nullptr)
+                {
+                    this->setUnselected(this);
+                    this->setSelected(this->selectOnRight);
+                }
+            }
+
+            if(e.key.keysym.sym == SDLK_RETURN)
+            {
+                if(this->etat == SELECTED)
+                {
+                    /*if(sing_syst->son_active == true)
+                    {
+                        if(Mix_PlayChannel(1, click_sound, 0) < 0)
+                        {
+                            std::cerr << Mix_GetError() << std::endl;
+                            exit(EXIT_FAILURE);
+                        }
+                    }*/
+                    mode_edition = true;
+                }
+            }
+        }
     }
     else if(e.type == SDL_MOUSEBUTTONDOWN)
     {
@@ -106,4 +165,25 @@ void Inputfield::HandleEvents(SDL_Event e, SingletonSysteme* sing_syst)
             texte_modifie = true;
         }
     }
+}
+
+
+void Inputfield::setSelectedIfMove(Selectionnable* selectOnUp, Selectionnable* selectOnDown, Selectionnable* selectOnLeft, Selectionnable* selectOnRight)
+{
+    this->selectOnUp = selectOnUp;
+    this->selectOnDown = selectOnDown;
+    this->selectOnLeft = selectOnLeft;
+    this->selectOnRight = selectOnRight;
+}
+
+void Inputfield::setSelected(Selectionnable* ui)
+{
+    if(ui != nullptr)
+        ui->etat = SELECTED;
+}
+
+void Inputfield::setUnselected(Selectionnable* previous)
+{
+    if(previous != nullptr)
+        previous->etat = NORMAL;
 }

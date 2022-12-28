@@ -1,6 +1,6 @@
 #include "bouton.hpp"
 
-Bouton::Bouton(SDL_Color couleur_normal, SDL_Color couleur_hover, SDL_Color couleur_click, SDL_Color couleur_selected, SDL_Rect position, eventFunction funcPtr, std::string texte, SDL_Renderer* rendu)
+Bouton::Bouton(SDL_Color couleur_normal, SDL_Color couleur_hover, SDL_Color couleur_click, SDL_Color couleur_selected, SDL_Rect position, eventFunction funcPtr, std::string texte, SDL_Renderer* rendu, std::string tag)
 :texte(texte, "./font/lazy.ttf", {255, 255, 255, 255}, position, rendu)
 {
     this->couleur_normal = couleur_normal;
@@ -24,6 +24,8 @@ Bouton::Bouton(SDL_Color couleur_normal, SDL_Color couleur_hover, SDL_Color coul
     }
 
     this->hasImage = false;
+
+    this->tag = tag;
 }
 
 Bouton::Bouton(std::string image_normal, std::string image_hover, std::string image_click, std::string image_selected, SDL_Rect position, eventFunction funcPtr, std::string texte, SDL_Renderer* rendu)
@@ -173,14 +175,64 @@ void Bouton::Draw(SDL_Renderer* rendu)
     texte.Draw(rendu);
 }
 
+bool Bouton::verrou = true;
+
 void Bouton::HandleEvents(SDL_Event e, SingletonSysteme* sing_syst)
 {
     int x, y; //position x et y de la souris
     SDL_GetMouseState(&x, &y);
 
-    if(e.type == SDL_KEYDOWN)
+    if(e.type == SDL_KEYDOWN && this->etat == SELECTED && verrou == true)
     {
+        if(e.key.keysym.sym == SDLK_UP)
+        {
+            if(this->selectOnUp != nullptr)
+            {
+                this->fonc(this->selectOnUp, sing_syst);
+            }
+        }
+        else if(e.key.keysym.sym == SDLK_DOWN)
+        {
+            if(this->selectOnDown != nullptr)
+            {
+                this->fonc(this->selectOnDown, sing_syst);
+            }
+        }
+        else if(e.key.keysym.sym == SDLK_LEFT)
+        {
+            if(this->selectOnLeft != nullptr)
+            {
+                this->fonc(this->selectOnLeft, sing_syst);
+            }
+        }
+        else if(e.key.keysym.sym == SDLK_RIGHT)
+        {
+            if(this->selectOnRight != nullptr)
+            {
+                this->fonc(this->selectOnRight, sing_syst);
+            }
+        }
 
+        if(e.key.keysym.sym == SDLK_RETURN)
+        {
+            if(this->etat == SELECTED)
+            {
+                if(sing_syst->son_active == true)
+                {
+                    if(Mix_PlayChannel(1, click_sound, 0) < 0)
+                    {
+                        std::cerr << Mix_GetError() << std::endl;
+                        exit(EXIT_FAILURE);
+                    }
+                }
+                this->funcPtr(sing_syst, this);
+            }
+        }
+        verrou = false;
+    }
+    else if(e.type == SDL_KEYUP)
+    {
+        verrou = true;
     }
     else if(e.type == SDL_MOUSEMOTION)
     {
@@ -215,6 +267,16 @@ void Bouton::onPointerEnter(SDL_Event e, SingletonSysteme* sing_syst)
     if(e.button.button != SDL_BUTTON_LEFT) //si on se trouve sur le bouton sans le clic enfonce
     {
         this->etat = HOVERED;
+        //RESET
+        /*if(this->selectOnUp != nullptr)
+            this->selectOnUp->etat = NORMAL;
+        if(this->selectOnDown != nullptr)
+            this->selectOnDown->etat = NORMAL;
+        if(this->selectOnLeft != nullptr)
+            this->selectOnLeft->etat = NORMAL;
+        if(this->selectOnRight != nullptr)
+            this->selectOnRight->etat = NORMAL;*/
+        //this->etat = SELECTED;
         if(son_joue == false && sing_syst->son_active == true)
         {
             if(Mix_PlayChannel(1, hover_sound, 0) < 0)
@@ -230,6 +292,12 @@ void Bouton::onPointerEnter(SDL_Event e, SingletonSysteme* sing_syst)
         if(clicAvantCollision == false)
         {
             this->etat = HOVERED;
+            //RESET
+            /*this->selectOnUp->etat = NORMAL;
+            this->selectOnDown->etat = NORMAL;
+            this->selectOnLeft->etat = NORMAL;
+            this->selectOnRight->etat = NORMAL;*/
+            //this->etat = SELECTED;
             if(son_joue == false && sing_syst->son_active == true)
             {
                 if(Mix_PlayChannel(1, hover_sound, 0) < 0)
@@ -303,3 +371,41 @@ void Bouton::onPointerDown(SDL_Event e, SingletonSysteme* sing_syst)
     }
 }
 
+
+
+void Bouton::setSelectedIfMove(Selectionnable* selectOnUp, Selectionnable* selectOnDown, Selectionnable* selectOnLeft, Selectionnable* selectOnRight)
+{
+    this->selectOnUp = selectOnUp;
+    this->selectOnDown = selectOnDown;
+    this->selectOnLeft = selectOnLeft;
+    this->selectOnRight = selectOnRight;
+}
+
+
+void Bouton::setSelected(Selectionnable* ui)
+{
+    if(ui != nullptr)
+        ui->etat = SELECTED;
+}
+
+
+void Bouton::setUnselected(Selectionnable* previous)
+{
+    if(previous != nullptr)
+        previous->etat = NORMAL;
+}
+
+void Bouton::fonc(Selectionnable* ui, SingletonSysteme* sing_syst)
+{
+    this->setUnselected(this);
+    this->setSelected(ui);
+    if(sing_syst->son_active == true)
+    {
+        if(Mix_PlayChannel(1, hover_sound, 0) < 0)
+        {
+            std::cerr << Mix_GetError() << std::endl;
+            exit(EXIT_FAILURE);
+        }
+        son_joue = true;
+    }
+}

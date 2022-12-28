@@ -2,7 +2,7 @@
 #define __SINGLETON__SYSTEME__HPP__
 
 #define LONGUEUR_FENETRE 1280
-#define HAUTEUR_FENETRE 704 //720!
+#define HAUTEUR_FENETRE 720 //720!
 
 #include <iostream>
 #include <fstream>
