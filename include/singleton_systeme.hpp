@@ -61,6 +61,10 @@ class SingletonSysteme
         int posX_joueur;
         int posY_joueur;
 
+        //MenuPrincipal menuPrincipal;
+
+        //TODO : attribut Etat*
+
         std::fstream fichier_sauvegarde;
 
     protected:

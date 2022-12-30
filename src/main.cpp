@@ -10,6 +10,7 @@
 #include "texte.hpp"
 #include "joueur.hpp"
 #include "toggle.hpp"
+#include "menuPrincipal.hpp"
 
 SDL_Texture* init_texture(std::string image, SDL_Renderer* rendu)
 {
@@ -377,7 +378,10 @@ int main(int argc, char* argv[])
         mode = "FENETRE";
 
     // MENU PRINCIPAL /////////////////////////////////////////////////////////////////////////////////////////////////////////////////
-    Bouton bouton_continuer(ROUGE, VERT, BLEU, GRIS, {550, 225, 200, 100}, &fonc_bouton_continuer, "Continuer", SingletonSysteme::instance().rendu, "Bouton continuer");
+
+    MenuPrincipal menuPrincipal(&SingletonSysteme::instance());
+
+    /*Bouton bouton_continuer(ROUGE, VERT, BLEU, GRIS, {550, 225, 200, 100}, &fonc_bouton_continuer, "Continuer", SingletonSysteme::instance().rendu, "Bouton continuer");
     Texte texte_nom_joueur(SingletonSysteme::instance().nom_joueur, "./font/lazy.ttf", BLANC, {300, 225, 200, 100}, SingletonSysteme::instance().rendu);
     Texte titre("Titre du jeu", "./font/lazy.ttf", BLANC, {400, 0, 500, 200}, SingletonSysteme::instance().rendu);
     Bouton bouton_nouvelle_partie(ROUGE, VERT, BLEU, GRIS, {550, 350, 200, 100}, &fonc_bouton_nouvelle_partie, "NOUVELLE PARTIE", SingletonSysteme::instance().rendu, "Bouton nouvelle partie");
@@ -393,7 +397,7 @@ int main(int argc, char* argv[])
         bouton_nouvelle_partie.setSelectedIfMove(nullptr, &bouton_options, nullptr, nullptr);
     else bouton_nouvelle_partie.setSelectedIfMove(&bouton_continuer, &bouton_options, nullptr, nullptr);
 
-    bouton_quitter.setSelectedIfMove(&bouton_options, nullptr, nullptr, nullptr);
+    bouton_quitter.setSelectedIfMove(&bouton_options, nullptr, nullptr, nullptr);*/
 
     ///////////////////////////////////////////////////////////////////////////////////////////////////////////////////////////////////
 
@@ -479,11 +483,12 @@ int main(int argc, char* argv[])
 
             if(SingletonSysteme::instance().etat == MENU_PRINCIPAL)
             {
-                if(SingletonSysteme::instance().nom_joueur.empty() == false)
+                /*if(SingletonSysteme::instance().nom_joueur.empty() == false)
                     bouton_continuer.HandleEvents(e, &SingletonSysteme::instance());
                 bouton_nouvelle_partie.HandleEvents(e, &SingletonSysteme::instance());
                 bouton_options.HandleEvents(e, &SingletonSysteme::instance());
-                bouton_quitter.HandleEvents(e, &SingletonSysteme::instance());
+                bouton_quitter.HandleEvents(e, &SingletonSysteme::instance());*/
+                menuPrincipal.HandleEvents(e, &SingletonSysteme::instance());
             }
             else if(SingletonSysteme::instance().etat == MENU_OPTIONS)
             {
@@ -522,7 +527,7 @@ int main(int argc, char* argv[])
 
         if(SingletonSysteme::instance().etat == MENU_PRINCIPAL)
         {
-            if(SingletonSysteme::instance().nom_joueur.empty() == false)
+            /*if(SingletonSysteme::instance().nom_joueur.empty() == false)
             {
                 bouton_continuer.Draw(SingletonSysteme::instance().rendu);
                 texte_nom_joueur.Draw(SingletonSysteme::instance().rendu);
@@ -530,7 +535,9 @@ int main(int argc, char* argv[])
             bouton_nouvelle_partie.Draw(SingletonSysteme::instance().rendu);
             bouton_options.Draw(SingletonSysteme::instance().rendu);
             bouton_quitter.Draw(SingletonSysteme::instance().rendu);
-            titre.Draw(SingletonSysteme::instance().rendu);
+            titre.Draw(SingletonSysteme::instance().rendu);*/
+
+            menuPrincipal.Draw(SingletonSysteme::instance().rendu, &SingletonSysteme::instance());
         }
         else if(SingletonSysteme::instance().etat == MENU_OPTIONS)
         {

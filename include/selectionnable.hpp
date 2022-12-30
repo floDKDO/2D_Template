@@ -36,6 +36,8 @@ class Selectionnable
         Selectionnable* selectOnLeft;
         Selectionnable* selectOnRight;
 
+        static bool verrou; //pour empecher le double defilement (passer d'un ui à deux autres en un appuie)
+
     protected:
 
     private:

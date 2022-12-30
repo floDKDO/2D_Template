@@ -52,13 +52,13 @@ class Bouton : public Selectionnable
         void onPointerExit(SDL_Event e, SingletonSysteme* sing_syst);
         void onPointerDown(SDL_Event e, SingletonSysteme* sing_syst);
         void onClick(SDL_Event e, SingletonSysteme* sing_syst);
+        void onKeyPressed(SDL_Event e, SingletonSysteme* sing_syst);
+        void onKeyReleased(SDL_Event e, SingletonSysteme* sing_syst);
 
         void setSelectedIfMove(Selectionnable* selectOnUp, Selectionnable* selectOnDown, Selectionnable* selectOnLeft, Selectionnable* selectOnRight);
         void setSelected(Selectionnable* ui);
         void setUnselected(Selectionnable* previous);
         void fonc(Selectionnable* ui, SingletonSysteme* sing_syst);
-
-        static bool verrou;
 
     protected:
 
