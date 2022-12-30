@@ -14,12 +14,6 @@
 #include "texte.hpp"
 #include "singleton_systeme.hpp"
 
-const SDL_Color ROUGE = {255, 0, 0, 255};
-const SDL_Color VERT = {0, 255, 0, 255};
-const SDL_Color BLEU = {0, 0, 255, 255};
-const SDL_Color BLANC = {255, 255, 255, 255};
-const SDL_Color GRIS = {127, 127, 127, 255};
-
 class MenuPrincipal
 {
     public:

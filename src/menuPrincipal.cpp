@@ -8,7 +8,7 @@ MenuPrincipal::MenuPrincipal(SingletonSysteme* sing_syst)
 ,bouton_options(ROUGE, VERT, BLEU, GRIS, {550, 475, 200, 100}, &fonc_bouton_options, "OPTIONS", sing_syst->rendu, "Bouton options")
 ,bouton_quitter(ROUGE, VERT, BLEU, GRIS, {550, 600, 200, 100}, &fonc_bouton_quitter, "QUITTER", sing_syst->rendu, "Bouton quitter")
 {
-    bouton_options.setSelected(&bouton_options);
+    bouton_nouvelle_partie.setSelected(&bouton_nouvelle_partie);
     bouton_options.setSelectedIfMove(&bouton_nouvelle_partie, &bouton_quitter, nullptr, nullptr);
 
     bouton_continuer.setSelectedIfMove(nullptr, &bouton_nouvelle_partie, nullptr, nullptr);
@@ -70,49 +70,48 @@ void MenuPrincipal::HandleEvents(SDL_Event e, SingletonSysteme* sing_syst)
         Bouton* s = dynamic_cast<Bouton*>(s0);
         if(s->tag == "Bouton continuer")
         {
-            if(sing_syst->nom_joueur.empty() == false)
-                bouton_continuer.HandleEvents(e, sing_syst);
+            if(sing_syst->nom_joueur.empty() == true)
+                continue; //si le nom est vide, alors on ne gère pas les événements du bouton continuer
         }
-        else
-        {
-            int x, y; //position x et y de la souris
-            SDL_GetMouseState(&x, &y);
 
-            if(e.type == SDL_KEYDOWN)
+        int x, y; //position x et y de la souris
+        SDL_GetMouseState(&x, &y);
+
+        if(e.type == SDL_KEYDOWN)
+        {
+            s->onKeyPressed(e, sing_syst);
+        }
+        else if(e.type == SDL_KEYUP)
+        {
+            s->onKeyReleased(e, sing_syst);
+        }
+        else if(e.type == SDL_MOUSEMOTION)
+        {
+            if(s->collision(s->position, x, y) == true)
             {
-                s->onKeyPressed(e, sing_syst);
+                this->resetSelected(); //seul ajout
+                s->onPointerEnter(e, sing_syst);
             }
-            else if(e.type == SDL_KEYUP)
+            else
             {
-                s->onKeyReleased(e, sing_syst);
-            }
-            else if(e.type == SDL_MOUSEMOTION)
-            {
-                if(s->collision(s->position, x, y) == true)
-                {
-                    this->resetSelected(); //seul ajout
-                    s->onPointerEnter(e, sing_syst);
-                }
-                else
-                {
-                    s->onPointerExit(e, sing_syst);
-                }
-            }
-            else if(e.type == SDL_MOUSEBUTTONDOWN)
-            {
-                if(e.button.button == SDL_BUTTON_LEFT)
-                {
-                    s->onPointerDown(e, sing_syst);
-                }
-            }
-            else if(e.type == SDL_MOUSEBUTTONUP)
-            {
-                if(e.button.button == SDL_BUTTON_LEFT)
-                {
-                   s->onClick(e, sing_syst);
-                }
+                s->onPointerExit(e, sing_syst);
             }
         }
+        else if(e.type == SDL_MOUSEBUTTONDOWN)
+        {
+            if(e.button.button == SDL_BUTTON_LEFT)
+            {
+                s->onPointerDown(e, sing_syst);
+            }
+        }
+        else if(e.type == SDL_MOUSEBUTTONUP)
+        {
+            if(e.button.button == SDL_BUTTON_LEFT)
+            {
+               s->onClick(e, sing_syst);
+            }
+        }
+
     }
 }
 

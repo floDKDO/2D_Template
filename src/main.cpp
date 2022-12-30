@@ -11,6 +11,7 @@
 #include "joueur.hpp"
 #include "toggle.hpp"
 #include "menuPrincipal.hpp"
+#include "menuOptions.hpp"
 
 SDL_Texture* init_texture(std::string image, SDL_Renderer* rendu)
 {
@@ -88,7 +89,7 @@ void reglage_fenetre(SingletonSysteme* sing_syst)
 }*/
 
 
-void fonc_bouton_nouvelle_partie(SingletonSysteme* sing_syst, Selectionnable* bouton)
+/*void fonc_bouton_nouvelle_partie(SingletonSysteme* sing_syst, Selectionnable* bouton)
 {
     (void)bouton;
     std::cout << "click nouvelle partie" << std::endl;
@@ -97,14 +98,14 @@ void fonc_bouton_nouvelle_partie(SingletonSysteme* sing_syst, Selectionnable* bo
         sing_syst->Supprimmer();
     }
     sing_syst->etat = DEMANDE_NOM;
-}
+}*/
 
-void fonc_bouton_continuer(SingletonSysteme* sing_syst, Selectionnable* bouton)
+/*void fonc_bouton_continuer(SingletonSysteme* sing_syst, Selectionnable* bouton)
 {
     (void)bouton;
     std::cout << "click jouer" << std::endl;
     sing_syst->etat = EN_JEU;
-}
+}*/
 
 void fonc_bouton_fin_demande_nom(SingletonSysteme* sing_syst, Selectionnable* bouton)
 {
@@ -121,12 +122,12 @@ void fonc_inputfield_nom_joueur(SingletonSysteme* sing_syst, Selectionnable* inp
     sing_syst->nom_joueur = dynamic_cast<Inputfield*>(inputfield)->texte.texte;
 }
 
-void fonc_bouton_options(SingletonSysteme* sing_syst, Selectionnable* bouton)
+/*void fonc_bouton_options(SingletonSysteme* sing_syst, Selectionnable* bouton)
 {
     (void)bouton;
     std::cout << "click options" << std::endl;
     sing_syst->etat = MENU_OPTIONS;
-}
+}*/
 
 void fonc_bouton_options_retour(SingletonSysteme* sing_syst, Selectionnable* bouton)
 {
@@ -135,7 +136,7 @@ void fonc_bouton_options_retour(SingletonSysteme* sing_syst, Selectionnable* bou
     sing_syst->etat = MENU_PRINCIPAL;
 }
 
-void fonc_bouton_options_fenetre(SingletonSysteme* sing_syst, Selectionnable* bouton)
+/*void fonc_bouton_options_fenetre(SingletonSysteme* sing_syst, Selectionnable* bouton)
 {
     std::cout << "click options fenetre" << std::endl;
     reglage_fenetre(sing_syst); //=> passer le parametre
@@ -147,22 +148,24 @@ void fonc_bouton_options_fenetre(SingletonSysteme* sing_syst, Selectionnable* bo
     {
         dynamic_cast<Bouton*>(bouton)->texte.texte = "PLEIN-ECRAN";
     }
-}
+}*/
 
-void fonc_bouton_quitter(SingletonSysteme* sing_syst, Selectionnable* bouton)
+/*void fonc_bouton_quitter(SingletonSysteme* sing_syst, Selectionnable* bouton)
 {
     (void)bouton;
     std::cout << "click quitter" << std::endl;
     sing_syst->Sauvegarder();
     sing_syst->Destroy(); //il faut tout clean...
     exit(EXIT_SUCCESS);
-}
+}*/
 
-void fonc_choix_touche_haut(SingletonSysteme* sing_syst, Selectionnable* bouton)
+
+void fonc_choix_touche(SingletonSysteme* sing_syst, Selectionnable* bouton)
 {
     bool quitter = false;
     SDL_Texture* texture = init_texture("./img/pop_up_touche.png", sing_syst->rendu);
     SDL_Rect dest = init_rect_from_image(300, 300, texture);
+    Bouton* b = dynamic_cast<Bouton*>(bouton);
     while(quitter == false)
     {
         SDL_Event e;
@@ -177,12 +180,20 @@ void fonc_choix_touche_haut(SingletonSysteme* sing_syst, Selectionnable* bouton)
                     && e.key.keysym.sym != sing_syst->touches.dep_gauche
                     && e.key.keysym.sym != sing_syst->touches.dep_droite)
                     {
-                        if((dynamic_cast<Bouton*>(bouton)->texte.texte = SDL_GetKeyName(e.key.keysym.sym)).empty() == true)
+                        if((b->texte.texte = SDL_GetKeyName(e.key.keysym.sym)).empty() == true)
                         {
                             std::cerr << "No name" << std::endl;
                             exit(EXIT_FAILURE);
                         }
-                        sing_syst->touches.dep_haut = e.key.keysym.sym;
+                        if (b->tag.find("haut") != std::string::npos)
+                            sing_syst->touches.dep_haut = e.key.keysym.sym;
+                        else if (b->tag.find("bas") != std::string::npos)
+                            sing_syst->touches.dep_bas = e.key.keysym.sym;
+                        else if (b->tag.find("gauche") != std::string::npos)
+                            sing_syst->touches.dep_gauche = e.key.keysym.sym;
+                        else if (b->tag.find("droite") != std::string::npos)
+                            sing_syst->touches.dep_droite = e.key.keysym.sym;
+
                         quitter = true;
                     }
                     break;
@@ -200,136 +211,6 @@ void fonc_choix_touche_haut(SingletonSysteme* sing_syst, Selectionnable* bouton)
     }
     SDL_DestroyTexture(texture);
 }
-
-void fonc_choix_touche_bas(SingletonSysteme* sing_syst, Selectionnable* bouton)
-{
-    bool quitter = false;
-    SDL_Texture* texture = init_texture("./img/pop_up_touche.png", sing_syst->rendu);
-    SDL_Rect dest = init_rect_from_image(300, 300, texture);
-    while(quitter == false)
-    {
-        SDL_Event e;
-        while(SDL_PollEvent(&e) != 0)
-        {
-            switch(e.type)
-            {
-                case SDL_KEYDOWN:
-
-                    if(e.key.keysym.sym != sing_syst->touches.dep_haut
-                    && e.key.keysym.sym != sing_syst->touches.dep_bas
-                    && e.key.keysym.sym != sing_syst->touches.dep_gauche
-                    && e.key.keysym.sym != sing_syst->touches.dep_droite)
-                    {
-                        if((dynamic_cast<Bouton*>(bouton)->texte.texte = SDL_GetKeyName(e.key.keysym.sym)).empty() == true)
-                        {
-                            std::cerr << "No name" << std::endl;
-                            exit(EXIT_FAILURE);
-                        }
-                        sing_syst->touches.dep_bas = e.key.keysym.sym;
-                        quitter = true;
-                    }
-                    break;
-
-                default :
-                    break;
-            }
-        }
-        if(SDL_RenderCopy(sing_syst->rendu, texture, nullptr, &dest) < 0)
-        {
-            std::cerr << SDL_GetError() << std::endl;
-            exit(EXIT_FAILURE);
-        }
-        SDL_RenderPresent(sing_syst->rendu);
-    }
-    SDL_DestroyTexture(texture);
-}
-
-void fonc_choix_touche_gauche(SingletonSysteme* sing_syst, Selectionnable* bouton)
-{
-    bool quitter = false;
-    SDL_Texture* texture = init_texture("./img/pop_up_touche.png", sing_syst->rendu);
-    SDL_Rect dest = init_rect_from_image(300, 300, texture);
-    while(quitter == false)
-    {
-        SDL_Event e;
-        while(SDL_PollEvent(&e) != 0)
-        {
-            switch(e.type)
-            {
-                case SDL_KEYDOWN:
-
-                    if(e.key.keysym.sym != sing_syst->touches.dep_haut
-                    && e.key.keysym.sym != sing_syst->touches.dep_bas
-                    && e.key.keysym.sym != sing_syst->touches.dep_gauche
-                    && e.key.keysym.sym != sing_syst->touches.dep_droite)
-                    {
-                        if((dynamic_cast<Bouton*>(bouton)->texte.texte = SDL_GetKeyName(e.key.keysym.sym)).empty() == true)
-                        {
-                            std::cerr << "No name" << std::endl;
-                            exit(EXIT_FAILURE);
-                        }
-                        sing_syst->touches.dep_gauche = e.key.keysym.sym;
-                        quitter = true;
-                    }
-                    break;
-
-                default :
-                    break;
-            }
-        }
-        if(SDL_RenderCopy(sing_syst->rendu, texture, nullptr, &dest) < 0)
-        {
-            std::cerr << SDL_GetError() << std::endl;
-            exit(EXIT_FAILURE);
-        }
-        SDL_RenderPresent(sing_syst->rendu);
-    }
-    SDL_DestroyTexture(texture);
-}
-
-void fonc_choix_touche_droite(SingletonSysteme* sing_syst, Selectionnable* bouton)
-{
-    bool quitter = false;
-    SDL_Texture* texture = init_texture("./img/pop_up_touche.png", sing_syst->rendu);
-    SDL_Rect dest = init_rect_from_image(300, 300, texture);
-    while(quitter == false)
-    {
-        SDL_Event e;
-        while(SDL_PollEvent(&e) != 0)
-        {
-            switch(e.type)
-            {
-                case SDL_KEYDOWN:
-
-                    if(e.key.keysym.sym != sing_syst->touches.dep_haut
-                    && e.key.keysym.sym != sing_syst->touches.dep_bas
-                    && e.key.keysym.sym != sing_syst->touches.dep_gauche
-                    && e.key.keysym.sym != sing_syst->touches.dep_droite)
-                    {
-                        if((dynamic_cast<Bouton*>(bouton)->texte.texte = SDL_GetKeyName(e.key.keysym.sym)).empty() == true)
-                        {
-                            std::cerr << "No name" << std::endl;
-                            exit(EXIT_FAILURE);
-                        }
-                        sing_syst->touches.dep_droite = e.key.keysym.sym;
-                        quitter = true;
-                    }
-                    break;
-
-                default :
-                    break;
-            }
-        }
-        if(SDL_RenderCopy(sing_syst->rendu, texture, nullptr, &dest) < 0)
-        {
-            std::cerr << SDL_GetError() << std::endl;
-            exit(EXIT_FAILURE);
-        }
-        SDL_RenderPresent(sing_syst->rendu);
-    }
-    SDL_DestroyTexture(texture);
-}
-
 
 void fonc_toggle_son(SingletonSysteme* sing_syst, Selectionnable* bouton)
 {
@@ -380,6 +261,7 @@ int main(int argc, char* argv[])
     // MENU PRINCIPAL /////////////////////////////////////////////////////////////////////////////////////////////////////////////////
 
     MenuPrincipal menuPrincipal(&SingletonSysteme::instance());
+    MenuOptions menuOptions(&SingletonSysteme::instance());
 
     /*Bouton bouton_continuer(ROUGE, VERT, BLEU, GRIS, {550, 225, 200, 100}, &fonc_bouton_continuer, "Continuer", SingletonSysteme::instance().rendu, "Bouton continuer");
     Texte texte_nom_joueur(SingletonSysteme::instance().nom_joueur, "./font/lazy.ttf", BLANC, {300, 225, 200, 100}, SingletonSysteme::instance().rendu);
@@ -402,7 +284,7 @@ int main(int argc, char* argv[])
     ///////////////////////////////////////////////////////////////////////////////////////////////////////////////////////////////////
 
     // MENU OPTIONS ////////////////////////////////////////////////////////////////////////////////////////////////////////////////////////////////////
-    Texte texte_touche_haut("Haut", "./font/lazy.ttf", BLANC, {420, 100, 150, 60}, SingletonSysteme::instance().rendu);
+    /*Texte texte_touche_haut("Haut", "./font/lazy.ttf", BLANC, {420, 100, 150, 60}, SingletonSysteme::instance().rendu);
     Texte texte_touche_bas("Bas", "./font/lazy.ttf", BLANC, {420, 180, 150, 60}, SingletonSysteme::instance().rendu);
     Texte texte_touche_gauche("Gauche", "./font/lazy.ttf", BLANC, {420, 260, 150, 60}, SingletonSysteme::instance().rendu);
     Texte texte_touche_droite("Droite", "./font/lazy.ttf", BLANC, {420, 340, 150, 60}, SingletonSysteme::instance().rendu);
@@ -411,10 +293,10 @@ int main(int argc, char* argv[])
     Bouton bouton_options_fenetre(ROUGE, VERT, BLEU, BLANC, {575, 600, 200, 100}, &fonc_bouton_options_fenetre, mode, SingletonSysteme::instance().rendu, "Bouton options fenetre");
     Bouton bouton_options_retour(ROUGE, VERT, BLEU, BLANC, {100, 600, 200, 100}, &fonc_bouton_options_retour, "RETOUR", SingletonSysteme::instance().rendu, "Bouton options retour");
 
-    Bouton bouton_options_touche_haut(ROUGE, VERT, BLEU, BLANC, {600, 100, 150, 60}, &fonc_choix_touche_haut, SDL_GetKeyName(SingletonSysteme::instance().touches.dep_haut), SingletonSysteme::instance().rendu, "Bouton options touche haut");
-    Bouton bouton_options_touche_bas(ROUGE, VERT, BLEU, BLANC, {600, 180, 150, 60}, &fonc_choix_touche_bas, SDL_GetKeyName(SingletonSysteme::instance().touches.dep_bas), SingletonSysteme::instance().rendu, "Bouton options touche bas");
-    Bouton bouton_options_touche_gauche(ROUGE, VERT, BLEU, BLANC, {600, 260, 150, 60}, &fonc_choix_touche_gauche, SDL_GetKeyName(SingletonSysteme::instance().touches.dep_gauche), SingletonSysteme::instance().rendu, "Bouton options touche gauche");
-    Bouton bouton_options_touche_droite(ROUGE, VERT, BLEU, BLANC, {600, 340, 150, 60}, &fonc_choix_touche_droite, SDL_GetKeyName(SingletonSysteme::instance().touches.dep_droite), SingletonSysteme::instance().rendu, "Bouton options touche droite");
+    Bouton bouton_options_touche_haut(ROUGE, VERT, BLEU, BLANC, {600, 100, 150, 60}, &fonc_choix_touche, SDL_GetKeyName(SingletonSysteme::instance().touches.dep_haut), SingletonSysteme::instance().rendu, "Bouton options touche haut");
+    Bouton bouton_options_touche_bas(ROUGE, VERT, BLEU, BLANC, {600, 180, 150, 60}, &fonc_choix_touche, SDL_GetKeyName(SingletonSysteme::instance().touches.dep_bas), SingletonSysteme::instance().rendu, "Bouton options touche bas");
+    Bouton bouton_options_touche_gauche(ROUGE, VERT, BLEU, BLANC, {600, 260, 150, 60}, &fonc_choix_touche, SDL_GetKeyName(SingletonSysteme::instance().touches.dep_gauche), SingletonSysteme::instance().rendu, "Bouton options touche gauche");
+    Bouton bouton_options_touche_droite(ROUGE, VERT, BLEU, BLANC, {600, 340, 150, 60}, &fonc_choix_touche, SDL_GetKeyName(SingletonSysteme::instance().touches.dep_droite), SingletonSysteme::instance().rendu, "Bouton options touche droite");
 
     Toggle toggle_sound(BLANC, GRIS, GRIS, GRIS, {280, 100, 50, 50}, "SON", &fonc_toggle_son, SingletonSysteme::instance().son_active, SingletonSysteme::instance().rendu);
     Toggle toggle_musique(BLANC, GRIS, GRIS, GRIS, {1000, 100, 50, 50}, "MUSIQUE", &fonc_toggle_musique, SingletonSysteme::instance().musique_activee, SingletonSysteme::instance().rendu);
@@ -428,7 +310,7 @@ int main(int argc, char* argv[])
     bouton_options_touche_droite.setSelectedIfMove(&bouton_options_touche_gauche, &bouton_options_fenetre, nullptr, nullptr);
     toggle_sound.setSelectedIfMove(nullptr, nullptr, nullptr, &bouton_options_touche_haut);
     toggle_musique.setSelectedIfMove(nullptr, nullptr, &bouton_options_touche_haut, nullptr);
-    bouton_options_retour.setSelected(&bouton_options_retour);
+    bouton_options_retour.setSelected(&bouton_options_retour);*/
 
     ////////////////////////////////////////////////////////////////////////////////////////////////////////////////////////////////////////////////////
 
@@ -492,14 +374,15 @@ int main(int argc, char* argv[])
             }
             else if(SingletonSysteme::instance().etat == MENU_OPTIONS)
             {
-                bouton_options_retour.HandleEvents(e, &SingletonSysteme::instance());
+                /*bouton_options_retour.HandleEvents(e, &SingletonSysteme::instance());
                 bouton_options_fenetre.HandleEvents(e, &SingletonSysteme::instance());
                 toggle_sound.HandleEvents(e, &SingletonSysteme::instance());
                 toggle_musique.HandleEvents(e, &SingletonSysteme::instance());
                 bouton_options_touche_haut.HandleEvents(e, &SingletonSysteme::instance());
                 bouton_options_touche_bas.HandleEvents(e, &SingletonSysteme::instance());
                 bouton_options_touche_gauche.HandleEvents(e, &SingletonSysteme::instance());
-                bouton_options_touche_droite.HandleEvents(e, &SingletonSysteme::instance());
+                bouton_options_touche_droite.HandleEvents(e, &SingletonSysteme::instance());*/
+                menuOptions.HandleEvents(e, &SingletonSysteme::instance());
             }
             else if(SingletonSysteme::instance().etat == DEMANDE_NOM)
             {
@@ -541,7 +424,7 @@ int main(int argc, char* argv[])
         }
         else if(SingletonSysteme::instance().etat == MENU_OPTIONS)
         {
-            bouton_options_retour.Draw(SingletonSysteme::instance().rendu);
+            /*bouton_options_retour.Draw(SingletonSysteme::instance().rendu);
             mode_ecran.Draw(SingletonSysteme::instance().rendu);
             bouton_options_fenetre.Draw(SingletonSysteme::instance().rendu);
             toggle_sound.Draw(SingletonSysteme::instance().rendu);
@@ -554,7 +437,8 @@ int main(int argc, char* argv[])
             texte_touche_haut.Draw(SingletonSysteme::instance().rendu);
             texte_touche_bas.Draw(SingletonSysteme::instance().rendu);
             texte_touche_gauche.Draw(SingletonSysteme::instance().rendu);
-            texte_touche_droite.Draw(SingletonSysteme::instance().rendu);
+            texte_touche_droite.Draw(SingletonSysteme::instance().rendu);*/
+            menuOptions.Draw(SingletonSysteme::instance().rendu, &SingletonSysteme::instance());
         }
         else if(SingletonSysteme::instance().etat == DEMANDE_NOM)
         {

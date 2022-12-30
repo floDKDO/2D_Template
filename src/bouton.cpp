@@ -8,6 +8,7 @@ Bouton::Bouton(SDL_Color couleur_normal, SDL_Color couleur_hover, SDL_Color coul
     this->couleur_click = couleur_click;
     this->couleur_selected = couleur_selected;
     this->etat = NORMAL; //etat de base
+    this->previousEtat = etat;
 
     this->position = position;
     this->funcPtr = funcPtr; //pointeur sur la fonction qui sera lancée quand il y aura un clic sur le bouton
@@ -32,6 +33,7 @@ Bouton::Bouton(std::string image_normal, std::string image_hover, std::string im
 :texte(texte, "./font/lazy.ttf", {255, 255, 255, 255}, position, rendu)
 {
     this->etat = NORMAL; //etat de base
+    this->previousEtat = etat;
 
     if((this->image_normal = IMG_LoadTexture(rendu, image_normal.c_str())) == nullptr)
     {
@@ -231,8 +233,7 @@ void Bouton::onPointerEnter(SDL_Event e, SingletonSysteme* sing_syst)
         if(this->selectOnRight != nullptr)
             this->selectOnRight->etat = NORMAL;*/
         //getSelected()->etat = NORMAL
-        this->etat = SELECTED;
-        if(son_joue == false && sing_syst->son_active == true)
+        if(son_joue == false && sing_syst->son_active == true && previousEtat != SELECTED)
         {
             if(Mix_PlayChannel(1, hover_sound, 0) < 0)
             {
@@ -241,6 +242,7 @@ void Bouton::onPointerEnter(SDL_Event e, SingletonSysteme* sing_syst)
             }
             son_joue = true;
         }
+        this->etat = SELECTED;
     }
     else //si on se trouve sur le bouton avec le clic enfonce
     {
@@ -256,7 +258,6 @@ void Bouton::onPointerEnter(SDL_Event e, SingletonSysteme* sing_syst)
                 this->selectOnLeft->etat = NORMAL;
             if(this->selectOnRight != nullptr)
                 this->selectOnRight->etat = NORMAL;*/
-            this->etat = SELECTED;
             if(son_joue == false && sing_syst->son_active == true)
             {
                 if(Mix_PlayChannel(1, hover_sound, 0) < 0)
@@ -266,8 +267,10 @@ void Bouton::onPointerEnter(SDL_Event e, SingletonSysteme* sing_syst)
                 }
                 son_joue = true;
             }
+            this->etat = SELECTED;
         }
     }
+    this->previousEtat = etat;
 }
 
 
@@ -277,6 +280,8 @@ void Bouton::onPointerExit(SDL_Event e, SingletonSysteme* sing_syst)
     if(e.button.button != SDL_BUTTON_LEFT) //si on se trouve sur le bouton sans le clic enfonce
     {
         //this->etat = NORMAL;
+
+        previousEtat = etat;
         son_joue = false;
     }
     else //si on se trouve sur le bouton avec le clic enfonce
@@ -284,6 +289,8 @@ void Bouton::onPointerExit(SDL_Event e, SingletonSysteme* sing_syst)
         if(clicAvantCollision == false)
         {
             //this->etat = NORMAL;
+
+            previousEtat = etat;
             son_joue = false;
         }
     }

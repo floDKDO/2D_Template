@@ -30,7 +30,7 @@ class Toggle : public Selectionnable
 
         bool hasImage;
 
-        SDL_Rect position;
+        //SDL_Rect position;
 
         //typedef void(*eventFunction)(SingletonSysteme*, Bouton*);
         //eventFunction funcPtr; //pointeur sur la fonction qui sera lancée quand il y aura un clic sur le bouton
@@ -41,6 +41,7 @@ class Toggle : public Selectionnable
         Mix_Chunk* hover_sound;
         Mix_Chunk* click_sound;
         bool son_joue = false;
+        int previousEtat;
 
         std::string tag;
 
