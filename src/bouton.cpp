@@ -303,7 +303,7 @@ void Bouton::onClick(SDL_Event e, SingletonSysteme* sing_syst)
     SDL_GetMouseState(&x, &y);
     if(collision(this->position, x, y) == true && clicAvantCollision == false) //empecher de cliquer avant d'etre sur le bouton
     {
-        this->etat = NORMAL;
+        this->etat = SELECTED;
         if(sing_syst->son_active == true)
         {
             if(Mix_PlayChannel(1, click_sound, 0) < 0)

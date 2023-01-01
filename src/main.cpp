@@ -12,6 +12,7 @@
 #include "toggle.hpp"
 #include "menuPrincipal.hpp"
 #include "menuOptions.hpp"
+#include "menuChoixNom.hpp"
 
 SDL_Texture* init_texture(std::string image, SDL_Renderer* rendu)
 {
@@ -48,7 +49,7 @@ SDL_Rect init_rect_from_image(int x, int y, SDL_Texture* texture)
 }
 
 
-void plein_ecran(SDL_Window* fenetre)
+/*void plein_ecran(SDL_Window* fenetre)
 {
     if(SDL_SetWindowFullscreen(fenetre, SDL_WINDOW_FULLSCREEN) < 0)
     {
@@ -80,7 +81,7 @@ void reglage_fenetre(SingletonSysteme* sing_syst)
         plein_ecran(sing_syst->fenetre);
         sing_syst->mode_fenetre = PLEIN_ECRAN;
     }
-}
+}*/
 
 /*void redimensionner_fenetre(SDL_Window* fenetre, int x, int y)
 {
@@ -107,7 +108,7 @@ void reglage_fenetre(SingletonSysteme* sing_syst)
     sing_syst->etat = EN_JEU;
 }*/
 
-void fonc_bouton_fin_demande_nom(SingletonSysteme* sing_syst, Selectionnable* bouton)
+/*void fonc_bouton_fin_demande_nom(SingletonSysteme* sing_syst, Selectionnable* bouton)
 {
     (void)bouton;
     std::cout << "click jouer" << std::endl;
@@ -120,7 +121,7 @@ void fonc_bouton_fin_demande_nom(SingletonSysteme* sing_syst, Selectionnable* bo
 void fonc_inputfield_nom_joueur(SingletonSysteme* sing_syst, Selectionnable* inputfield)
 {
     sing_syst->nom_joueur = dynamic_cast<Inputfield*>(inputfield)->texte.texte;
-}
+}*/
 
 /*void fonc_bouton_options(SingletonSysteme* sing_syst, Selectionnable* bouton)
 {
@@ -129,12 +130,12 @@ void fonc_inputfield_nom_joueur(SingletonSysteme* sing_syst, Selectionnable* inp
     sing_syst->etat = MENU_OPTIONS;
 }*/
 
-void fonc_bouton_options_retour(SingletonSysteme* sing_syst, Selectionnable* bouton)
+/*void fonc_bouton_options_retour(SingletonSysteme* sing_syst, Selectionnable* bouton)
 {
     (void)bouton;
     std::cout << "click options retour" << std::endl;
     sing_syst->etat = MENU_PRINCIPAL;
-}
+}*/
 
 /*void fonc_bouton_options_fenetre(SingletonSysteme* sing_syst, Selectionnable* bouton)
 {
@@ -160,7 +161,7 @@ void fonc_bouton_options_retour(SingletonSysteme* sing_syst, Selectionnable* bou
 }*/
 
 
-void fonc_choix_touche(SingletonSysteme* sing_syst, Selectionnable* bouton)
+/*void fonc_choix_touche(SingletonSysteme* sing_syst, Selectionnable* bouton)
 {
     bool quitter = false;
     SDL_Texture* texture = init_texture("./img/pop_up_touche.png", sing_syst->rendu);
@@ -225,7 +226,7 @@ void fonc_toggle_musique(SingletonSysteme* sing_syst, Selectionnable* bouton)
     std::cout << "click toggle musique" << std::endl;
     sing_syst->musique_activee = !(sing_syst->musique_activee);
 }
-
+*/
 
 /* Algo de modification de taille de fenetre
 1. Partir d'une taille de résolution de base et donc d'une taille de fenetre de base (ex : 1280 * 720)
@@ -262,6 +263,7 @@ int main(int argc, char* argv[])
 
     MenuPrincipal menuPrincipal(&SingletonSysteme::instance());
     MenuOptions menuOptions(&SingletonSysteme::instance());
+    MenuChoixNom menuChoixNom(&SingletonSysteme::instance());
 
     /*Bouton bouton_continuer(ROUGE, VERT, BLEU, GRIS, {550, 225, 200, 100}, &fonc_bouton_continuer, "Continuer", SingletonSysteme::instance().rendu, "Bouton continuer");
     Texte texte_nom_joueur(SingletonSysteme::instance().nom_joueur, "./font/lazy.ttf", BLANC, {300, 225, 200, 100}, SingletonSysteme::instance().rendu);
@@ -315,14 +317,14 @@ int main(int argc, char* argv[])
     ////////////////////////////////////////////////////////////////////////////////////////////////////////////////////////////////////////////////////
 
     // MENU CHOIX DU NOM //////////////////////////////////////////////////////////////////////////////////////////////////////////////////////
-    Inputfield inputfield("./font/lazy.ttf", ROUGE, {300, 400, 200, 50}, &fonc_inputfield_nom_joueur, SingletonSysteme::instance().rendu);
+    /*Inputfield inputfield("./font/lazy.ttf", ROUGE, {300, 400, 200, 50}, &fonc_inputfield_nom_joueur, SingletonSysteme::instance().rendu);
     Texte demande_nom("Ecrivez votre nom", "./font/lazy.ttf", BLANC, {300, 200, 300, 150}, SingletonSysteme::instance().rendu);
     Bouton bouton_valider(ROUGE, VERT, BLEU, BLANC, {300, 550, 200, 100}, &fonc_bouton_fin_demande_nom, "VALIDER", SingletonSysteme::instance().rendu, "Bouton valider");
 
     inputfield.setSelectedIfMove(nullptr, &bouton_valider, nullptr, nullptr);
     bouton_valider.setSelectedIfMove(&inputfield, nullptr, nullptr, nullptr);
 
-    bouton_valider.setSelected(&bouton_valider);
+    bouton_valider.setSelected(&bouton_valider);*/
     ///////////////////////////////////////////////////////////////////////////////////////////////////////////////////////////////////////////
 
     // EN JEU ////////////////////////////////////////////////////////////////////////////////
@@ -386,8 +388,9 @@ int main(int argc, char* argv[])
             }
             else if(SingletonSysteme::instance().etat == DEMANDE_NOM)
             {
-                bouton_valider.HandleEvents(e, &SingletonSysteme::instance());
-                inputfield.HandleEvents(e, &SingletonSysteme::instance());
+                /*bouton_valider.HandleEvents(e, &SingletonSysteme::instance());
+                inputfield.HandleEvents(e, &SingletonSysteme::instance());*/
+                menuChoixNom.HandleEvents(e, &SingletonSysteme::instance());
             }
             else if(SingletonSysteme::instance().etat == EN_JEU)
             {
@@ -442,9 +445,10 @@ int main(int argc, char* argv[])
         }
         else if(SingletonSysteme::instance().etat == DEMANDE_NOM)
         {
-            bouton_valider.Draw(SingletonSysteme::instance().rendu);
+            /*bouton_valider.Draw(SingletonSysteme::instance().rendu);
             demande_nom.Draw(SingletonSysteme::instance().rendu);
-            inputfield.Draw(SingletonSysteme::instance().rendu);
+            inputfield.Draw(SingletonSysteme::instance().rendu);*/
+            menuChoixNom.Draw(SingletonSysteme::instance().rendu, &SingletonSysteme::instance());
         }
         else if(SingletonSysteme::instance().etat == EN_JEU)
         {

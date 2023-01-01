@@ -8,14 +8,19 @@ MenuPrincipal::MenuPrincipal(SingletonSysteme* sing_syst)
 ,bouton_options(ROUGE, VERT, BLEU, GRIS, {550, 475, 200, 100}, &fonc_bouton_options, "OPTIONS", sing_syst->rendu, "Bouton options")
 ,bouton_quitter(ROUGE, VERT, BLEU, GRIS, {550, 600, 200, 100}, &fonc_bouton_quitter, "QUITTER", sing_syst->rendu, "Bouton quitter")
 {
-    bouton_nouvelle_partie.setSelected(&bouton_nouvelle_partie);
     bouton_options.setSelectedIfMove(&bouton_nouvelle_partie, &bouton_quitter, nullptr, nullptr);
-
     bouton_continuer.setSelectedIfMove(nullptr, &bouton_nouvelle_partie, nullptr, nullptr);
 
     if(SingletonSysteme::instance().nom_joueur.empty() == true)
+    {
+        bouton_nouvelle_partie.setSelected(&bouton_nouvelle_partie);
         bouton_nouvelle_partie.setSelectedIfMove(nullptr, &bouton_options, nullptr, nullptr);
-    else bouton_nouvelle_partie.setSelectedIfMove(&bouton_continuer, &bouton_options, nullptr, nullptr);
+    }
+    else
+    {
+        bouton_continuer.setSelected(&bouton_continuer);
+        bouton_nouvelle_partie.setSelectedIfMove(&bouton_continuer, &bouton_options, nullptr, nullptr);
+    }
 
     bouton_quitter.setSelectedIfMove(&bouton_options, nullptr, nullptr, nullptr);
 

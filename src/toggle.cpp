@@ -389,7 +389,7 @@ void Toggle::onClick(SDL_Event e, SingletonSysteme* sing_syst)
     SDL_GetMouseState(&x, &y);
     if(collision(this->position, x, y) == true && clicAvantCollision == false) //empecher de cliquer avant d'etre sur le bouton
     {
-        this->etat = NORMAL;
+        this->etat = SELECTED;
         isChecked = !isChecked;
         if(sing_syst->son_active == true)
         {
