@@ -92,6 +92,14 @@ void MenuOptions::HandleEvents(SDL_Event e, SingletonSysteme* sing_syst)
         {
             s->onKeyReleased(e, sing_syst);
         }
+        else if(e.type == SDL_CONTROLLERBUTTONDOWN)
+        {
+            s->onControllerButtonPressed(e, sing_syst);
+        }
+        else if(e.type == SDL_CONTROLLERBUTTONUP)
+        {
+            s->onControllerButtonReleased(e, sing_syst);
+        }
         else if(e.type == SDL_MOUSEMOTION)
         {
             if(s->collision(s->position, x, y) == true)

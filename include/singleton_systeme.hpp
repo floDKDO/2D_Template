@@ -34,6 +34,16 @@ struct touches_clavier
     SDL_Keycode dep_droite;
 };
 
+
+struct touches_manette
+{
+    SDL_GameControllerButton dep_haut;
+    SDL_GameControllerButton dep_bas;
+    SDL_GameControllerButton dep_gauche;
+    SDL_GameControllerButton dep_droite;
+};
+
+
 const SDL_Color ROUGE = {255, 0, 0, 255};
 const SDL_Color VERT = {0, 255, 0, 255};
 const SDL_Color BLEU = {0, 0, 255, 255};
@@ -56,6 +66,8 @@ class SingletonSysteme
         void Destroy();
 
         touches_clavier touches;
+        touches_manette touches_1;
+        SDL_GameController* manette;
 
         SDL_Window* fenetre;
         SDL_Renderer* rendu;

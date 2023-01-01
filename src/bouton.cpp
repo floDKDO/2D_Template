@@ -190,6 +190,14 @@ void Bouton::HandleEvents(SDL_Event e, SingletonSysteme* sing_syst)
     {
         this->onKeyReleased(e, sing_syst);
     }
+    else if(e.type == SDL_CONTROLLERBUTTONDOWN)
+    {
+        this->onControllerButtonPressed(e, sing_syst);
+    }
+    else if(e.type == SDL_CONTROLLERBUTTONUP)
+    {
+        this->onControllerButtonReleased(e, sing_syst);
+    }
     else if(e.type == SDL_MOUSEMOTION)
     {
         if(collision(this->position, x, y) == true)
@@ -371,6 +379,66 @@ void Bouton::onKeyPressed(SDL_Event e, SingletonSysteme* sing_syst)
 
 
 void Bouton::onKeyReleased(SDL_Event e, SingletonSysteme* sing_syst)
+{
+    (void)e;
+    (void)sing_syst;
+    this->verrou = true;
+}
+
+
+void Bouton::onControllerButtonPressed(SDL_Event e, SingletonSysteme* sing_syst)
+{
+    if(this->etat == SELECTED && verrou == true)
+    {
+        if(e.cbutton.button == SDL_CONTROLLER_BUTTON_DPAD_UP)
+        {
+            if(this->selectOnUp != nullptr)
+            {
+                this->fonc(this->selectOnUp, sing_syst);
+            }
+        }
+        else if(e.cbutton.button == SDL_CONTROLLER_BUTTON_DPAD_DOWN)
+        {
+            if(this->selectOnDown != nullptr)
+            {
+                this->fonc(this->selectOnDown, sing_syst);
+            }
+        }
+        else if(e.cbutton.button == SDL_CONTROLLER_BUTTON_DPAD_LEFT)
+        {
+            if(this->selectOnLeft != nullptr)
+            {
+                this->fonc(this->selectOnLeft, sing_syst);
+            }
+        }
+        else if(e.cbutton.button == SDL_CONTROLLER_BUTTON_DPAD_RIGHT)
+        {
+            if(this->selectOnRight != nullptr)
+            {
+                this->fonc(this->selectOnRight, sing_syst);
+            }
+        }
+
+        if(e.cbutton.button == SDL_CONTROLLER_BUTTON_A) //a ameliorer selon le type de manette
+        {
+            if(this->etat == SELECTED)
+            {
+                if(sing_syst->son_active == true)
+                {
+                    if(Mix_PlayChannel(1, click_sound, 0) < 0)
+                    {
+                        std::cerr << Mix_GetError() << std::endl;
+                        exit(EXIT_FAILURE);
+                    }
+                }
+                this->funcPtr(sing_syst, this);
+            }
+        }
+        verrou = false;
+    }
+}
+
+void Bouton::onControllerButtonReleased(SDL_Event e, SingletonSysteme* sing_syst)
 {
     (void)e;
     (void)sing_syst;

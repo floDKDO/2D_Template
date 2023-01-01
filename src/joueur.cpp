@@ -76,6 +76,31 @@ void Joueur::HandleEvents(SDL_Event e, SingletonSysteme* sing_syst)
         {
             ResetAllValues(this->dep);
         }
+        else if(e.type == SDL_CONTROLLERBUTTONDOWN)
+        {
+            if(e.cbutton.button == sing_syst->touches_1.dep_haut)
+            {
+                SetValue(dep, 0);
+            }
+            else if(e.cbutton.button == sing_syst->touches_1.dep_bas)
+            {
+                SetValue(dep, 1);
+            }
+            else if(e.cbutton.button == sing_syst->touches_1.dep_gauche)
+            {
+                SetValue(dep, 2);
+            }
+            else if(e.cbutton.button == sing_syst->touches_1.dep_droite)
+            {
+                SetValue(dep, 3);
+            }
+            sing_syst->posX_joueur = this->position.x;
+            sing_syst->posY_joueur = this->position.y;
+        }
+        else if(e.type == SDL_CONTROLLERBUTTONUP)
+        {
+            ResetAllValues(this->dep);
+        }
     }
     else if(this->mode == VUE_COTE)
     {
@@ -108,7 +133,41 @@ void Joueur::HandleEvents(SDL_Event e, SingletonSysteme* sing_syst)
                 if(vitesseDeChute < -(this->hauteur_saut / 2))
                     vitesseDeChute = -(this->hauteur_saut / 2);
             }
-            else if((e.key.keysym.sym == SDLK_LEFT || e.key.keysym.sym == SDLK_q) || (e.key.keysym.sym == SDLK_RIGHT || e.key.keysym.sym == SDLK_d))
+            else if(e.key.keysym.sym == SDLK_LEFT || e.key.keysym.sym == SDLK_RIGHT)
+            {
+                ResetAllValues(this->dep);
+            }
+        }
+        else if(e.type == SDL_CONTROLLERBUTTONDOWN)
+        {
+            if(e.cbutton.button == sing_syst->touches_1.dep_gauche)
+            {
+                SetValue(dep, 2);
+            }
+            else if(e.cbutton.button == sing_syst->touches_1.dep_droite)
+            {
+                SetValue(dep, 3);
+            }
+            else if(e.cbutton.button == SDL_CONTROLLER_BUTTON_A)
+            {
+                if(surSol == true)
+                {
+                    surSol = false;
+                    vitesseDeChute = -(this->hauteur_saut);
+                }
+            }
+            sing_syst->posX_joueur = this->position.x;
+            sing_syst->posY_joueur = this->position.y;
+        }
+        else if(e.type == SDL_CONTROLLERBUTTONUP)
+        {
+            if(e.cbutton.button == SDL_CONTROLLER_BUTTON_A)
+            {
+                //permet de jauger le saut quand on relache espace si on a pas atteint la vitesse maximale d'hauteur
+                if(vitesseDeChute < -(this->hauteur_saut / 2))
+                    vitesseDeChute = -(this->hauteur_saut / 2);
+            }
+            else if(e.cbutton.button == sing_syst->touches_1.dep_gauche || e.cbutton.button == sing_syst->touches_1.dep_droite)
             {
                 ResetAllValues(this->dep);
             }
@@ -159,7 +218,7 @@ void Joueur::Update(Uint32& timeStep)
         position.y += vitesseDeChute;
         vitesseDeChute += 0.5f; //gravite
 
-        if(position.y > 720 - 32) //si on touche le sol
+        if(position.y > 704 - 32) //si on touche le sol
         {
             position.y = 672;
             surSol = true;

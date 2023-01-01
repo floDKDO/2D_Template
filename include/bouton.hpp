@@ -55,6 +55,8 @@ class Bouton : public Selectionnable
         void onClick(SDL_Event e, SingletonSysteme* sing_syst);
         void onKeyPressed(SDL_Event e, SingletonSysteme* sing_syst);
         void onKeyReleased(SDL_Event e, SingletonSysteme* sing_syst);
+        void onControllerButtonPressed(SDL_Event e, SingletonSysteme* sing_syst);
+        void onControllerButtonReleased(SDL_Event e, SingletonSysteme* sing_syst);
 
         void setSelectedIfMove(Selectionnable* selectOnUp, Selectionnable* selectOnDown, Selectionnable* selectOnLeft, Selectionnable* selectOnRight);
         void setSelected(Selectionnable* ui);

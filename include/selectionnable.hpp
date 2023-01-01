@@ -39,6 +39,8 @@ class Selectionnable
         virtual void onClick(SDL_Event e, SingletonSysteme* sing_syst);
         virtual void onKeyPressed(SDL_Event e, SingletonSysteme* sing_syst);
         virtual void onKeyReleased(SDL_Event e, SingletonSysteme* sing_syst);
+        virtual void onControllerButtonPressed(SDL_Event e, SingletonSysteme* sing_syst);
+        virtual void onControllerButtonReleased(SDL_Event e, SingletonSysteme* sing_syst);
 
         SDL_Rect position;
 

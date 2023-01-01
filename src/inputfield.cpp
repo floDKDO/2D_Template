@@ -122,51 +122,126 @@ void Inputfield::HandleEvents(SDL_Event e, SingletonSysteme* sing_syst)
         }
         else
         {
-            if(e.key.keysym.sym == SDLK_UP)
+            if(this->etat == SELECTED && verrou == true)
             {
-                if(this->selectOnUp != nullptr)
+                if(e.key.keysym.sym == SDLK_UP)
                 {
-                    this->fonc(this->selectOnUp, sing_syst);
-                }
-            }
-            else if(e.key.keysym.sym == SDLK_DOWN)
-            {
-                if(this->selectOnDown != nullptr)
-                {
-                    this->fonc(this->selectOnDown, sing_syst);
-                }
-            }
-            else if(e.key.keysym.sym == SDLK_LEFT)
-            {
-                if(this->selectOnLeft != nullptr)
-                {
-                    this->fonc(this->selectOnLeft, sing_syst);
-                }
-            }
-            else if(e.key.keysym.sym == SDLK_RIGHT)
-            {
-                if(this->selectOnRight != nullptr)
-                {
-                    this->fonc(this->selectOnRight, sing_syst);
-                }
-            }
-
-            if(e.key.keysym.sym == SDLK_RETURN)
-            {
-                if(this->etat == SELECTED)
-                {
-                    mode_edition = true;
-                    if(sing_syst->son_active == true)
+                    if(this->selectOnUp != nullptr)
                     {
-                        if(Mix_PlayChannel(1, click_sound, 0) < 0)
+                        this->fonc(this->selectOnUp, sing_syst);
+                    }
+                }
+                else if(e.key.keysym.sym == SDLK_DOWN)
+                {
+                    if(this->selectOnDown != nullptr)
+                    {
+                        this->fonc(this->selectOnDown, sing_syst);
+                    }
+                }
+                else if(e.key.keysym.sym == SDLK_LEFT)
+                {
+                    if(this->selectOnLeft != nullptr)
+                    {
+                        this->fonc(this->selectOnLeft, sing_syst);
+                    }
+                }
+                else if(e.key.keysym.sym == SDLK_RIGHT)
+                {
+                    if(this->selectOnRight != nullptr)
+                    {
+                        this->fonc(this->selectOnRight, sing_syst);
+                    }
+                }
+
+                if(e.key.keysym.sym == SDLK_RETURN)
+                {
+                    if(this->etat == SELECTED)
+                    {
+                        mode_edition = true;
+                        if(sing_syst->son_active == true)
                         {
-                            std::cerr << Mix_GetError() << std::endl;
-                            exit(EXIT_FAILURE);
+                            if(Mix_PlayChannel(1, click_sound, 0) < 0)
+                            {
+                                std::cerr << Mix_GetError() << std::endl;
+                                exit(EXIT_FAILURE);
+                            }
                         }
                     }
                 }
+                verrou = false;
             }
         }
+    }
+    else if(e.type == SDL_KEYUP)
+    {
+        verrou = true;
+    }
+    else if(e.type == SDL_CONTROLLERBUTTONDOWN)
+    {
+        if(mode_edition == true)
+        {
+            if(e.cbutton.button == SDL_CONTROLLER_BUTTON_A)
+            {   //si on appuie sur entrée lors de la modification de la chaine, quitte l'inputfield
+                mode_edition = false;
+                if(funcPtr != nullptr)
+                    funcPtr(sing_syst, this); //si on appui sur entree, la fonction se lance
+            }
+        }
+        else
+        {
+            if(this->etat == SELECTED && verrou == true)
+            {
+                if(e.cbutton.button == SDL_CONTROLLER_BUTTON_DPAD_UP)
+                {
+                    if(this->selectOnUp != nullptr)
+                    {
+                        this->fonc(this->selectOnUp, sing_syst);
+                    }
+                }
+                else if(e.cbutton.button == SDL_CONTROLLER_BUTTON_DPAD_DOWN)
+                {
+                    if(this->selectOnDown != nullptr)
+                    {
+                        this->fonc(this->selectOnDown, sing_syst);
+                    }
+                }
+                else if(e.cbutton.button == SDL_CONTROLLER_BUTTON_DPAD_LEFT)
+                {
+                    if(this->selectOnLeft != nullptr)
+                    {
+                        this->fonc(this->selectOnLeft, sing_syst);
+                    }
+                }
+                else if(e.cbutton.button == SDL_CONTROLLER_BUTTON_DPAD_RIGHT)
+                {
+                    if(this->selectOnRight != nullptr)
+                    {
+                        this->fonc(this->selectOnRight, sing_syst);
+                    }
+                }
+
+                if(e.cbutton.button == SDL_CONTROLLER_BUTTON_A)
+                {
+                    if(this->etat == SELECTED)
+                    {
+                        mode_edition = true;
+                        if(sing_syst->son_active == true)
+                        {
+                            if(Mix_PlayChannel(1, click_sound, 0) < 0)
+                            {
+                                std::cerr << Mix_GetError() << std::endl;
+                                exit(EXIT_FAILURE);
+                            }
+                        }
+                    }
+                }
+                verrou = false;
+            }
+        }
+    }
+    else if(e.type == SDL_CONTROLLERBUTTONUP)
+    {
+        verrou = true;
     }
     else if(e.type == SDL_MOUSEBUTTONDOWN)
     {

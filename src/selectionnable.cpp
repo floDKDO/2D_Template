@@ -33,3 +33,13 @@ void Selectionnable::onKeyReleased(SDL_Event e, SingletonSysteme* sing_syst)
 {
 
 }
+
+void Selectionnable::onControllerButtonPressed(SDL_Event e, SingletonSysteme* sing_syst)
+{
+
+}
+
+void Selectionnable::onControllerButtonReleased(SDL_Event e, SingletonSysteme* sing_syst)
+{
+
+}

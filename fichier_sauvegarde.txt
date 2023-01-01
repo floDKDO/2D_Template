@@ -1,5 +1,5 @@
 //Nom joueur
-toto
+tata
 //Mode fenetre
 0
 //Musique activee ?
@@ -7,10 +7,10 @@ toto
 //Son active ?
 1
 //Touche déplacement haut
-Z
+Up
 //Touche déplacement bas
-S
+Down
 //Touche déplacement gauche
-Q
+Left
 //Touche déplacement droite
-D
+Right

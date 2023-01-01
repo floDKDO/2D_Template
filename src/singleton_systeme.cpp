@@ -16,7 +16,7 @@ void SingletonSysteme::Init(void)
         flags = SDL_WINDOW_RESIZABLE;
     }
 
-    if(SDL_Init(SDL_INIT_VIDEO) < 0)
+    if(SDL_Init(SDL_INIT_VIDEO | SDL_INIT_GAMECONTROLLER) < 0)
     {
         std::cerr << SDL_GetError() << std::endl;
         exit(EXIT_FAILURE);
@@ -58,7 +58,7 @@ void SingletonSysteme::Init(void)
         exit(EXIT_FAILURE);
     }
 
-    if(SDL_RenderSetLogicalSize(this->rendu, 1280, 704) < 0) //720!
+    if(SDL_RenderSetLogicalSize(this->rendu, 1280, 720) < 0) //720!
     {
         std::cerr << SDL_GetError() << std::endl;
         exit(EXIT_FAILURE);
@@ -66,6 +66,20 @@ void SingletonSysteme::Init(void)
 
     //si dans menu où il y a l'inputfield, alors appeler cette fonction
     SDL_StartTextInput();
+
+
+    this->manette = SDL_GameControllerOpen(0);
+
+    //activer les evenements manette
+    if(SDL_GameControllerEventState(SDL_ENABLE) < 0)
+    {
+        std::cerr << SDL_GetError() << std::endl;
+        exit(EXIT_FAILURE);
+    }
+    this->touches_1.dep_haut = SDL_CONTROLLER_BUTTON_DPAD_UP;
+    this->touches_1.dep_bas = SDL_CONTROLLER_BUTTON_DPAD_DOWN;
+    this->touches_1.dep_gauche = SDL_CONTROLLER_BUTTON_DPAD_LEFT;
+    this->touches_1.dep_droite = SDL_CONTROLLER_BUTTON_DPAD_RIGHT;
 }
 
 void SingletonSysteme::Charger(void)
@@ -100,7 +114,7 @@ void SingletonSysteme::Charger(void)
                         this->son_active = std::stoi(ligne);
                         break;
 
-                    case 5: //touche deplacement haut
+                    case 5: //touche deplacement haut clavier
                         if((this->touches.dep_haut = SDL_GetKeyFromName(ligne.c_str())) == SDLK_UNKNOWN)
                         {
                             std::cerr << SDL_GetError() << std::endl;
@@ -108,7 +122,7 @@ void SingletonSysteme::Charger(void)
                         }
                         break;
 
-                    case 6: //touche deplacement bas
+                    case 6: //touche deplacement bas clavier
                         if((this->touches.dep_bas = SDL_GetKeyFromName(ligne.c_str())) == SDLK_UNKNOWN)
                         {
                             std::cerr << SDL_GetError() << std::endl;
@@ -116,7 +130,7 @@ void SingletonSysteme::Charger(void)
                         }
                         break;
 
-                    case 7: //touche deplacement gauche
+                    case 7: //touche deplacement gauche clavier
                         if((this->touches.dep_gauche = SDL_GetKeyFromName(ligne.c_str())) == SDLK_UNKNOWN)
                         {
                             std::cerr << SDL_GetError() << std::endl;
@@ -124,7 +138,7 @@ void SingletonSysteme::Charger(void)
                         }
                         break;
 
-                    case 8: //touche deplacement droite
+                    case 8: //touche deplacement droite clavier
                         if((this->touches.dep_droite = SDL_GetKeyFromName(ligne.c_str())) == SDLK_UNKNOWN)
                         {
                             std::cerr << SDL_GetError() << std::endl;
@@ -156,6 +170,11 @@ void SingletonSysteme::Charger(void)
             this->touches.dep_bas = SDLK_DOWN;
             this->touches.dep_gauche = SDLK_LEFT;
             this->touches.dep_droite = SDLK_RIGHT;
+
+            this->touches_1.dep_haut = SDL_CONTROLLER_BUTTON_DPAD_UP;
+            this->touches_1.dep_bas = SDL_CONTROLLER_BUTTON_DPAD_DOWN;
+            this->touches_1.dep_gauche = SDL_CONTROLLER_BUTTON_DPAD_LEFT;
+            this->touches_1.dep_droite = SDL_CONTROLLER_BUTTON_DPAD_RIGHT;
 
             /*this->posX_joueur = 800;
             this->posY_joueur = 96;*/
