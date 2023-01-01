@@ -26,15 +26,24 @@ class Inputfield : public Selectionnable
 
         Texte texte;
         Texte texte_placeHolder;
+        Texte curseur;
+        int place;
+
+        bool affiche_curseur;
+
+        Mix_Chunk* hover_sound;
+        Mix_Chunk* click_sound;
 
         Inputfield(std::string police, SDL_Color couleur, SDL_Rect position, eventFunction funcPtr, SDL_Renderer* rendu);
         void Draw(SDL_Renderer* rendu);
+        void Update(Uint32& timeStep);
         void HandleEvents(SDL_Event e, SingletonSysteme* sing_syst);
         bool collision(SDL_Rect dest_joueur, int x, int y);
 
         void setSelectedIfMove(Selectionnable* selectOnUp, Selectionnable* selectOnDown, Selectionnable* selectOnLeft, Selectionnable* selectOnRight);
         void setSelected(Selectionnable* ui);
         void setUnselected(Selectionnable* previous);
+        void fonc(Selectionnable* ui, SingletonSysteme* sing_syst);
 
     protected:
 

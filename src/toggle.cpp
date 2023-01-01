@@ -310,16 +310,6 @@ void Toggle::onPointerEnter(SDL_Event e, SingletonSysteme* sing_syst)
 {
     if(e.button.button != SDL_BUTTON_LEFT) //si on se trouve sur le bouton sans le clic enfonce
     {
-        //this->etat = HOVERED;
-        //RESET
-        /*if(this->selectOnUp != nullptr)
-            this->selectOnUp->etat = NORMAL;
-        if(this->selectOnDown != nullptr)
-            this->selectOnDown->etat = NORMAL;
-        if(this->selectOnLeft != nullptr)
-            this->selectOnLeft->etat = NORMAL;
-        if(this->selectOnRight != nullptr)
-            this->selectOnRight->etat = NORMAL;*/
         this->etat = SELECTED;
         if(son_joue == false && sing_syst->son_active == true && previousEtat != SELECTED)
         {
@@ -335,16 +325,6 @@ void Toggle::onPointerEnter(SDL_Event e, SingletonSysteme* sing_syst)
     {
         if(clicAvantCollision == false)
         {
-            //this->etat = HOVERED;
-            //RESET
-            /*if(this->selectOnUp != nullptr)
-                this->selectOnUp->etat = NORMAL;
-            if(this->selectOnDown != nullptr)
-                this->selectOnDown->etat = NORMAL;
-            if(this->selectOnLeft != nullptr)
-                this->selectOnLeft->etat = NORMAL;
-            if(this->selectOnRight != nullptr)
-                this->selectOnRight->etat = NORMAL;*/
             this->etat = SELECTED;
             if(son_joue == false && sing_syst->son_active == true && previousEtat != SELECTED)
             {

@@ -52,11 +52,11 @@ void Texte::Draw(SDL_Renderer* rendu)
         exit(EXIT_FAILURE);
     }
 
-    /*if(TTF_SizeText(this->police, this->texte.c_str(), &(this->position.w), &(this->position.h)) < 0)
+    if(TTF_SizeText(this->police, this->texte.c_str(), &(this->position.w), &(this->position.h)) < 0)
     {
         std::cerr << TTF_GetError() << std::endl;
         exit(EXIT_FAILURE);
-    }*/
+    }
 
     if(SDL_RenderCopy(rendu, texture, nullptr, &position) < 0)
     {

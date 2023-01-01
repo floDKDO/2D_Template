@@ -33,12 +33,12 @@ class Selectionnable
         virtual void setSelected(Selectionnable* ui) = 0;
         virtual void setUnselected(Selectionnable* previous) = 0;
 
-        virtual void onPointerEnter(SDL_Event e, SingletonSysteme* sing_syst){}
-        virtual void onPointerExit(SDL_Event e, SingletonSysteme* sing_syst){}
-        virtual void onPointerDown(SDL_Event e, SingletonSysteme* sing_syst){}
-        virtual void onClick(SDL_Event e, SingletonSysteme* sing_syst){}
-        virtual void onKeyPressed(SDL_Event e, SingletonSysteme* sing_syst){}
-        virtual void onKeyReleased(SDL_Event e, SingletonSysteme* sing_syst){}
+        virtual void onPointerEnter(SDL_Event e, SingletonSysteme* sing_syst);
+        virtual void onPointerExit(SDL_Event e, SingletonSysteme* sing_syst);
+        virtual void onPointerDown(SDL_Event e, SingletonSysteme* sing_syst);
+        virtual void onClick(SDL_Event e, SingletonSysteme* sing_syst);
+        virtual void onKeyPressed(SDL_Event e, SingletonSysteme* sing_syst);
+        virtual void onKeyReleased(SDL_Event e, SingletonSysteme* sing_syst);
 
         SDL_Rect position;
 

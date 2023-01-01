@@ -35,6 +35,7 @@ class MenuChoixNom
 
         void Draw(SDL_Renderer* rendu, SingletonSysteme* sing_syst);
         void HandleEvents(SDL_Event e, SingletonSysteme* sing_syst);
+        void Update(Uint32& timeStep);
 
     protected:
 

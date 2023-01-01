@@ -243,11 +243,11 @@ int main(int argc, char* argv[])
     (void)argc;
     (void)argv;
 
-    const SDL_Color ROUGE = {255, 0, 0, 255};
+    /*const SDL_Color ROUGE = {255, 0, 0, 255};
     const SDL_Color VERT = {0, 255, 0, 255};
     const SDL_Color BLEU = {0, 0, 255, 255};
     const SDL_Color BLANC = {255, 255, 255, 255};
-    const SDL_Color GRIS = {127, 127, 127, 255};
+    const SDL_Color GRIS = {127, 127, 127, 255};*/
     //const SDL_Color NOIR = {0, 0, 0, 255};
 
     SingletonSysteme::instance().Charger();
@@ -449,6 +449,7 @@ int main(int argc, char* argv[])
             demande_nom.Draw(SingletonSysteme::instance().rendu);
             inputfield.Draw(SingletonSysteme::instance().rendu);*/
             menuChoixNom.Draw(SingletonSysteme::instance().rendu, &SingletonSysteme::instance());
+            menuChoixNom.Update(timeStep);
         }
         else if(SingletonSysteme::instance().etat == EN_JEU)
         {
