@@ -12,32 +12,72 @@ MenuOptions::MenuOptions(SingletonSysteme* sing_syst)
 ,bouton_options_touche_bas(ROUGE, VERT, BLEU, GRIS, {600, 180, 150, 60}, &fonc_choix_touche, SDL_GetKeyName(sing_syst->touches.dep_bas), sing_syst->rendu, "Bouton options touche bas")
 ,bouton_options_touche_gauche(ROUGE, VERT, BLEU, GRIS, {600, 260, 150, 60}, &fonc_choix_touche, SDL_GetKeyName(sing_syst->touches.dep_gauche), sing_syst->rendu, "Bouton options touche gauche")
 ,bouton_options_touche_droite(ROUGE, VERT, BLEU, GRIS, {600, 340, 150, 60}, &fonc_choix_touche, SDL_GetKeyName(sing_syst->touches.dep_droite), sing_syst->rendu, "Bouton options touche droite")
+,bouton_options_manette_haut(ROUGE, VERT, BLEU, GRIS, {775, 100, 150, 60}, &fonc_choix_touche_manette, SDL_GameControllerGetStringForButton(sing_syst->touches_1.dep_haut), sing_syst->rendu, "Bouton options manette haut")
+,bouton_options_manette_bas(ROUGE, VERT, BLEU, GRIS, {775, 180, 150, 60}, &fonc_choix_touche_manette, SDL_GameControllerGetStringForButton(sing_syst->touches_1.dep_bas), sing_syst->rendu, "Bouton options manette bas")
+,bouton_options_manette_gauche(ROUGE, VERT, BLEU, GRIS, {775, 260, 150, 60}, &fonc_choix_touche_manette, SDL_GameControllerGetStringForButton(sing_syst->touches_1.dep_gauche), sing_syst->rendu, "Bouton options manette gauche")
+,bouton_options_manette_droite(ROUGE, VERT, BLEU, GRIS, {775, 340, 150, 60}, &fonc_choix_touche_manette, SDL_GameControllerGetStringForButton(sing_syst->touches_1.dep_droite), sing_syst->rendu, "Bouton options manette droite")
+,texte_clavier("CLAVIER", "./font/lazy.ttf", BLANC, {600, 50, 50, 50}, sing_syst->rendu)
+,texte_manette("MANETTE", "./font/lazy.ttf", BLANC, {775, 50, 50, 50}, sing_syst->rendu)
 ,toggle_sound(BLANC, GRIS, GRIS, GRIS, {280, 100, 50, 50}, "SON", &fonc_toggle_son, sing_syst->son_active, sing_syst->rendu)
 ,toggle_musique(BLANC, GRIS, GRIS, GRIS, {1000, 100, 50, 50}, "MUSIQUE", &fonc_toggle_musique, sing_syst->musique_activee, sing_syst->rendu)
 {
-    if(SingletonSysteme::instance().mode_fenetre == PLEIN_ECRAN)
+    if(sing_syst->mode_fenetre == PLEIN_ECRAN)
         bouton_options_fenetre.texte.texte = "PLEIN ECRAN";
-    else if(SingletonSysteme::instance().mode_fenetre == FENETRE)
+    else if(sing_syst->mode_fenetre == FENETRE)
         bouton_options_fenetre.texte.texte = "FENETRE";
     //HAUT, BAS, GAUCHE, DROITE
-    bouton_options_fenetre.setSelectedIfMove(&bouton_options_touche_droite, nullptr, &bouton_options_retour, nullptr);
-    bouton_options_retour.setSelectedIfMove(nullptr, nullptr, nullptr, &bouton_options_fenetre);
-    bouton_options_touche_haut.setSelectedIfMove(nullptr, &bouton_options_touche_bas, &toggle_sound, &toggle_musique);
-    bouton_options_touche_bas.setSelectedIfMove(&bouton_options_touche_haut, &bouton_options_touche_gauche, nullptr, nullptr);
-    bouton_options_touche_gauche.setSelectedIfMove(&bouton_options_touche_bas, &bouton_options_touche_droite, nullptr, nullptr);
-    bouton_options_touche_droite.setSelectedIfMove(&bouton_options_touche_gauche, &bouton_options_fenetre, nullptr, nullptr);
-    toggle_sound.setSelectedIfMove(nullptr, nullptr, nullptr, &bouton_options_touche_haut);
-    toggle_musique.setSelectedIfMove(nullptr, nullptr, &bouton_options_touche_haut, nullptr);
-    bouton_options_retour.setSelected(&bouton_options_retour);
 
-    this->ui.push_back(&(this->bouton_options_fenetre));
-    this->ui.push_back(&(this->bouton_options_retour));
-    this->ui.push_back(&(this->bouton_options_touche_haut));
-    this->ui.push_back(&(this->bouton_options_touche_bas));
-    this->ui.push_back(&(this->bouton_options_touche_gauche));
-    this->ui.push_back(&(this->bouton_options_touche_droite));
-    this->ui.push_back(&(this->toggle_sound));
-    this->ui.push_back(&(this->toggle_musique));
+    if(sing_syst->manette != nullptr)
+    {
+        bouton_options_fenetre.setSelectedIfMove(&bouton_options_touche_droite, nullptr, &bouton_options_retour, nullptr);
+        bouton_options_retour.setSelectedIfMove(nullptr, nullptr, nullptr, &bouton_options_fenetre);
+        bouton_options_touche_haut.setSelectedIfMove(nullptr, &bouton_options_touche_bas, &toggle_sound, &bouton_options_manette_haut);
+        bouton_options_touche_bas.setSelectedIfMove(&bouton_options_touche_haut, &bouton_options_touche_gauche, nullptr, &bouton_options_manette_bas);
+        bouton_options_touche_gauche.setSelectedIfMove(&bouton_options_touche_bas, &bouton_options_touche_droite, nullptr, &bouton_options_manette_gauche);
+        bouton_options_touche_droite.setSelectedIfMove(&bouton_options_touche_gauche, &bouton_options_fenetre, nullptr, &bouton_options_manette_droite);
+        bouton_options_manette_haut.setSelectedIfMove(nullptr, &bouton_options_manette_bas, &bouton_options_touche_haut, &toggle_musique);
+        bouton_options_manette_bas.setSelectedIfMove(&bouton_options_manette_haut, &bouton_options_manette_gauche, &bouton_options_touche_bas, nullptr);
+        bouton_options_manette_gauche.setSelectedIfMove(&bouton_options_manette_bas, &bouton_options_manette_droite, &bouton_options_touche_gauche, nullptr);
+        bouton_options_manette_droite.setSelectedIfMove(&bouton_options_manette_gauche, nullptr, &bouton_options_touche_droite, nullptr);
+        bouton_options_retour.setSelected(&bouton_options_retour);
+
+        toggle_sound.setSelectedIfMove(nullptr, nullptr, nullptr, &bouton_options_touche_haut);
+        toggle_musique.setSelectedIfMove(nullptr, nullptr, &bouton_options_manette_haut, nullptr);
+
+        this->ui.push_back(&(this->bouton_options_manette_haut));
+        this->ui.push_back(&(this->bouton_options_manette_bas));
+        this->ui.push_back(&(this->bouton_options_manette_gauche));
+        this->ui.push_back(&(this->bouton_options_manette_droite));
+        this->ui.push_back(&(this->bouton_options_fenetre));
+        this->ui.push_back(&(this->bouton_options_retour));
+        this->ui.push_back(&(this->bouton_options_touche_haut));
+        this->ui.push_back(&(this->bouton_options_touche_bas));
+        this->ui.push_back(&(this->bouton_options_touche_gauche));
+        this->ui.push_back(&(this->bouton_options_touche_droite));
+        this->ui.push_back(&(this->toggle_sound));
+        this->ui.push_back(&(this->toggle_musique));
+    }
+    else
+    {
+        bouton_options_fenetre.setSelectedIfMove(&bouton_options_touche_droite, nullptr, &bouton_options_retour, nullptr);
+        bouton_options_retour.setSelectedIfMove(nullptr, nullptr, nullptr, &bouton_options_fenetre);
+        bouton_options_touche_haut.setSelectedIfMove(nullptr, &bouton_options_touche_bas, &toggle_sound, &toggle_musique);
+        bouton_options_touche_bas.setSelectedIfMove(&bouton_options_touche_haut, &bouton_options_touche_gauche, nullptr, nullptr);
+        bouton_options_touche_gauche.setSelectedIfMove(&bouton_options_touche_bas, &bouton_options_touche_droite, nullptr, nullptr);
+        bouton_options_touche_droite.setSelectedIfMove(&bouton_options_touche_gauche, &bouton_options_fenetre, nullptr, nullptr);
+        toggle_sound.setSelectedIfMove(nullptr, nullptr, nullptr, &bouton_options_touche_haut);
+        toggle_musique.setSelectedIfMove(nullptr, nullptr, &bouton_options_touche_haut, nullptr);
+        bouton_options_retour.setSelected(&bouton_options_retour);
+
+        this->ui.push_back(&(this->bouton_options_fenetre));
+        this->ui.push_back(&(this->bouton_options_retour));
+        this->ui.push_back(&(this->bouton_options_touche_haut));
+        this->ui.push_back(&(this->bouton_options_touche_bas));
+        this->ui.push_back(&(this->bouton_options_touche_gauche));
+        this->ui.push_back(&(this->bouton_options_touche_droite));
+        this->ui.push_back(&(this->toggle_sound));
+        this->ui.push_back(&(this->toggle_musique));
+    }
 }
 
 
@@ -74,6 +114,12 @@ void MenuOptions::Draw(SDL_Renderer* rendu, SingletonSysteme* sing_syst)
     texte_touche_gauche.Draw(rendu);
     texte_touche_droite.Draw(rendu);
     mode_ecran.Draw(rendu);
+
+    if(sing_syst->manette != nullptr)
+    {
+        texte_clavier.Draw(rendu);
+        texte_manette.Draw(rendu);
+    }
 }
 
 
@@ -234,6 +280,72 @@ void MenuOptions::fonc_choix_touche(SingletonSysteme* sing_syst, Selectionnable*
     }
     SDL_DestroyTexture(texture);
 }
+
+
+void MenuOptions::fonc_choix_touche_manette(SingletonSysteme* sing_syst, Selectionnable* bouton)
+{
+    bool quitter = false;
+    SDL_Texture* texture;
+    if((texture = IMG_LoadTexture(sing_syst->rendu, "./img/pop_up_touche.png")) == nullptr)
+    {
+        std::cerr << IMG_GetError() << std::endl;
+        exit(EXIT_FAILURE);
+    }
+    SDL_Rect dest;
+    int w, h;
+    if(SDL_QueryTexture(texture, nullptr, nullptr, &w, &h) < 0)
+    {
+        std::cerr << SDL_GetError() << std::endl;
+        exit(EXIT_FAILURE);
+    }
+    dest = {300, 300, w, h};
+    Bouton* b = dynamic_cast<Bouton*>(bouton);
+    while(quitter == false)
+    {
+        SDL_Event e;
+        while(SDL_PollEvent(&e) != 0)
+        {
+            switch(e.type)
+            {
+                case SDL_CONTROLLERBUTTONDOWN:
+
+                    if(e.cbutton.button != sing_syst->touches_1.dep_haut
+                    && e.cbutton.button != sing_syst->touches_1.dep_bas
+                    && e.cbutton.button != sing_syst->touches_1.dep_gauche
+                    && e.cbutton.button != sing_syst->touches_1.dep_droite)
+                    {
+                        if((b->texte.texte = SDL_GameControllerGetStringForButton((SDL_GameControllerButton)e.cbutton.button)).empty() == true)
+                        {
+                            std::cerr << "No name" << std::endl;
+                            exit(EXIT_FAILURE);
+                        }
+                        if (b->tag.find("haut") != std::string::npos)
+                            sing_syst->touches_1.dep_haut = (SDL_GameControllerButton)e.cbutton.button;
+                        else if (b->tag.find("bas") != std::string::npos)
+                            sing_syst->touches_1.dep_bas = (SDL_GameControllerButton)e.cbutton.button;
+                        else if (b->tag.find("gauche") != std::string::npos)
+                            sing_syst->touches_1.dep_gauche = (SDL_GameControllerButton)e.cbutton.button;
+                        else if (b->tag.find("droite") != std::string::npos)
+                            sing_syst->touches_1.dep_droite = (SDL_GameControllerButton)e.cbutton.button;
+
+                        quitter = true;
+                    }
+                    break;
+
+                default :
+                    break;
+            }
+        }
+        if(SDL_RenderCopy(sing_syst->rendu, texture, nullptr, &dest) < 0)
+        {
+            std::cerr << SDL_GetError() << std::endl;
+            exit(EXIT_FAILURE);
+        }
+        SDL_RenderPresent(sing_syst->rendu);
+    }
+    SDL_DestroyTexture(texture);
+}
+
 
 void MenuOptions::fonc_toggle_son(SingletonSysteme* sing_syst, Selectionnable* bouton)
 {

@@ -34,6 +34,15 @@ class MenuOptions
         Bouton bouton_options_touche_gauche;
         Bouton bouton_options_touche_droite;
 
+        Bouton bouton_options_manette_haut;
+        Bouton bouton_options_manette_bas;
+        Bouton bouton_options_manette_gauche;
+        Bouton bouton_options_manette_droite;
+
+        Texte texte_clavier;
+        Texte texte_manette;
+
+
         Toggle toggle_sound;
         Toggle toggle_musique;
 
@@ -43,6 +52,7 @@ class MenuOptions
         static void fonc_toggle_son(SingletonSysteme* sing_syst, Selectionnable* bouton);
         static void fonc_toggle_musique(SingletonSysteme* sing_syst, Selectionnable* bouton);
         static void fonc_bouton_options_fenetre(SingletonSysteme* sing_syst, Selectionnable* bouton);
+        static void fonc_choix_touche_manette(SingletonSysteme* sing_syst, Selectionnable* bouton);
 
         void resetSelected(void);
         Selectionnable* getSelected(void);

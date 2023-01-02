@@ -69,6 +69,8 @@ void SingletonSysteme::Init(void)
 
 
     this->manette = SDL_GameControllerOpen(0);
+    if(this->manette == nullptr)
+        std::cout << "pas de manette";
 
     //activer les evenements manette
     if(SDL_GameControllerEventState(SDL_ENABLE) < 0)
@@ -76,10 +78,6 @@ void SingletonSysteme::Init(void)
         std::cerr << SDL_GetError() << std::endl;
         exit(EXIT_FAILURE);
     }
-    this->touches_1.dep_haut = SDL_CONTROLLER_BUTTON_DPAD_UP;
-    this->touches_1.dep_bas = SDL_CONTROLLER_BUTTON_DPAD_DOWN;
-    this->touches_1.dep_gauche = SDL_CONTROLLER_BUTTON_DPAD_LEFT;
-    this->touches_1.dep_droite = SDL_CONTROLLER_BUTTON_DPAD_RIGHT;
 }
 
 void SingletonSysteme::Charger(void)
@@ -146,6 +144,39 @@ void SingletonSysteme::Charger(void)
                         }
                         break;
 
+                    case 9: //touche deplacement haut manette
+                        if((this->touches_1.dep_haut = SDL_GameControllerGetButtonFromString(ligne.c_str())) == SDL_CONTROLLER_BUTTON_INVALID)
+                        {
+                            std::cerr << SDL_GetError() << std::endl;
+                            exit(EXIT_FAILURE);
+                        }
+                        break;
+
+                    case 10: //touche deplacement bas manette
+                        if((this->touches_1.dep_bas = SDL_GameControllerGetButtonFromString(ligne.c_str())) == SDL_CONTROLLER_BUTTON_INVALID)
+                        {
+                            std::cerr << SDL_GetError() << std::endl;
+                            exit(EXIT_FAILURE);
+                        }
+                        break;
+
+                    case 11: //touche deplacement gauche manette
+                        if((this->touches_1.dep_gauche = SDL_GameControllerGetButtonFromString(ligne.c_str())) == SDL_CONTROLLER_BUTTON_INVALID)
+                        {
+                            std::cerr << SDL_GetError() << std::endl;
+                            exit(EXIT_FAILURE);
+                        }
+                        break;
+
+                    case 12: //touche deplacement droite manette
+                        if((this->touches_1.dep_droite = SDL_GameControllerGetButtonFromString(ligne.c_str())) == SDL_CONTROLLER_BUTTON_INVALID)
+                        {
+                            std::cerr << SDL_GetError() << std::endl;
+                            exit(EXIT_FAILURE);
+                        }
+                        break;
+
+
                     /*case 9: //position joueur en x
                         this->posX_joueur = std::stoi(ligne);
                         break;
@@ -206,6 +237,15 @@ void SingletonSysteme::Sauvegarder(void)
         fichier_sauvegarde << SDL_GetKeyName(this->touches.dep_gauche) << "\n";
         fichier_sauvegarde << "//Touche déplacement droite\n";
         fichier_sauvegarde << SDL_GetKeyName(this->touches.dep_droite) << "\n";
+
+        fichier_sauvegarde << "//Touche déplacement haut\n";
+        fichier_sauvegarde << SDL_GameControllerGetStringForButton(this->touches_1.dep_haut) << "\n";
+        fichier_sauvegarde << "//Touche déplacement bas\n";
+        fichier_sauvegarde << SDL_GameControllerGetStringForButton(this->touches_1.dep_bas) << "\n";
+        fichier_sauvegarde << "//Touche déplacement gauche\n";
+        fichier_sauvegarde << SDL_GameControllerGetStringForButton(this->touches_1.dep_gauche) << "\n";
+        fichier_sauvegarde << "//Touche déplacement droite\n";
+        fichier_sauvegarde << SDL_GameControllerGetStringForButton(this->touches_1.dep_droite) << "\n";
 
         /*fichier_sauvegarde << "//Position joueur en x\n";
         fichier_sauvegarde << this->posX_joueur << "\n";

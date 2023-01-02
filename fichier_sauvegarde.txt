@@ -1,5 +1,5 @@
 //Nom joueur
-tata
+yyyy
 //Mode fenetre
 0
 //Musique activee ?
@@ -14,3 +14,11 @@ Down
 Left
 //Touche déplacement droite
 Right
+//Touche déplacement haut
+y
+//Touche déplacement bas
+a
+//Touche déplacement gauche
+x
+//Touche déplacement droite
+b
