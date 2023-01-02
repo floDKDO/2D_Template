@@ -1,66 +1,28 @@
 #include "texte.hpp"
 
-Texte::Texte(std::string texte, std::string police, SDL_Color couleur, SDL_Rect position, SDL_Renderer* rendu)
+Texte::Texte(std::string texte, std::string police, int taille_police, SDL_Color couleur, SDL_Rect position, SDL_Renderer* rendu, std::string name)
 {
-    if((this->police = TTF_OpenFont(police.c_str(), 30)) == nullptr)
-    {
-        std::cerr << TTF_GetError() << std::endl;
-        exit(EXIT_FAILURE);
-    }
+    (void)rendu;
+    NCHK(this->police = TTF_OpenFont(police.c_str(), taille_police), TTF_GetError());
+    this->taille_police = taille_police;
     this->couleur = couleur;
     this->texte = texte;
     this->position = position;
-
-    /*if(this->texte.empty() == true)
-        this->texte = " ";
-
-    if((this->surface = TTF_RenderText_Solid(this->police, this->texte.c_str(), couleur)) == nullptr)
-    {
-        std::cerr << TTF_GetError() << std::endl;
-        exit(EXIT_FAILURE);
-    }
-
-    if((texture = SDL_CreateTextureFromSurface(rendu, surface)) == nullptr)
-    {
-        std::cerr << SDL_GetError() << std::endl;
-        exit(EXIT_FAILURE);
-    }*/
+    this->name = name;
 }
 
 void Texte::Draw(SDL_Renderer* rendu)
 {
     if(texte.length() > 0)
     {
-        if((this->surface = TTF_RenderText_Solid(police, texte.c_str(), couleur)) == nullptr)
-        {
-            std::cerr << TTF_GetError() << std::endl;
-            exit(EXIT_FAILURE);
-        }
+        NCHK(this->surface = TTF_RenderText_Solid(this->police, this->texte.c_str(), couleur), TTF_GetError());
+
     }
     else
     {
-        if((this->surface = TTF_RenderText_Solid(police, " ", couleur)) == nullptr)
-        {
-            std::cerr << TTF_GetError() << std::endl;
-            exit(EXIT_FAILURE);
-        }
+        NCHK(this->surface = TTF_RenderText_Solid(this->police, " ", couleur), TTF_GetError());
     }
-
-    if((texture = SDL_CreateTextureFromSurface(rendu, surface)) == nullptr)
-    {
-        std::cerr << SDL_GetError() << std::endl;
-        exit(EXIT_FAILURE);
-    }
-
-    if(TTF_SizeText(this->police, this->texte.c_str(), &(this->position.w), &(this->position.h)) < 0)
-    {
-        std::cerr << TTF_GetError() << std::endl;
-        exit(EXIT_FAILURE);
-    }
-
-    if(SDL_RenderCopy(rendu, texture, nullptr, &position) < 0)
-    {
-        std::cerr << SDL_GetError() << std::endl;
-        exit(EXIT_FAILURE);
-    }
+    NCHK(texture = SDL_CreateTextureFromSurface(rendu, surface), SDL_GetError());
+    CHK(TTF_SizeText(this->police, this->texte.c_str(), &(this->position.w), &(this->position.h)), TTF_GetError());
+    CHK(SDL_RenderCopy(rendu, texture, nullptr, &position), SDL_GetError());
 }

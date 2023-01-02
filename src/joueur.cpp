@@ -35,16 +35,8 @@ void Joueur::SetValue(bool dep[4], int indice)
 
 void Joueur::Draw(SDL_Renderer* rendu)
 {
-    if(SDL_SetRenderDrawColor(rendu, this->couleur.r, this->couleur.g, this->couleur.b, this->couleur.a) < 0)
-    {
-        std::cerr << SDL_GetError() << std::endl;
-        exit(EXIT_FAILURE);
-    }
-    if(SDL_RenderFillRect(rendu, &(this->position)) < 0)
-    {
-        std::cerr << SDL_GetError() << std::endl;
-        exit(EXIT_FAILURE);
-    }
+    CHK(SDL_SetRenderDrawColor(rendu, this->couleur.r, this->couleur.g, this->couleur.b, this->couleur.a), SDL_GetError());
+    CHK(SDL_RenderFillRect(rendu, &(this->position)), SDL_GetError());
 }
 
 void Joueur::HandleEvents(SDL_Event e, SingletonSysteme* sing_syst)

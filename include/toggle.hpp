@@ -15,8 +15,8 @@
 class Toggle : public Selectionnable
 {
     public:
-        Toggle(SDL_Color couleur_normal, SDL_Color couleur_hover, SDL_Color couleur_click, SDL_Color couleur_selected, SDL_Rect position, std::string texte, eventFunction funcPtr, bool isCheckedSave, SDL_Renderer* rendu);
-        Toggle(std::string image_normal, std::string image_hover, std::string image_click, std::string image_selected, SDL_Rect position, std::string texte, eventFunction funcPtr, bool isCheckedSave, SDL_Renderer* rendu);
+        Toggle(SDL_Color couleur_normal, SDL_Color couleur_hover, SDL_Color couleur_click, SDL_Color couleur_selected, SDL_Rect position, std::string texte, int taille_police, eventFunction funcPtr, bool isCheckedSave, SDL_Renderer* rendu, std::string name);
+        Toggle(std::string image_normal, std::string image_hover, std::string image_click, std::string image_selected, SDL_Rect position, std::string texte, int taille_police, eventFunction funcPtr, bool isCheckedSave, SDL_Renderer* rendu, std::string name);
 
         SDL_Color couleur_normal;
         SDL_Color couleur_hover;
@@ -30,20 +30,14 @@ class Toggle : public Selectionnable
 
         bool hasImage;
 
-        //SDL_Rect position;
-
-        //typedef void(*eventFunction)(SingletonSysteme*, Bouton*);
-        //eventFunction funcPtr; //pointeur sur la fonction qui sera lancée quand il y aura un clic sur le bouton
-
-        //etat etat;
         Texte texte;
 
         Mix_Chunk* hover_sound;
         Mix_Chunk* click_sound;
-        bool son_joue = false;
+        bool son_joue;
         int previousEtat;
 
-        std::string tag;
+        std::string name;
 
         bool clicAvantCollision;
 

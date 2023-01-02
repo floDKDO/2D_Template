@@ -20,7 +20,7 @@ class MenuChoixNom
     public:
         MenuChoixNom(SingletonSysteme* sing_syst);
 
-        std::vector<Selectionnable*> ui; //contient tous les boutons du menu principal
+        std::vector<Selectionnable*> ui; //contient tous les boutons du menu
 
         Inputfield inputfield;
         Texte demande_nom;
@@ -33,7 +33,7 @@ class MenuChoixNom
         void resetSelected(void);
         Selectionnable* getSelected(void);
 
-        void Draw(SDL_Renderer* rendu, SingletonSysteme* sing_syst);
+        void Draw(SingletonSysteme* sing_syst);
         void HandleEvents(SDL_Event e, SingletonSysteme* sing_syst);
         void Update(Uint32& timeStep);
 

@@ -9,75 +9,30 @@ void SingletonSysteme::Init(void)
     Uint32 flags;
     if(mode_fenetre == PLEIN_ECRAN)
     {
-         flags = SDL_WINDOW_FULLSCREEN;
+        flags = SDL_WINDOW_FULLSCREEN;
     }
     else if(mode_fenetre == FENETRE)
     {
         flags = SDL_WINDOW_RESIZABLE;
     }
 
-    if(SDL_Init(SDL_INIT_VIDEO | SDL_INIT_GAMECONTROLLER) < 0)
-    {
-        std::cerr << SDL_GetError() << std::endl;
-        exit(EXIT_FAILURE);
-    }
-
-    if(TTF_Init() < 0)
-    {
-        std::cerr << TTF_GetError() << std::endl;
-        exit(EXIT_FAILURE);
-    }
-
-    if(IMG_Init(IMG_INIT_PNG | IMG_INIT_JPG) < 0)
-    {
-        std::cerr << IMG_GetError() << std::endl;
-        exit(EXIT_FAILURE);
-    }
-
-    if(Mix_Init(MIX_INIT_MP3 | MIX_INIT_OGG) < 0)
-    {
-        std::cerr << Mix_GetError() << std::endl;
-        exit(EXIT_FAILURE);
-    }
-
-    if(Mix_OpenAudio(MIX_DEFAULT_FREQUENCY, MIX_DEFAULT_FORMAT, MIX_CHANNELS, 1024) < 0)
-    {
-        std::cerr << Mix_GetError() << std::endl;
-        exit(EXIT_FAILURE);
-    }
-
-    if((this->fenetre = SDL_CreateWindow("Mon jeu", SDL_WINDOWPOS_CENTERED, SDL_WINDOWPOS_CENTERED, LONGUEUR_FENETRE, HAUTEUR_FENETRE, flags)) == nullptr)
-    {
-        std::cerr << SDL_GetError() << std::endl;
-        exit(EXIT_FAILURE);
-    }
-
-    if((this->rendu = SDL_CreateRenderer(this->fenetre, -1, SDL_RENDERER_ACCELERATED | SDL_RENDERER_PRESENTVSYNC)) == nullptr)
-    {
-        std::cerr << SDL_GetError() << std::endl;
-        exit(EXIT_FAILURE);
-    }
-
-    if(SDL_RenderSetLogicalSize(this->rendu, 1280, 720) < 0) //720!
-    {
-        std::cerr << SDL_GetError() << std::endl;
-        exit(EXIT_FAILURE);
-    }
-
-    //si dans menu où il y a l'inputfield, alors appeler cette fonction
-    SDL_StartTextInput();
-
+    CHK(SDL_Init(SDL_INIT_VIDEO | SDL_INIT_GAMECONTROLLER), SDL_GetError());
+    CHK(TTF_Init(), TTF_GetError());
+    CHK(IMG_Init(IMG_INIT_PNG | IMG_INIT_JPG), IMG_GetError());
+    CHK(Mix_Init(MIX_INIT_MP3 | MIX_INIT_OGG), Mix_GetError());
+    CHK(Mix_OpenAudio(MIX_DEFAULT_FREQUENCY, MIX_DEFAULT_FORMAT, MIX_CHANNELS, 1024), Mix_GetError());
+    NCHK(this->fenetre = SDL_CreateWindow("Mon jeu", SDL_WINDOWPOS_CENTERED, SDL_WINDOWPOS_CENTERED, LONGUEUR_FENETRE, HAUTEUR_FENETRE, flags), SDL_GetError());
+    NCHK(this->rendu = SDL_CreateRenderer(this->fenetre, -1, SDL_RENDERER_ACCELERATED | SDL_RENDERER_PRESENTVSYNC), SDL_GetError());
+    CHK(SDL_RenderSetLogicalSize(this->rendu, 1280, 720), SDL_GetError()); //720!
 
     this->manette = SDL_GameControllerOpen(0);
     if(this->manette == nullptr)
         std::cout << "pas de manette";
 
     //activer les evenements manette
-    if(SDL_GameControllerEventState(SDL_ENABLE) < 0)
-    {
-        std::cerr << SDL_GetError() << std::endl;
-        exit(EXIT_FAILURE);
-    }
+    CHK(SDL_GameControllerEventState(SDL_ENABLE), SDL_GetError());
+    //si dans menu où il y a l'inputfield, alors appeler cette fonction
+    SDL_StartTextInput();
 }
 
 void SingletonSysteme::Charger(void)

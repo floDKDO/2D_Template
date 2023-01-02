@@ -1,8 +1,8 @@
 #include "inputfield.hpp"
 
-Inputfield::Inputfield(std::string police, SDL_Color couleur, SDL_Rect position, eventFunction funcPtr, SDL_Renderer* rendu)
-:texte("", police, couleur, position, rendu), texte_placeHolder("Votre nom...", police, {127, 127, 127, 255}, position, rendu)
-,curseur("|", police, couleur, position, rendu)
+Inputfield::Inputfield(std::string police, int taille_police, SDL_Color couleur, SDL_Rect position, eventFunction funcPtr, SDL_Renderer* rendu, std::string name)
+:texte("", police, taille_police, couleur, position, rendu, "texte de " + name), texte_placeHolder("Votre nom...", police, 30, {127, 127, 127, 255}, position, rendu, "texte placeholder de " + name)
+,curseur("|", police, taille_police, couleur, position, rendu, "curseur de " + name)
 {
     this->fond_de_texte = position;
     this->zone_de_texte = {fond_de_texte.x, fond_de_texte.y, 0, 0};
@@ -11,23 +11,14 @@ Inputfield::Inputfield(std::string police, SDL_Color couleur, SDL_Rect position,
     this->texte_modifie = false;
     this->funcPtr = funcPtr;
 
-    if((this->hover_sound = Mix_LoadWAV("./sound/hover.ogg")) == nullptr)
-    {
-        std::cerr << Mix_GetError() << std::endl;
-        exit(EXIT_FAILURE);
-    }
-    if((this->click_sound = Mix_LoadWAV("./sound/select.ogg")) == nullptr)
-    {
-        std::cerr << Mix_GetError() << std::endl;
-        exit(EXIT_FAILURE);
-    }
+    NCHK(this->hover_sound = Mix_LoadWAV("./sound/hover.ogg"), Mix_GetError());
+    NCHK(this->click_sound = Mix_LoadWAV("./sound/select.ogg"), Mix_GetError());
 
-    if(TTF_SizeText(this->texte.police, " ", &place, nullptr) < 0)
-    {
-        std::cerr << TTF_GetError() << std::endl;
-        exit(EXIT_FAILURE);
-    }
+    CHK(TTF_SizeText(this->texte.police, " ", &place, nullptr), TTF_GetError());
+
     place /= 2;
+
+    this->name = name;
 
     SDL_SetTextInputRect(&(this->zone_de_texte));
 }
@@ -55,21 +46,9 @@ void Inputfield::Draw(SDL_Renderer* rendu)
     zone_de_texte.w = texte.surface->w;
     zone_de_texte.h = texte.surface->h;
 
-    if(SDL_SetRenderDrawColor(rendu, 255, 255, 255, 255) < 0)
-    {
-        std::cerr << SDL_GetError() << std::endl;
-        exit(EXIT_FAILURE);
-    }
-    if(SDL_RenderFillRect(rendu, &fond_de_texte) < 0)
-    {
-        std::cerr << SDL_GetError() << std::endl;
-        exit(EXIT_FAILURE);
-    }
-    if(SDL_RenderCopy(rendu, texte.texture, nullptr, &zone_de_texte) < 0)
-    {
-        std::cerr << SDL_GetError() << std::endl;
-        exit(EXIT_FAILURE);
-    }
+    CHK(SDL_SetRenderDrawColor(rendu, 255, 255, 255, 255), SDL_GetError());
+    CHK(SDL_RenderFillRect(rendu, &fond_de_texte), SDL_GetError());
+    CHK(SDL_RenderCopy(rendu, texte.texture, nullptr, &zone_de_texte), SDL_GetError());
 
     if(texte.texte.length() == 0)
     {
@@ -160,11 +139,7 @@ void Inputfield::HandleEvents(SDL_Event e, SingletonSysteme* sing_syst)
                         mode_edition = true;
                         if(sing_syst->son_active == true)
                         {
-                            if(Mix_PlayChannel(1, click_sound, 0) < 0)
-                            {
-                                std::cerr << Mix_GetError() << std::endl;
-                                exit(EXIT_FAILURE);
-                            }
+                            CHK(Mix_PlayChannel(1, click_sound, 0), Mix_GetError());
                         }
                     }
                 }
@@ -227,11 +202,7 @@ void Inputfield::HandleEvents(SDL_Event e, SingletonSysteme* sing_syst)
                         mode_edition = true;
                         if(sing_syst->son_active == true)
                         {
-                            if(Mix_PlayChannel(1, click_sound, 0) < 0)
-                            {
-                                std::cerr << Mix_GetError() << std::endl;
-                                exit(EXIT_FAILURE);
-                            }
+                            CHK(Mix_PlayChannel(1, click_sound, 0), Mix_GetError());
                         }
                     }
                 }
@@ -253,11 +224,7 @@ void Inputfield::HandleEvents(SDL_Event e, SingletonSysteme* sing_syst)
                 mode_edition = true;
                 if(sing_syst->son_active == true)
                 {
-                    if(Mix_PlayChannel(1, click_sound, 0) < 0)
-                    {
-                        std::cerr << Mix_GetError() << std::endl;
-                        exit(EXIT_FAILURE);
-                    }
+                    CHK(Mix_PlayChannel(1, click_sound, 0), Mix_GetError());
                 }
             }
             else if(collision(fond_de_texte, x, y) == false && mode_edition == true)
@@ -306,10 +273,6 @@ void Inputfield::fonc(Selectionnable* ui, SingletonSysteme* sing_syst)
     this->setSelected(ui);
     if(sing_syst->son_active == true && etat != SELECTED)
     {
-        if(Mix_PlayChannel(1, hover_sound, 0) < 0)
-        {
-            std::cerr << Mix_GetError() << std::endl;
-            exit(EXIT_FAILURE);
-        }
+        CHK(Mix_PlayChannel(1, hover_sound, 0), Mix_GetError());
     }
 }

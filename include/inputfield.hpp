@@ -15,9 +15,6 @@ class Inputfield : public Selectionnable
 {
     public:
 
-        //typedef void(*eventFunction)(SingletonSysteme*, Inputfield*);
-        //eventFunction funcPtr; //pointeur sur la fonction qui sera lancée quand il y aura un appuie sur entrée ou un clic en dehors de l'inputfield
-
         bool mode_edition;
         SDL_Rect zone_de_texte;
         SDL_Rect fond_de_texte;
@@ -27,14 +24,15 @@ class Inputfield : public Selectionnable
         Texte texte;
         Texte texte_placeHolder;
         Texte curseur;
-        int place;
+        int place; //place prise par un seul caractère
+        std::string name;
 
         bool affiche_curseur;
 
         Mix_Chunk* hover_sound;
         Mix_Chunk* click_sound;
 
-        Inputfield(std::string police, SDL_Color couleur, SDL_Rect position, eventFunction funcPtr, SDL_Renderer* rendu);
+        Inputfield(std::string police, int taille_police, SDL_Color couleur, SDL_Rect position, eventFunction funcPtr, SDL_Renderer* rendu, std::string name);
         void Draw(SDL_Renderer* rendu);
         void Update(Uint32& timeStep);
         void HandleEvents(SDL_Event e, SingletonSysteme* sing_syst);

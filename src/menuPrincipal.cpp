@@ -1,12 +1,12 @@
 #include "menuPrincipal.hpp"
 
 MenuPrincipal::MenuPrincipal(SingletonSysteme* sing_syst)
-:bouton_continuer(ROUGE, VERT, BLEU, GRIS, {550, 225, 200, 100}, &fonc_bouton_continuer, "Continuer", sing_syst->rendu, "Bouton continuer")
-,texte_nom_joueur(sing_syst->nom_joueur, "./font/lazy.ttf", BLANC, {300, 225, 200, 100}, sing_syst->rendu)
-,titre("Titre du jeu", "./font/lazy.ttf", BLANC, {400, 0, 500, 200}, sing_syst->rendu)
-,bouton_nouvelle_partie(ROUGE, VERT, BLEU, GRIS, {550, 350, 200, 100}, &fonc_bouton_nouvelle_partie, "NOUVELLE PARTIE", sing_syst->rendu, "Bouton nouvelle partie")
-,bouton_options(ROUGE, VERT, BLEU, GRIS, {550, 475, 200, 100}, &fonc_bouton_options, "OPTIONS", sing_syst->rendu, "Bouton options")
-,bouton_quitter(ROUGE, VERT, BLEU, GRIS, {550, 600, 200, 100}, &fonc_bouton_quitter, "QUITTER", sing_syst->rendu, "Bouton quitter")
+:bouton_continuer(ROUGE, VERT, BLEU, GRIS, {550, 225, 200, 100}, &fonc_bouton_continuer, "Continuer", 30, sing_syst->rendu, "Bouton continuer")
+,texte_nom_joueur(sing_syst->nom_joueur, "./font/lazy.ttf", 30, BLANC, {300, 225, 200, 100}, sing_syst->rendu, "texte nom_joueur")
+,titre("Titre du jeu", "./font/lazy.ttf", 30, BLANC, {400, 0, 500, 200}, sing_syst->rendu, "texte titre")
+,bouton_nouvelle_partie(ROUGE, VERT, BLEU, GRIS, {550, 350, 200, 100}, &fonc_bouton_nouvelle_partie, "NOUVELLE PARTIE", 30, sing_syst->rendu, "Bouton nouvelle partie")
+,bouton_options(ROUGE, VERT, BLEU, GRIS, {550, 475, 200, 100}, &fonc_bouton_options, "OPTIONS", 30, sing_syst->rendu, "Bouton options")
+,bouton_quitter(ROUGE, VERT, BLEU, GRIS, {550, 600, 200, 100}, &fonc_bouton_quitter, "QUITTER", 30, sing_syst->rendu, "Bouton quitter")
 {
     bouton_options.setSelectedIfMove(&bouton_nouvelle_partie, &bouton_quitter, nullptr, nullptr);
     bouton_continuer.setSelectedIfMove(nullptr, &bouton_nouvelle_partie, nullptr, nullptr);
@@ -53,18 +53,18 @@ Selectionnable* MenuPrincipal::getSelected(void)
     return ui_selected;
 }
 
-void MenuPrincipal::Draw(SDL_Renderer* rendu, SingletonSysteme* sing_syst)
+void MenuPrincipal::Draw(SingletonSysteme* sing_syst)
 {
     if(sing_syst->nom_joueur.empty() == false)
     {
-        bouton_continuer.Draw(rendu);
-        texte_nom_joueur.Draw(rendu);
+        bouton_continuer.Draw(sing_syst->rendu);
+        texte_nom_joueur.Draw(sing_syst->rendu);
     }
 
-    bouton_nouvelle_partie.Draw(rendu);
-    bouton_options.Draw(rendu);
-    bouton_quitter.Draw(rendu);
-    this->titre.Draw(rendu);
+    bouton_nouvelle_partie.Draw(sing_syst->rendu);
+    bouton_options.Draw(sing_syst->rendu);
+    bouton_quitter.Draw(sing_syst->rendu);
+    this->titre.Draw(sing_syst->rendu);
 }
 
 
@@ -73,7 +73,7 @@ void MenuPrincipal::HandleEvents(SDL_Event e, SingletonSysteme* sing_syst)
     for(Selectionnable* s0 : ui)
     {
         Bouton* s = dynamic_cast<Bouton*>(s0);
-        if(s->tag == "Bouton continuer")
+        if(s->name == "Bouton continuer")
         {
             if(sing_syst->nom_joueur.empty() == true)
                 continue; //si le nom est vide, alors on ne gère pas les événements du bouton continuer

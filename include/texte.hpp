@@ -7,18 +7,22 @@
 #include <SDL2/SDL_ttf.h>
 #include <SDL2/SDL_mixer.h>
 
+#include "singleton_systeme.hpp"
+
 class Texte
 {
     public:
-        Texte(std::string texte, std::string police, SDL_Color couleur, SDL_Rect position, SDL_Renderer* rendu);
+        Texte(std::string texte, std::string police, int taille_police, SDL_Color couleur, SDL_Rect position, SDL_Renderer* rendu, std::string name);
         void Draw(SDL_Renderer* rendu);
 
         SDL_Rect position;
         std::string texte;
+        std::string name;
         TTF_Font* police;
         SDL_Color couleur;
         SDL_Surface* surface;
         SDL_Texture* texture;
+        int taille_police;
 
     protected:
 

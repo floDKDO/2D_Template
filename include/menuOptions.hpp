@@ -18,7 +18,7 @@ class MenuOptions
 {
     public:
         MenuOptions(SingletonSysteme* sing_syst);
-        std::vector<Selectionnable*> ui; //contient tous les boutons du menu principal
+        std::vector<Selectionnable*> ui; //contient tous les boutons du menu
 
         Texte texte_touche_haut;
         Texte texte_touche_bas;
@@ -57,7 +57,7 @@ class MenuOptions
         void resetSelected(void);
         Selectionnable* getSelected(void);
 
-        void Draw(SDL_Renderer* rendu, SingletonSysteme* sing_syst);
+        void Draw(SingletonSysteme* sing_syst);
         void HandleEvents(SDL_Event e, SingletonSysteme* sing_syst);
 
     protected:

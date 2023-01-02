@@ -1,25 +1,25 @@
 #include "menuOptions.hpp"
 
 MenuOptions::MenuOptions(SingletonSysteme* sing_syst)
-:texte_touche_haut("Haut", "./font/lazy.ttf", BLANC, {420, 100, 150, 60}, sing_syst->rendu)
-,texte_touche_bas("Bas", "./font/lazy.ttf", BLANC, {420, 180, 150, 60}, sing_syst->rendu)
-,texte_touche_gauche("Gauche", "./font/lazy.ttf", BLANC, {420, 260, 150, 60}, sing_syst->rendu)
-,texte_touche_droite("Droite", "./font/lazy.ttf", BLANC, {420, 340, 150, 60}, sing_syst->rendu)
-,mode_ecran("MODE ECRAN", "./font/lazy.ttf", BLANC, {575, 500, 200, 100}, sing_syst->rendu)
-,bouton_options_fenetre(ROUGE, VERT, BLEU, GRIS, {575, 600, 200, 100}, &fonc_bouton_options_fenetre, "", sing_syst->rendu, "Bouton options fenetre")
-,bouton_options_retour(ROUGE, VERT, BLEU, GRIS, {100, 600, 200, 100}, &fonc_bouton_options_retour, "RETOUR", sing_syst->rendu, "Bouton options retour")
-,bouton_options_touche_haut(ROUGE, VERT, BLEU, GRIS, {600, 100, 150, 60}, &fonc_choix_touche, SDL_GetKeyName(sing_syst->touches.dep_haut), sing_syst->rendu, "Bouton options touche haut")
-,bouton_options_touche_bas(ROUGE, VERT, BLEU, GRIS, {600, 180, 150, 60}, &fonc_choix_touche, SDL_GetKeyName(sing_syst->touches.dep_bas), sing_syst->rendu, "Bouton options touche bas")
-,bouton_options_touche_gauche(ROUGE, VERT, BLEU, GRIS, {600, 260, 150, 60}, &fonc_choix_touche, SDL_GetKeyName(sing_syst->touches.dep_gauche), sing_syst->rendu, "Bouton options touche gauche")
-,bouton_options_touche_droite(ROUGE, VERT, BLEU, GRIS, {600, 340, 150, 60}, &fonc_choix_touche, SDL_GetKeyName(sing_syst->touches.dep_droite), sing_syst->rendu, "Bouton options touche droite")
-,bouton_options_manette_haut(ROUGE, VERT, BLEU, GRIS, {775, 100, 150, 60}, &fonc_choix_touche_manette, SDL_GameControllerGetStringForButton(sing_syst->touches_1.dep_haut), sing_syst->rendu, "Bouton options manette haut")
-,bouton_options_manette_bas(ROUGE, VERT, BLEU, GRIS, {775, 180, 150, 60}, &fonc_choix_touche_manette, SDL_GameControllerGetStringForButton(sing_syst->touches_1.dep_bas), sing_syst->rendu, "Bouton options manette bas")
-,bouton_options_manette_gauche(ROUGE, VERT, BLEU, GRIS, {775, 260, 150, 60}, &fonc_choix_touche_manette, SDL_GameControllerGetStringForButton(sing_syst->touches_1.dep_gauche), sing_syst->rendu, "Bouton options manette gauche")
-,bouton_options_manette_droite(ROUGE, VERT, BLEU, GRIS, {775, 340, 150, 60}, &fonc_choix_touche_manette, SDL_GameControllerGetStringForButton(sing_syst->touches_1.dep_droite), sing_syst->rendu, "Bouton options manette droite")
-,texte_clavier("CLAVIER", "./font/lazy.ttf", BLANC, {600, 50, 50, 50}, sing_syst->rendu)
-,texte_manette("MANETTE", "./font/lazy.ttf", BLANC, {775, 50, 50, 50}, sing_syst->rendu)
-,toggle_sound(BLANC, GRIS, GRIS, GRIS, {280, 100, 50, 50}, "SON", &fonc_toggle_son, sing_syst->son_active, sing_syst->rendu)
-,toggle_musique(BLANC, GRIS, GRIS, GRIS, {1000, 100, 50, 50}, "MUSIQUE", &fonc_toggle_musique, sing_syst->musique_activee, sing_syst->rendu)
+:texte_touche_haut("Haut", "./font/lazy.ttf", 30, BLANC, {420, 100, 150, 60}, sing_syst->rendu, "texte touche_haut")
+,texte_touche_bas("Bas", "./font/lazy.ttf", 30, BLANC, {420, 180, 150, 60}, sing_syst->rendu, "texte touche_bas")
+,texte_touche_gauche("Gauche", "./font/lazy.ttf", 30, BLANC, {420, 260, 150, 60}, sing_syst->rendu, "texte touche_gauche")
+,texte_touche_droite("Droite", "./font/lazy.ttf", 30, BLANC, {420, 340, 150, 60}, sing_syst->rendu, "texte touche_droite")
+,mode_ecran("MODE ECRAN", "./font/lazy.ttf", 30, BLANC, {575, 500, 200, 100}, sing_syst->rendu, "texte mode_ecran")
+,bouton_options_fenetre(ROUGE, VERT, BLEU, GRIS, {575, 600, 200, 100}, &fonc_bouton_options_fenetre, "", 30, sing_syst->rendu, "Bouton options fenetre")
+,bouton_options_retour(ROUGE, VERT, BLEU, GRIS, {100, 600, 200, 100}, &fonc_bouton_options_retour, "RETOUR", 30, sing_syst->rendu, "Bouton options retour")
+,bouton_options_touche_haut(ROUGE, VERT, BLEU, GRIS, {600, 100, 150, 60}, &fonc_choix_touche, SDL_GetKeyName(sing_syst->touches.dep_haut), 30, sing_syst->rendu, "Bouton options touche haut")
+,bouton_options_touche_bas(ROUGE, VERT, BLEU, GRIS, {600, 180, 150, 60}, &fonc_choix_touche, SDL_GetKeyName(sing_syst->touches.dep_bas), 30, sing_syst->rendu, "Bouton options touche bas")
+,bouton_options_touche_gauche(ROUGE, VERT, BLEU, GRIS, {600, 260, 150, 60}, &fonc_choix_touche, SDL_GetKeyName(sing_syst->touches.dep_gauche), 30, sing_syst->rendu, "Bouton options touche gauche")
+,bouton_options_touche_droite(ROUGE, VERT, BLEU, GRIS, {600, 340, 150, 60}, &fonc_choix_touche, SDL_GetKeyName(sing_syst->touches.dep_droite), 30, sing_syst->rendu, "Bouton options touche droite")
+,bouton_options_manette_haut(ROUGE, VERT, BLEU, GRIS, {775, 100, 150, 60}, &fonc_choix_touche_manette, SDL_GameControllerGetStringForButton(sing_syst->touches_1.dep_haut), 30, sing_syst->rendu, "Bouton options manette haut")
+,bouton_options_manette_bas(ROUGE, VERT, BLEU, GRIS, {775, 180, 150, 60}, &fonc_choix_touche_manette, SDL_GameControllerGetStringForButton(sing_syst->touches_1.dep_bas), 30, sing_syst->rendu, "Bouton options manette bas")
+,bouton_options_manette_gauche(ROUGE, VERT, BLEU, GRIS, {775, 260, 150, 60}, &fonc_choix_touche_manette, SDL_GameControllerGetStringForButton(sing_syst->touches_1.dep_gauche), 30, sing_syst->rendu, "Bouton options manette gauche")
+,bouton_options_manette_droite(ROUGE, VERT, BLEU, GRIS, {775, 340, 150, 60}, &fonc_choix_touche_manette, SDL_GameControllerGetStringForButton(sing_syst->touches_1.dep_droite), 30, sing_syst->rendu, "Bouton options manette droite")
+,texte_clavier("CLAVIER", "./font/lazy.ttf", 30, BLANC, {600, 50, 50, 50}, sing_syst->rendu,"texte clavier")
+,texte_manette("MANETTE", "./font/lazy.ttf", 30, BLANC, {775, 50, 50, 50}, sing_syst->rendu, "texte manette")
+,toggle_sound(BLANC, GRIS, GRIS, GRIS, {280, 100, 50, 50}, "SON", 30, &fonc_toggle_son, sing_syst->son_active, sing_syst->rendu, "toggle sound")
+,toggle_musique(BLANC, GRIS, GRIS, GRIS, {1000, 100, 50, 50}, "MUSIQUE", 30, &fonc_toggle_musique, sing_syst->musique_activee, sing_syst->rendu, "toggle musique")
 {
     if(sing_syst->mode_fenetre == PLEIN_ECRAN)
         bouton_options_fenetre.texte.texte = "PLEIN ECRAN";
@@ -103,22 +103,22 @@ Selectionnable* MenuOptions::getSelected(void)
     return ui_selected;
 }
 
-void MenuOptions::Draw(SDL_Renderer* rendu, SingletonSysteme* sing_syst)
+void MenuOptions::Draw(SingletonSysteme* sing_syst)
 {
     for(Selectionnable* s : ui)
     {
-        s->Draw(rendu);
+        s->Draw(sing_syst->rendu);
     }
-    texte_touche_haut.Draw(rendu);
-    texte_touche_bas.Draw(rendu);
-    texte_touche_gauche.Draw(rendu);
-    texte_touche_droite.Draw(rendu);
-    mode_ecran.Draw(rendu);
+    texte_touche_haut.Draw(sing_syst->rendu);
+    texte_touche_bas.Draw(sing_syst->rendu);
+    texte_touche_gauche.Draw(sing_syst->rendu);
+    texte_touche_droite.Draw(sing_syst->rendu);
+    mode_ecran.Draw(sing_syst->rendu);
 
     if(sing_syst->manette != nullptr)
     {
-        texte_clavier.Draw(rendu);
-        texte_manette.Draw(rendu);
+        texte_clavier.Draw(sing_syst->rendu);
+        texte_manette.Draw(sing_syst->rendu);
     }
 }
 
@@ -190,20 +190,12 @@ void MenuOptions::fonc_bouton_options_fenetre(SingletonSysteme* sing_syst, Selec
     Uint32 mask_window = SDL_GetWindowFlags(sing_syst->fenetre);
     if(mask_window & SDL_WINDOW_FULLSCREEN) //si la fenetre est en plein ecran
     {
-        if(SDL_SetWindowFullscreen(sing_syst->fenetre, 0) < 0)
-        {
-            std::cerr << SDL_GetError() << std::endl;
-            exit(EXIT_FAILURE);
-        }
+        CHK(SDL_SetWindowFullscreen(sing_syst->fenetre, 0), SDL_GetError());
         sing_syst->mode_fenetre = FENETRE;
     }
     else //si la fenetre est en mode fenetre
     {
-        if(SDL_SetWindowFullscreen(sing_syst->fenetre, SDL_WINDOW_FULLSCREEN) < 0)
-        {
-            std::cerr << SDL_GetError() << std::endl;
-            exit(EXIT_FAILURE);
-        }
+        CHK(SDL_SetWindowFullscreen(sing_syst->fenetre, SDL_WINDOW_FULLSCREEN), SDL_GetError());
         sing_syst->mode_fenetre = PLEIN_ECRAN;
     }
     if(sing_syst->mode_fenetre == FENETRE)
@@ -221,19 +213,10 @@ void MenuOptions::fonc_choix_touche(SingletonSysteme* sing_syst, Selectionnable*
 {
     bool quitter = false;
     SDL_Texture* texture;
-    if((texture = IMG_LoadTexture(sing_syst->rendu, "./img/pop_up_touche.png")) == nullptr)
-    {
-        std::cerr << IMG_GetError() << std::endl;
-        exit(EXIT_FAILURE);
-    }
-    SDL_Rect dest;
+    NCHK(texture = IMG_LoadTexture(sing_syst->rendu, "./img/pop_up_touche.png"), IMG_GetError());
     int w, h;
-    if(SDL_QueryTexture(texture, nullptr, nullptr, &w, &h) < 0)
-    {
-        std::cerr << SDL_GetError() << std::endl;
-        exit(EXIT_FAILURE);
-    }
-    dest = {300, 300, w, h};
+    CHK(SDL_QueryTexture(texture, nullptr, nullptr, &w, &h), SDL_GetError());
+    SDL_Rect dest = {300, 300, w, h};
     Bouton* b = dynamic_cast<Bouton*>(bouton);
     while(quitter == false)
     {
@@ -254,13 +237,13 @@ void MenuOptions::fonc_choix_touche(SingletonSysteme* sing_syst, Selectionnable*
                             std::cerr << "No name" << std::endl;
                             exit(EXIT_FAILURE);
                         }
-                        if (b->tag.find("haut") != std::string::npos)
+                        if (b->name.find("haut") != std::string::npos)
                             sing_syst->touches.dep_haut = e.key.keysym.sym;
-                        else if (b->tag.find("bas") != std::string::npos)
+                        else if (b->name.find("bas") != std::string::npos)
                             sing_syst->touches.dep_bas = e.key.keysym.sym;
-                        else if (b->tag.find("gauche") != std::string::npos)
+                        else if (b->name.find("gauche") != std::string::npos)
                             sing_syst->touches.dep_gauche = e.key.keysym.sym;
-                        else if (b->tag.find("droite") != std::string::npos)
+                        else if (b->name.find("droite") != std::string::npos)
                             sing_syst->touches.dep_droite = e.key.keysym.sym;
 
                         quitter = true;
@@ -271,11 +254,7 @@ void MenuOptions::fonc_choix_touche(SingletonSysteme* sing_syst, Selectionnable*
                     break;
             }
         }
-        if(SDL_RenderCopy(sing_syst->rendu, texture, nullptr, &dest) < 0)
-        {
-            std::cerr << SDL_GetError() << std::endl;
-            exit(EXIT_FAILURE);
-        }
+        CHK(SDL_RenderCopy(sing_syst->rendu, texture, nullptr, &dest), SDL_GetError());
         SDL_RenderPresent(sing_syst->rendu);
     }
     SDL_DestroyTexture(texture);
@@ -286,19 +265,10 @@ void MenuOptions::fonc_choix_touche_manette(SingletonSysteme* sing_syst, Selecti
 {
     bool quitter = false;
     SDL_Texture* texture;
-    if((texture = IMG_LoadTexture(sing_syst->rendu, "./img/pop_up_touche.png")) == nullptr)
-    {
-        std::cerr << IMG_GetError() << std::endl;
-        exit(EXIT_FAILURE);
-    }
-    SDL_Rect dest;
+    NCHK(texture = IMG_LoadTexture(sing_syst->rendu, "./img/pop_up_touche.png"), IMG_GetError());
     int w, h;
-    if(SDL_QueryTexture(texture, nullptr, nullptr, &w, &h) < 0)
-    {
-        std::cerr << SDL_GetError() << std::endl;
-        exit(EXIT_FAILURE);
-    }
-    dest = {300, 300, w, h};
+    CHK(SDL_QueryTexture(texture, nullptr, nullptr, &w, &h), SDL_GetError());
+    SDL_Rect dest = {300, 300, w, h};
     Bouton* b = dynamic_cast<Bouton*>(bouton);
     while(quitter == false)
     {
@@ -319,13 +289,13 @@ void MenuOptions::fonc_choix_touche_manette(SingletonSysteme* sing_syst, Selecti
                             std::cerr << "No name" << std::endl;
                             exit(EXIT_FAILURE);
                         }
-                        if (b->tag.find("haut") != std::string::npos)
+                        if (b->name.find("haut") != std::string::npos)
                             sing_syst->touches_1.dep_haut = (SDL_GameControllerButton)e.cbutton.button;
-                        else if (b->tag.find("bas") != std::string::npos)
+                        else if (b->name.find("bas") != std::string::npos)
                             sing_syst->touches_1.dep_bas = (SDL_GameControllerButton)e.cbutton.button;
-                        else if (b->tag.find("gauche") != std::string::npos)
+                        else if (b->name.find("gauche") != std::string::npos)
                             sing_syst->touches_1.dep_gauche = (SDL_GameControllerButton)e.cbutton.button;
-                        else if (b->tag.find("droite") != std::string::npos)
+                        else if (b->name.find("droite") != std::string::npos)
                             sing_syst->touches_1.dep_droite = (SDL_GameControllerButton)e.cbutton.button;
 
                         quitter = true;
@@ -336,11 +306,7 @@ void MenuOptions::fonc_choix_touche_manette(SingletonSysteme* sing_syst, Selecti
                     break;
             }
         }
-        if(SDL_RenderCopy(sing_syst->rendu, texture, nullptr, &dest) < 0)
-        {
-            std::cerr << SDL_GetError() << std::endl;
-            exit(EXIT_FAILURE);
-        }
+        CHK(SDL_RenderCopy(sing_syst->rendu, texture, nullptr, &dest), SDL_GetError());
         SDL_RenderPresent(sing_syst->rendu);
     }
     SDL_DestroyTexture(texture);

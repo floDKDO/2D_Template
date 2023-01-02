@@ -11,6 +11,11 @@
 #include <SDL2/SDL_ttf.h>
 #include <SDL2/SDL_mixer.h>
 
+//macros pour gerer les retours de fonctions
+#define NCHK(op, type) do { if ((op) == nullptr){std::cerr << type << std::endl; exit(EXIT_FAILURE);} }while(0)
+#define CHK(op, type) do { if ((op) < 0){std::cerr << type << std::endl; exit(EXIT_FAILURE);} }while(0)
+
+
 enum etat_jeu
 {
     MENU_PRINCIPAL,
@@ -78,8 +83,6 @@ class SingletonSysteme
         std::string nom_joueur;
         int posX_joueur;
         int posY_joueur;
-
-        //MenuPrincipal menuPrincipal;
 
         //TODO : attribut Etat*
 

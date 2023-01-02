@@ -1,9 +1,9 @@
 #include "menuChoixNom.hpp"
 
 MenuChoixNom::MenuChoixNom(SingletonSysteme* sing_syst)
-:inputfield("./font/lazy.ttf", ROUGE, {300, 400, 200, 50}, &fonc_inputfield_nom_joueur, sing_syst->rendu)
-,demande_nom("Ecrivez votre nom", "./font/lazy.ttf", BLANC, {300, 200, 300, 150}, sing_syst->rendu)
-,bouton_valider(ROUGE, VERT, BLEU, GRIS, {300, 550, 200, 100}, &fonc_bouton_fin_demande_nom, "VALIDER", sing_syst->rendu, "Bouton valider")
+:inputfield("./font/lazy.ttf", 30, ROUGE, {300, 400, 200, 50}, &fonc_inputfield_nom_joueur, sing_syst->rendu, "inputfield choix nom")
+,demande_nom("Ecrivez votre nom", "./font/lazy.ttf", 30, BLANC, {300, 200, 300, 150}, sing_syst->rendu, "texte dmande_nom")
+,bouton_valider(ROUGE, VERT, BLEU, GRIS, {300, 550, 200, 100}, &fonc_bouton_fin_demande_nom, "VALIDER", 30, sing_syst->rendu, "Bouton valider")
 {
     inputfield.setSelectedIfMove(nullptr, &bouton_valider, nullptr, nullptr);
     bouton_valider.setSelectedIfMove(&inputfield, nullptr, nullptr, nullptr);
@@ -53,11 +53,11 @@ Selectionnable* MenuChoixNom::getSelected(void)
 }
 
 
-void MenuChoixNom::Draw(SDL_Renderer* rendu, SingletonSysteme* sing_syst)
+void MenuChoixNom::Draw(SingletonSysteme* sing_syst)
 {
-    inputfield.Draw(rendu);
-    demande_nom.Draw(rendu);
-    bouton_valider.Draw(rendu);
+    inputfield.Draw(sing_syst->rendu);
+    demande_nom.Draw(sing_syst->rendu);
+    bouton_valider.Draw(sing_syst->rendu);
     if(inputfield.etat == SELECTED)
         bouton_valider.etat = NORMAL;
 }
