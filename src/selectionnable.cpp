@@ -3,6 +3,8 @@
 
 bool Selectionnable::verrou = true;
 
+bool Selectionnable::inOnPointerEnter = false;
+
 
 void Selectionnable::onPointerEnter(SDL_Event e, SingletonSysteme* sing_syst)
 {

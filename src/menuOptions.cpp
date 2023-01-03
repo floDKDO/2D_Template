@@ -125,53 +125,17 @@ void MenuOptions::Draw(SingletonSysteme* sing_syst)
 
 void MenuOptions::HandleEvents(SDL_Event e, SingletonSysteme* sing_syst)
 {
+    int x, y; //position x et y de la souris
+    SDL_GetMouseState(&x, &y);
+
     for(Selectionnable* s : ui)
     {
-        int x, y; //position x et y de la souris
-        SDL_GetMouseState(&x, &y);
-
-        if(e.type == SDL_KEYDOWN)
+        if(e.type == SDL_MOUSEMOTION)
         {
-            s->onKeyPressed(e, sing_syst);
-        }
-        else if(e.type == SDL_KEYUP)
-        {
-            s->onKeyReleased(e, sing_syst);
-        }
-        else if(e.type == SDL_CONTROLLERBUTTONDOWN)
-        {
-            s->onControllerButtonPressed(e, sing_syst);
-        }
-        else if(e.type == SDL_CONTROLLERBUTTONUP)
-        {
-            s->onControllerButtonReleased(e, sing_syst);
-        }
-        else if(e.type == SDL_MOUSEMOTION)
-        {
-            if(s->collision(s->position, x, y) == true)
-            {
+            if(s->collision(s->position, x, y) == true && s->inOnPointerEnter == false)
                 this->resetSelected(); //seul ajout
-                s->onPointerEnter(e, sing_syst);
-            }
-            else
-            {
-                s->onPointerExit(e, sing_syst);
-            }
         }
-        else if(e.type == SDL_MOUSEBUTTONDOWN)
-        {
-            if(e.button.button == SDL_BUTTON_LEFT)
-            {
-                s->onPointerDown(e, sing_syst);
-            }
-        }
-        else if(e.type == SDL_MOUSEBUTTONUP)
-        {
-            if(e.button.button == SDL_BUTTON_LEFT)
-            {
-               s->onClick(e, sing_syst);
-            }
-        }
+        s->HandleEvents(e, sing_syst);
     }
 }
 

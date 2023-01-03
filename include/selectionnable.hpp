@@ -55,6 +55,7 @@ class Selectionnable
         Selectionnable* selectOnRight;
 
         static bool verrou; //pour empecher le double defilement (passer d'un ui à deux autres en un appuie)
+        static bool inOnPointerEnter; //pour reset l'etat selected lors d'un changement de bouton avec la souris
 
     protected:
 
