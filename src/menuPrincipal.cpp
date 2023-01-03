@@ -24,7 +24,8 @@ MenuPrincipal::MenuPrincipal(SingletonSysteme* sing_syst)
 
     bouton_quitter.setSelectedIfMove(&bouton_options, nullptr, nullptr, nullptr);
 
-    this->ui.push_back(&(this->bouton_continuer));
+    if(sing_syst->nom_joueur.empty() == false)
+        this->ui.push_back(&(this->bouton_continuer));
     this->ui.push_back(&(this->bouton_nouvelle_partie));
     this->ui.push_back(&(this->bouton_options));
     this->ui.push_back(&(this->bouton_quitter));
@@ -73,14 +74,10 @@ void MenuPrincipal::HandleEvents(SDL_Event e, SingletonSysteme* sing_syst)
     int x, y; //position x et y de la souris
     SDL_GetMouseState(&x, &y);
 
-    for(Selectionnable* s0 : ui)
+    for(Selectionnable* s : ui)
     {
-        Bouton* s = dynamic_cast<Bouton*>(s0);
-        if(s->name == "Bouton continuer")
-        {
-            if(sing_syst->nom_joueur.empty() == true)
-                continue; //si le nom est vide, alors on ne gère pas les événements du bouton continuer
-        }
+        if(s->name == "Bouton continuer" && sing_syst->nom_joueur.empty() == true)
+            continue; //si le nom est vide, alors on ne gère pas les événements du bouton continuer
 
         if(e.type == SDL_MOUSEMOTION)
         {

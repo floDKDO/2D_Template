@@ -43,8 +43,7 @@ class Selectionnable
         virtual void onControllerButtonReleased(SDL_Event e, SingletonSysteme* sing_syst);
 
         SDL_Rect position;
-
-        //std::string tag;
+        std::string name;
 
         etat etat;
         typedef void(*eventFunction)(SingletonSysteme*, Selectionnable*);

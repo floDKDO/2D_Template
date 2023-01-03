@@ -37,8 +37,6 @@ class Toggle : public Selectionnable
         bool son_joue;
         int previousEtat;
 
-        std::string name;
-
         bool clicAvantCollision;
 
         SDL_Texture* check;

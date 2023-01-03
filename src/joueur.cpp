@@ -125,7 +125,7 @@ void Joueur::HandleEvents(SDL_Event e, SingletonSysteme* sing_syst)
                 if(vitesseDeChute < -(this->hauteur_saut / 2))
                     vitesseDeChute = -(this->hauteur_saut / 2);
             }
-            else if(e.key.keysym.sym == SDLK_LEFT || e.key.keysym.sym == SDLK_RIGHT)
+            else if(e.key.keysym.sym == sing_syst->touches.dep_gauche || e.key.keysym.sym == sing_syst->touches.dep_droite)
             {
                 ResetAllValues(this->dep);
             }

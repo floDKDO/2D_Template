@@ -25,7 +25,6 @@ class Inputfield : public Selectionnable
         Texte texte_placeHolder;
         Texte curseur;
         int place; //place prise par un seul caractère
-        std::string name;
 
         bool affiche_curseur;
 

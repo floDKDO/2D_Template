@@ -16,7 +16,7 @@ Bouton::Bouton(SDL_Color couleur_normal, SDL_Color couleur_hover, SDL_Color coul
     NCHK(this->click_sound = Mix_LoadWAV("./sound/select.ogg"), Mix_GetError());
     this->son_joue = false;
     this->hasImage = false;
-    this->name = name;;
+    this->name = name;
 }
 
 Bouton::Bouton(std::string image_normal, std::string image_hover, std::string image_click, std::string image_selected, SDL_Rect position, eventFunction funcPtr, std::string texte, int taille_police, SDL_Renderer* rendu, std::string name)

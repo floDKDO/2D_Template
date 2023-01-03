@@ -48,14 +48,6 @@ MenuOptions::MenuOptions(SingletonSysteme* sing_syst)
         this->ui.push_back(&(this->bouton_options_manette_bas));
         this->ui.push_back(&(this->bouton_options_manette_gauche));
         this->ui.push_back(&(this->bouton_options_manette_droite));
-        this->ui.push_back(&(this->bouton_options_fenetre));
-        this->ui.push_back(&(this->bouton_options_retour));
-        this->ui.push_back(&(this->bouton_options_touche_haut));
-        this->ui.push_back(&(this->bouton_options_touche_bas));
-        this->ui.push_back(&(this->bouton_options_touche_gauche));
-        this->ui.push_back(&(this->bouton_options_touche_droite));
-        this->ui.push_back(&(this->toggle_sound));
-        this->ui.push_back(&(this->toggle_musique));
     }
     else
     {
@@ -68,16 +60,15 @@ MenuOptions::MenuOptions(SingletonSysteme* sing_syst)
         toggle_sound.setSelectedIfMove(nullptr, nullptr, nullptr, &bouton_options_touche_haut);
         toggle_musique.setSelectedIfMove(nullptr, nullptr, &bouton_options_touche_haut, nullptr);
         bouton_options_retour.setSelected(&bouton_options_retour);
-
-        this->ui.push_back(&(this->bouton_options_fenetre));
-        this->ui.push_back(&(this->bouton_options_retour));
-        this->ui.push_back(&(this->bouton_options_touche_haut));
-        this->ui.push_back(&(this->bouton_options_touche_bas));
-        this->ui.push_back(&(this->bouton_options_touche_gauche));
-        this->ui.push_back(&(this->bouton_options_touche_droite));
-        this->ui.push_back(&(this->toggle_sound));
-        this->ui.push_back(&(this->toggle_musique));
     }
+    this->ui.push_back(&(this->bouton_options_fenetre));
+    this->ui.push_back(&(this->bouton_options_retour));
+    this->ui.push_back(&(this->bouton_options_touche_haut));
+    this->ui.push_back(&(this->bouton_options_touche_bas));
+    this->ui.push_back(&(this->bouton_options_touche_gauche));
+    this->ui.push_back(&(this->bouton_options_touche_droite));
+    this->ui.push_back(&(this->toggle_sound));
+    this->ui.push_back(&(this->toggle_musique));
 }
 
 

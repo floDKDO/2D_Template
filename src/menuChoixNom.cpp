@@ -60,6 +60,13 @@ void MenuChoixNom::Draw(SingletonSysteme* sing_syst)
     bouton_valider.Draw(sing_syst->rendu);
     if(inputfield.etat == SELECTED)
         bouton_valider.etat = NORMAL;
+    if(bouton_valider.etat == SELECTED)
+    {
+        inputfield.inOnPointerEnter = false;
+        inputfield.mode_edition = false;
+        if(inputfield.funcPtr != nullptr)
+            inputfield.funcPtr(sing_syst, &inputfield); //si on clic en dehors de l'inputfield alors qu'on le modifie, la fonction se lance
+    }
 }
 
 
@@ -76,18 +83,11 @@ void MenuChoixNom::HandleEvents(SDL_Event e, SingletonSysteme* sing_syst)
 
     for(Selectionnable* s : ui)
     {
-        if(dynamic_cast<Inputfield*>(s) != nullptr)
+        if(e.type == SDL_MOUSEMOTION)
         {
-            s->HandleEvents(e, sing_syst);
+            if(s->collision(s->position, x, y) == true && s->inOnPointerEnter == false)
+                this->resetSelected(); //seul ajout
         }
-        else
-        {
-            if(e.type == SDL_MOUSEMOTION)
-            {
-                if(s->collision(s->position, x, y) == true && s->inOnPointerEnter == false)
-                    this->resetSelected(); //seul ajout
-            }
-            s->HandleEvents(e, sing_syst);
-        }
+        s->HandleEvents(e, sing_syst);
     }
 }

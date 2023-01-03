@@ -144,10 +144,12 @@ void Toggle::HandleEvents(SDL_Event e, SingletonSysteme* sing_syst)
     {
         if(collision(this->position, x, y) == true)
         {
+            inOnPointerEnter = true;
             this->onPointerEnter(e, sing_syst);
         }
         else
         {
+            inOnPointerEnter = false;
             this->onPointerExit(e, sing_syst);
         }
     }

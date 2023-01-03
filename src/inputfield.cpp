@@ -218,9 +218,10 @@ void Inputfield::HandleEvents(SDL_Event e, SingletonSysteme* sing_syst)
     {
         if(e.button.button == SDL_BUTTON_LEFT)
         {
-            this->etat = SELECTED;
             if(collision(fond_de_texte, x, y) == true && mode_edition == false)
             {   //si on clique sur l'inputfield et qu'on est pas en mode édition
+                inOnPointerEnter = true;
+                this->etat = SELECTED;
                 mode_edition = true;
                 if(sing_syst->son_active == true)
                 {
@@ -229,6 +230,7 @@ void Inputfield::HandleEvents(SDL_Event e, SingletonSysteme* sing_syst)
             }
             else if(collision(fond_de_texte, x, y) == false && mode_edition == true)
             {   //si on clique autre part que sur l'inputfield et qu'on est en mode édition
+                inOnPointerEnter = false;
                 mode_edition = false;
                 if(funcPtr != nullptr)
                     funcPtr(sing_syst, this); //si on clic en dehors de l'inputfield alors qu'on le modifie, la fonction se lance
