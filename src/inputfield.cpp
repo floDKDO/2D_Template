@@ -1,8 +1,8 @@
 #include "inputfield.hpp"
 
 Inputfield::Inputfield(std::string police, int taille_police, SDL_Color couleur, SDL_Rect position, eventFunction funcPtr, SDL_Renderer* rendu, std::string name)
-:texte("", police, taille_police, couleur, position, rendu, "texte de " + name), texte_placeHolder("Votre nom...", police, 30, {127, 127, 127, 255}, position, rendu, "texte placeholder de " + name)
-,curseur("|", police, taille_police, couleur, position, rendu, "curseur de " + name)
+:texte("", police, taille_police, couleur, position, rendu, "texte de " + name, false), texte_placeHolder("Votre nom...", police, 30, {127, 127, 127, 255}, position, rendu, "texte placeholder de " + name, false)
+,curseur("|", police, taille_police, couleur, position, rendu, "curseur de " + name, false)
 {
     this->fond_de_texte = position;
     this->zone_de_texte = {fond_de_texte.x, fond_de_texte.y, 0, 0};

@@ -2,7 +2,7 @@
 
 MenuChoixNom::MenuChoixNom(SingletonSysteme* sing_syst)
 :inputfield("./font/lazy.ttf", 30, ROUGE, {300, 400, 200, 50}, &fonc_inputfield_nom_joueur, sing_syst->rendu, "inputfield choix nom")
-,demande_nom("Ecrivez votre nom", "./font/lazy.ttf", 30, BLANC, {300, 200, 300, 150}, sing_syst->rendu, "texte dmande_nom")
+,demande_nom("Ecrivez votre nom", "./font/lazy.ttf", 30, BLANC, {300, 200, 300, 150}, sing_syst->rendu, "texte demande_nom", false)
 ,bouton_valider(ROUGE, VERT, BLEU, GRIS, {300, 550, 200, 100}, &fonc_bouton_fin_demande_nom, "VALIDER", 30, sing_syst->rendu, "Bouton valider")
 {
     inputfield.setSelectedIfMove(nullptr, &bouton_valider, nullptr, nullptr);

@@ -33,6 +33,8 @@ class Bouton : public Selectionnable
         bool son_joue;
         int previousEtat;
 
+        bool clicAvantCollision;
+
 
         Bouton(SDL_Color couleur_normal, SDL_Color couleur_hover, SDL_Color couleur_click, SDL_Color couleur_selected, SDL_Rect position, eventFunction funcPtr, std::string texte, int taille_police, SDL_Renderer* rendu, std::string name);
         Bouton(std::string image_normal, std::string image_hover, std::string image_click, std::string image_selected, SDL_Rect position, eventFunction funcPtr, std::string texte, int taille_police, SDL_Renderer* rendu, std::string name);
@@ -40,7 +42,6 @@ class Bouton : public Selectionnable
         void HandleEvents(SDL_Event e, SingletonSysteme* sing_syst);
         //void Update(SingletonSysteme* sing_syst);
         bool collision(SDL_Rect dest_joueur, int x, int y);
-        bool clicAvantCollision;
 
         void onPointerEnter(SDL_Event e, SingletonSysteme* sing_syst);
         void onPointerExit(SDL_Event e, SingletonSysteme* sing_syst);

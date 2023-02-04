@@ -1,7 +1,7 @@
 #include "toggle.hpp"
 
 Toggle::Toggle(SDL_Color couleur_normal, SDL_Color couleur_hover, SDL_Color couleur_click, SDL_Color couleur_selected, SDL_Rect position, std::string texte, int taille_police, eventFunction funcPtr, bool isCheckedSave, SDL_Renderer* rendu, std::string name)
-:texte(texte, "./font/lazy.ttf", taille_police, {255, 255, 255, 255}, position, rendu, "texte de " + name)
+:texte(texte, "./font/lazy.ttf", taille_police, {255, 255, 255, 255}, position, rendu, "texte de " + name, false)
 {
     this->isChecked = isCheckedSave;
     this->texte.position = {position.x, position.y - position.h, position.w, position.h};
@@ -24,7 +24,7 @@ Toggle::Toggle(SDL_Color couleur_normal, SDL_Color couleur_hover, SDL_Color coul
 }
 
 Toggle::Toggle(std::string image_normal, std::string image_hover, std::string image_click, std::string image_selected, SDL_Rect position, std::string texte, int taille_police, eventFunction funcPtr, bool isCheckedSave, SDL_Renderer* rendu, std::string name)
-:texte(texte, "./font/lazy.ttf", taille_police, {255, 255, 255, 255}, position, rendu, "texte de " + name)
+:texte(texte, "./font/lazy.ttf", taille_police, {255, 255, 255, 255}, position, rendu, "texte de " + name, false)
 {
     this->isChecked = isCheckedSave;
     this->texte.position = {position.x, position.y - position.h, position.w, position.h};

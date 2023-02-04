@@ -37,6 +37,7 @@ class MenuPrincipal
         Selectionnable* getSelected(void);
 
         void Draw(SingletonSysteme* sing_syst);
+        void Update(Uint32& timeStep);
         void HandleEvents(SDL_Event e, SingletonSysteme* sing_syst);
 
     protected:

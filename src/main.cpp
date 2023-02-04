@@ -50,6 +50,77 @@ SDL_Rect init_rect_from_image(int x, int y, SDL_Texture* texture)
 Il faudra créer les images en se basant sur la taille de l'étape 1 et cela sera bon pour toutes les autres tailles avec cet algo
 */
 
+/*#define LONGUEUR_FENETRE 1152 //1152
+#define HAUTEUR_FENETRE 1024 //1024
+#define LONGUEUR_BLOC 16
+#define HAUTEUR_BLOC 16
+#define NOMBRE_BLOCS_LONGUEUR 26  // nombre a afficher en x et y
+#define NOMBRE_BLOCS_HAUTEUR 32
+#define NOMBRE_TILE 2
+
+char tab[NOMBRE_BLOCS_LONGUEUR][NOMBRE_BLOCS_HAUTEUR] =
+{
+    "AAAAAAAAAAAAAAAARRAAAAAAAAAAAA",
+    "AAAAAAAAAAAAAAAARRAAAAAAAAAAAA",
+    "AAAAAAAAAAAAAAAARRAAAAAAAAAAAA",
+    "AAAAAAAAAAAAAAAARRAAAAAAAAAAAA",
+    "AAAAAAAARRRRRRRRRRRRRRRRAAAAAA",
+    "AAAAAAAARRRRRRRRRRRRRRRRAAAAAA",
+    "AAAAAARRMMMMMRRRRRRMMMMMRRAAAA",
+    "AAAAAARRMMMMMRRRRRRMMMMMRRAAAA",
+    "AAAAAARRMMMMMRRRRRRMMMMMRRAAAA",
+    "AAAAAARRMMMMMRRRRRRMMMMMRFAAAA",
+    "AAAAAAFRMMMMMPRRRRPMMMMMFRAAAA",
+    "AAAAAARFRRRSRRRRRRRRSRRRRFAAAA",
+    "AAAAAAFRRFRRRRRRRRRRRRFRFRAAAA",
+    "AAAAAARRRRRRRRRRRRRRRRRRRRAAAA",
+    "AAAAAARRRMMMMMMMRRRRRRRRRRAAAA",
+    "AAAAAARRRMMMMMMMRRRRRRRRRRAAAA",
+    "AAAAAARRRMMMMMMMRRRRRRRRRRAAAA",
+    "AAAAAARRRMMMMMMMRRRRRRRRRRAAAA",
+    "AAAAAARRRMMMMMMMRRRRRRRRAAAAAA",
+    "AAAAAARRRFFFPSRRRRRRRRRRAAAAAA",
+    "AAAAAAAARFFFRRRRRRRRRRAAAAAAAA",
+    "AAAAAAAARRRRRRRRRRRRRRAAAAAAAA",
+    "AAAAAAAAAAAAAAAAAAAAAAAAAAAAAA",
+    "AAAAAAAAAAAAAAAAAAAAAAAAAAAAAA",
+    "AAAAAAAAAAAAAAAAAAAAAAAAAAAAAA",
+    "AAAAAAAAAAAAAAAAAAAAAAAAAAAAAA"
+};
+
+
+void afficher(SDL_Rect dest, SDL_Texture* texture[NOMBRE_TILE], SDL_Renderer* rendu)
+{
+    for(int i = 0; i < NOMBRE_BLOCS_LONGUEUR; i++)
+    {
+        for(int j = 0; j < NOMBRE_BLOCS_HAUTEUR; j++)
+        {
+            dest = init_rect(LONGUEUR_BLOC * j, HAUTEUR_BLOC * i, LONGUEUR_BLOC, HAUTEUR_BLOC);
+            if(tab[i][j] == 'R') //case herbe
+            {
+                if(SDL_RenderCopy(rendu, texture[0], NULL, &dest) == -1)
+                {
+                    fprintf(stderr, SDL_GetError());
+                    exit(EXIT_FAILURE);
+                }
+            }
+            else if(tab[i][j] == 'F') //case fleur
+            {
+                if(SDL_RenderCopy(rendu, texture[1], NULL, &dest) == -1)
+                {
+                    fprintf(stderr, SDL_GetError());
+                    exit(EXIT_FAILURE);
+                }
+            }
+            else if(tab[i][j] == '0') //case vide
+            {
+                //espace sans rien pour deplacer le joueur
+                dest = init_rect(0, 0, 0, 0);
+            }
+        }
+    }
+}*/
+
 
 int main(int argc, char* argv[])
 {
@@ -132,6 +203,7 @@ int main(int argc, char* argv[])
         if(SingletonSysteme::instance().etat == MENU_PRINCIPAL)
         {
             menuPrincipal.Draw(&SingletonSysteme::instance());
+            menuPrincipal.Update(timeStep);
         }
         else if(SingletonSysteme::instance().etat == MENU_OPTIONS)
         {

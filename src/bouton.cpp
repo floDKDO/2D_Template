@@ -1,7 +1,7 @@
 #include "bouton.hpp"
 
 Bouton::Bouton(SDL_Color couleur_normal, SDL_Color couleur_hover, SDL_Color couleur_click, SDL_Color couleur_selected, SDL_Rect position, eventFunction funcPtr, std::string texte, int taille_police, SDL_Renderer* rendu, std::string name)
-:texte(texte, "./font/lazy.ttf", taille_police, {255, 255, 255, 255}, position, rendu, "texte de " + name)
+:texte(texte, "./font/lazy.ttf", taille_police, {255, 255, 255, 255}, position, rendu, "texte de " + name, false)
 {
     this->couleur_normal = couleur_normal;
     this->couleur_hover = couleur_hover;
@@ -20,7 +20,7 @@ Bouton::Bouton(SDL_Color couleur_normal, SDL_Color couleur_hover, SDL_Color coul
 }
 
 Bouton::Bouton(std::string image_normal, std::string image_hover, std::string image_click, std::string image_selected, SDL_Rect position, eventFunction funcPtr, std::string texte, int taille_police, SDL_Renderer* rendu, std::string name)
-:texte(texte, "./font/lazy.ttf", taille_police, {255, 255, 255, 255}, position, rendu, "texte de " + name)
+:texte(texte, "./font/lazy.ttf", taille_police, {255, 255, 255, 255}, position, rendu, "texte de " + name, false)
 {
     this->etat = NORMAL; //etat de base
     this->previousEtat = etat;

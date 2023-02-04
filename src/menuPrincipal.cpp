@@ -2,8 +2,8 @@
 
 MenuPrincipal::MenuPrincipal(SingletonSysteme* sing_syst)
 :bouton_continuer(ROUGE, VERT, BLEU, GRIS, {550, 225, 200, 100}, &fonc_bouton_continuer, "Continuer", 30, sing_syst->rendu, "Bouton continuer")
-,texte_nom_joueur(sing_syst->nom_joueur, "./font/lazy.ttf", 30, BLANC, {300, 225, 200, 100}, sing_syst->rendu, "texte nom_joueur")
-,titre("Titre du jeu", "./font/lazy.ttf", 30, BLANC, {400, 0, 500, 200}, sing_syst->rendu, "texte titre")
+,texte_nom_joueur(sing_syst->nom_joueur, "./font/lazy.ttf", 30, BLANC, {300, 225, 200, 100}, sing_syst->rendu, "texte nom_joueur", false)
+,titre("Titre du jeu", "./font/lazy.ttf", 30, BLANC, {400, 0, 500, 200}, sing_syst->rendu, "texte titre", false)
 ,bouton_nouvelle_partie(ROUGE, VERT, BLEU, GRIS, {550, 350, 200, 100}, &fonc_bouton_nouvelle_partie, "NOUVELLE PARTIE", 30, sing_syst->rendu, "Bouton nouvelle partie")
 ,bouton_options(ROUGE, VERT, BLEU, GRIS, {550, 475, 200, 100}, &fonc_bouton_options, "OPTIONS", 30, sing_syst->rendu, "Bouton options")
 ,bouton_quitter(ROUGE, VERT, BLEU, GRIS, {550, 600, 200, 100}, &fonc_bouton_quitter, "QUITTER", 30, sing_syst->rendu, "Bouton quitter")
@@ -66,6 +66,13 @@ void MenuPrincipal::Draw(SingletonSysteme* sing_syst)
     bouton_options.Draw(sing_syst->rendu);
     bouton_quitter.Draw(sing_syst->rendu);
     this->titre.Draw(sing_syst->rendu);
+}
+
+void MenuPrincipal::Update(Uint32& timeStep)
+{
+    bouton_nouvelle_partie.texte.Update(timeStep);
+    bouton_options.texte.Update(timeStep);
+    bouton_quitter.texte.Update(timeStep);
 }
 
 
