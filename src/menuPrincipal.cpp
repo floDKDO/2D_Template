@@ -7,6 +7,7 @@ MenuPrincipal::MenuPrincipal(SingletonSysteme* sing_syst)
 ,bouton_nouvelle_partie(ROUGE, VERT, BLEU, GRIS, {550, 350, 200, 100}, &fonc_bouton_nouvelle_partie, "NOUVELLE PARTIE", 30, sing_syst->rendu, "Bouton nouvelle partie")
 ,bouton_options(ROUGE, VERT, BLEU, GRIS, {550, 475, 200, 100}, &fonc_bouton_options, "OPTIONS", 30, sing_syst->rendu, "Bouton options")
 ,bouton_quitter(ROUGE, VERT, BLEU, GRIS, {550, 600, 200, 100}, &fonc_bouton_quitter, "QUITTER", 30, sing_syst->rendu, "Bouton quitter")
+,boite(GRIS, {100, 600, 200, 100}, "Bonjour joueur\n, comment allez vous? Il est bien mon jeu, n'est-ce pas? Dis OUIIIIIIIIIIIIIIIIIIIIIII!", 15, sing_syst->rendu, "Boite de dialogue")
 {
     bouton_options.setSelectedIfMove(&bouton_nouvelle_partie, &bouton_quitter, nullptr, nullptr);
     bouton_continuer.setSelectedIfMove(nullptr, &bouton_nouvelle_partie, nullptr, nullptr);
@@ -66,6 +67,7 @@ void MenuPrincipal::Draw(SingletonSysteme* sing_syst)
     bouton_options.Draw(sing_syst->rendu);
     bouton_quitter.Draw(sing_syst->rendu);
     this->titre.Draw(sing_syst->rendu);
+    this->boite.Draw(sing_syst->rendu);
 }
 
 void MenuPrincipal::Update(Uint32& timeStep)
@@ -73,6 +75,7 @@ void MenuPrincipal::Update(Uint32& timeStep)
     bouton_nouvelle_partie.texte.Update(timeStep);
     bouton_options.texte.Update(timeStep);
     bouton_quitter.texte.Update(timeStep);
+    boite.Update(timeStep);
 }
 
 
@@ -93,6 +96,8 @@ void MenuPrincipal::HandleEvents(SDL_Event e, SingletonSysteme* sing_syst)
         }
         s->HandleEvents(e, sing_syst);
     }
+
+    this->boite.HandleEvents(e, sing_syst);
 }
 
 

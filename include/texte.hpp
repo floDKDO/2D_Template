@@ -23,6 +23,7 @@ class Texte
         std::string texteDefilement;
         bool dialogue;
         unsigned int i;
+        Uint32 wrapLength;
         ////////////////////////////////////////////////
 
         std::string name;

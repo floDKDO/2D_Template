@@ -34,13 +34,14 @@ void Texte::Draw(SDL_Renderer* rendu)
     {
         if(this->texteDefilement.length() > 0)
         {
-            NCHK(this->surface = TTF_RenderText_Solid(this->police, this->texteDefilement.c_str(), couleur), TTF_GetError());
+            NCHK(this->surface = TTF_RenderText_Solid_Wrapped(this->police, this->texteDefilement.c_str(), couleur, wrapLength), TTF_GetError());
         }
         else
         {
-            NCHK(this->surface = TTF_RenderText_Solid(this->police, " ", couleur), TTF_GetError());
+            NCHK(this->surface = TTF_RenderText_Solid_Wrapped(this->police, " ", couleur, wrapLength), TTF_GetError());
         }
-        CHK(TTF_SizeText(this->police, this->texteDefilement.c_str(), &(this->position.w), &(this->position.h)), TTF_GetError());
+        position.w = surface->w;
+        position.h = surface->h;
     }
     NCHK(texture = SDL_CreateTextureFromSurface(rendu, surface), SDL_GetError());
     CHK(SDL_RenderCopy(rendu, texture, nullptr, &position), SDL_GetError());
