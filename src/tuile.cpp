@@ -1,10 +1,25 @@
 #include "tuile.hpp"
 
+//Tuile fixe
 Tuile::Tuile(std::string chemin, SDL_Rect position)
 {
     this->position = position;
     this->estPassable = false;
     this->chemin = chemin;
+    this->isAnimated = false;
+}
+
+
+//Tuile animée
+Tuile::Tuile(std::string chemin, SDL_Rect position, unsigned int nb_images, int espacement_tuiles_x)
+{
+    this->position = position;
+    this->estPassable = false;
+    this->chemin = chemin;
+    this->isAnimated = true;
+
+    this->nb_images = nb_images;
+    this->espacement_tuiles_x = espacement_tuiles_x;
 }
 
 
@@ -15,13 +30,24 @@ void Tuile::Draw(SDL_Renderer* rendu)
         std::cerr << IMG_GetError() << std::endl;
         exit(EXIT_FAILURE);
     }
-    if(SDL_RenderCopy(rendu, texture, nullptr, &position) < 0)
+
+    if(SDL_RenderCopy(rendu, texture, &srcRect, &position) < 0)
     {
         std::cerr << SDL_GetError() << std::endl;
         exit(EXIT_FAILURE);
     }
 }
 
+
+void Tuile::Update(Uint32& timeStep)
+{
+    if(isAnimated == true)
+    {
+        Uint32 seconds = SDL_GetTicks() / 200; //200 => rapidité de l'animation
+        int sprite = seconds % nb_images;
+        srcRect = {espacement_tuiles_x * sprite, 0, 16, 16};
+    }
+}
 
 
 

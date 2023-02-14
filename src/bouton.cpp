@@ -155,7 +155,8 @@ void Bouton::HandleEvents(SDL_Event e, SingletonSysteme* sing_syst)
 void Bouton::onPointerEnter(SDL_Event e, SingletonSysteme* sing_syst)
 {
     (void)e;
-    if(son_joue == false && sing_syst->son_active == true && previousEtat != SELECTED)
+    std::cout << son_joue << std::boolalpha << std::endl;
+    if(son_joue == false && sing_syst->son_active == true && previousEtat != SELECTED) //previous pour eviter qu'un son se rejoue si on est dejà sur le bouton avec la souris et qu'on la bouge dessus
     {
         CHK(Mix_PlayChannel(1, hover_sound, 0), Mix_GetError());
         son_joue = true;

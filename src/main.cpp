@@ -13,6 +13,8 @@
 #include "menuPrincipal.hpp"
 #include "menuOptions.hpp"
 #include "menuChoixNom.hpp"
+#include "tuile.hpp"
+#include "enJeu.hpp"
 
 SDL_Texture* init_texture(std::string image, SDL_Renderer* rendu)
 {
@@ -139,9 +141,9 @@ int main(int argc, char* argv[])
     MenuPrincipal menuPrincipal(&SingletonSysteme::instance());
     MenuOptions menuOptions(&SingletonSysteme::instance());
     MenuChoixNom menuChoixNom(&SingletonSysteme::instance());
+    EnJeu enJeu(&SingletonSysteme::instance());
 
     // EN JEU ////////////////////////////////////////////////////////////////////////////////
-    Joueur joueur(100, BLEU, {160, 160, 32, 32}, VUE_COTE);
     SDL_Texture* texture = init_texture("./img/fond.png", SingletonSysteme::instance().rendu);
     SDL_Rect dest = init_rect_from_image(0, 0, texture);
     //////////////////////////////////////////////////////////////////////////////////////////
@@ -192,7 +194,7 @@ int main(int argc, char* argv[])
             }
             else if(SingletonSysteme::instance().etat == EN_JEU)
             {
-                joueur.HandleEvents(e, &SingletonSysteme::instance());
+                enJeu.HandleEvents(e, &SingletonSysteme::instance());
             }
         }
 
@@ -216,9 +218,11 @@ int main(int argc, char* argv[])
         }
         else if(SingletonSysteme::instance().etat == EN_JEU)
         {
+            //fond
             CHK(SDL_RenderCopy(SingletonSysteme::instance().rendu, texture, nullptr, &dest), SDL_GetError());
-            joueur.Draw(SingletonSysteme::instance().rendu);
-            joueur.Update(timeStep);
+
+            enJeu.Draw(&SingletonSysteme::instance());
+            enJeu.Update(timeStep);
         }
 
         SDL_RenderPresent(SingletonSysteme::instance().rendu);

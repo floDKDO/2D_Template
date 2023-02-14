@@ -11,7 +11,7 @@ Texte::Texte(std::string texte, std::string police, int taille_police, SDL_Color
     this->name = name;
     // dialogue //////////////
     this->dialogue = dialogue;
-    this->i = 0;
+    this->indice = 0;
     this->texteDefilement = "";
     //////////////////////////
 }
@@ -24,11 +24,7 @@ void Texte::Draw(SDL_Renderer* rendu)
         {
             NCHK(this->surface = TTF_RenderText_Solid(this->police, this->texte.c_str(), couleur), TTF_GetError());
         }
-        else
-        {
-            NCHK(this->surface = TTF_RenderText_Solid(this->police, " ", couleur), TTF_GetError());
-        }
-        CHK(TTF_SizeText(this->police, this->texte.c_str(), &(this->position.w), &(this->position.h)), TTF_GetError());
+        else NCHK(this->surface = TTF_RenderText_Solid(this->police, " ", couleur), TTF_GetError());
     }
     else
     {
@@ -36,13 +32,10 @@ void Texte::Draw(SDL_Renderer* rendu)
         {
             NCHK(this->surface = TTF_RenderText_Solid_Wrapped(this->police, this->texteDefilement.c_str(), couleur, wrapLength), TTF_GetError());
         }
-        else
-        {
-            NCHK(this->surface = TTF_RenderText_Solid_Wrapped(this->police, " ", couleur, wrapLength), TTF_GetError());
-        }
-        position.w = surface->w;
-        position.h = surface->h;
+        else NCHK(this->surface = TTF_RenderText_Solid_Wrapped(this->police, " ", couleur, wrapLength), TTF_GetError());
     }
+    position.w = surface->w;
+    position.h = surface->h;
     NCHK(texture = SDL_CreateTextureFromSurface(rendu, surface), SDL_GetError());
     CHK(SDL_RenderCopy(rendu, texture, nullptr, &position), SDL_GetError());
 }
@@ -52,10 +45,10 @@ void Texte::Update(Uint32& timeStep)
 {
     if(dialogue == true)
     {
-        if(SDL_GetTicks() - timeStep > 200 && i < texte.length()) //200 => vitesse de défilement (200 ms par lettre)
+        if(SDL_GetTicks() - timeStep > 10 && indice < texte.length()) //200 => vitesse de défilement (200 ms par lettre)
         {
-            this->texteDefilement.push_back(this->texte[i]);
-            i += 1;
+            this->texteDefilement.push_back(this->texte[indice]);
+            indice += 1;
             timeStep = SDL_GetTicks();
         }
     }

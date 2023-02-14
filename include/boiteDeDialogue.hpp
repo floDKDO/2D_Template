@@ -10,20 +10,27 @@
 #include "texte.hpp"
 
 #include "singleton_systeme.hpp"
+#include <vector>
 
 //texte + carré
 //event : quand le texte est entièrement affiché, clic ou touche Entrée quitte la boite de dialogue
 class BoiteDeDialogue
 {
     public:
-        BoiteDeDialogue(SDL_Color couleur, SDL_Rect position, std::string texte, int taille_police, SDL_Renderer* rendu, std::string name);
+        BoiteDeDialogue(SDL_Color couleur, SDL_Rect position, std::vector<std::string> textes, int taille_police, SDL_Renderer* rendu, std::string name);
 
-        Texte texte_defilement;
+        std::vector<Texte> textes_defilement;
         SDL_Rect position;
         SDL_Texture* texture;
         std::string name;
         SDL_Color couleur;
         Mix_Chunk* click_sound;
+
+        SDL_Rect petit_carre;
+        bool dialogue_fini;
+        Uint8 alpha_carre;
+
+        int indice_texte_courant;
 
         void Draw(SDL_Renderer* rendu);
         void HandleEvents(SDL_Event e, SingletonSysteme* sing_syst);

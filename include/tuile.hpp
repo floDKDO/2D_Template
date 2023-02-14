@@ -12,17 +12,26 @@
 class Tuile
 {
     public:
+        //chemin : endroit où la tuile est stockée
         Tuile(std::string chemin, SDL_Rect position);
+        Tuile(std::string chemin, SDL_Rect position, unsigned int nb_images, int espacement_tuiles_x);
+
+        unsigned int nb_images;
+        //espacement des tuiles dans le tilesheet
+        int espacement_tuiles_x;
+
         SDL_Rect position;
+        SDL_Rect srcRect;
         SDL_Texture* texture;
         bool estPassable;
+        bool isAnimated;
         std::string chemin;
 
         void Draw(SDL_Renderer* rendu);
         void HandleEvents(SDL_Event e, SingletonSysteme* sing_syst);
         bool collision(SDL_Rect dest_joueur, int x, int y);
 
-        void Update(float timeStep);
+        void Update(Uint32& timeStep);
         void Clean();
 
     protected:

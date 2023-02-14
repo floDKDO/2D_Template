@@ -22,7 +22,7 @@ class Texte
         //si le texte est un dialogue avec un défilement
         std::string texteDefilement;
         bool dialogue;
-        unsigned int i;
+        unsigned int indice;
         Uint32 wrapLength;
         ////////////////////////////////////////////////
 

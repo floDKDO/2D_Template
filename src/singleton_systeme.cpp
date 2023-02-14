@@ -23,6 +23,7 @@ void SingletonSysteme::Init(void)
     CHK(Mix_OpenAudio(MIX_DEFAULT_FREQUENCY, MIX_DEFAULT_FORMAT, MIX_CHANNELS, 1024), Mix_GetError());
     NCHK(this->fenetre = SDL_CreateWindow("Mon jeu", SDL_WINDOWPOS_CENTERED, SDL_WINDOWPOS_CENTERED, LONGUEUR_FENETRE, HAUTEUR_FENETRE, flags), SDL_GetError());
     NCHK(this->rendu = SDL_CreateRenderer(this->fenetre, -1, SDL_RENDERER_ACCELERATED | SDL_RENDERER_PRESENTVSYNC), SDL_GetError());
+    CHK(SDL_SetRenderDrawBlendMode(rendu, SDL_BLENDMODE_BLEND), SDL_GetError()); //permettre la transparence
     CHK(SDL_RenderSetLogicalSize(this->rendu, 1280, 720), SDL_GetError()); //720!
 
     this->manette = SDL_GameControllerOpen(0);
