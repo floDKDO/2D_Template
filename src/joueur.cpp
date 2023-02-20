@@ -218,8 +218,8 @@ void Joueur::Update(Uint32& timeStep, SingletonSysteme* sing_syst)
         }
     }
 
-    sing_syst->camera.x = -position.x + LONGUEUR_FENETRE/2;
-    sing_syst->camera.y = -position.y + HAUTEUR_FENETRE/2;
+    sing_syst->camera.x = -position.x - position.w/2 + LONGUEUR_FENETRE/2;
+    sing_syst->camera.y = -position.y - position.h/2 + HAUTEUR_FENETRE/2;
 
     this->position = {position.x + sing_syst->camera.x, position.y + sing_syst->camera.y, position.w, position.h};
 }
