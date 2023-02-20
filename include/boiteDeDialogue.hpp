@@ -30,7 +30,7 @@ class BoiteDeDialogue
         bool dialogue_fini;
         Uint8 alpha_carre;
 
-        int indice_texte_courant;
+        long long unsigned int indice_texte_courant;
 
         void Draw(SDL_Renderer* rendu);
         void HandleEvents(SDL_Event e, SingletonSysteme* sing_syst);

@@ -26,13 +26,25 @@ void SingletonSysteme::Init(void)
     CHK(SDL_SetRenderDrawBlendMode(rendu, SDL_BLENDMODE_BLEND), SDL_GetError()); //permettre la transparence
     CHK(SDL_RenderSetLogicalSize(this->rendu, 1280, 720), SDL_GetError()); //720!
 
+    this->camera = {0, 0, LONGUEUR_FENETRE, HAUTEUR_FENETRE};
+
+    /* Algo de modification de taille de fenetre
+1. Partir d'une taille de résolution de base et donc d'une taille de fenetre de base (ex : 1280 * 720)
+=> fenetre = SDL_CreateWindow("Mon jeu", SDL_WINDOWPOS_CENTERED, SDL_WINDOWPOS_CENTERED, LONGUEUR_FENETRE, 1280, 720)
+=> SDL_RenderSetLogicalSize(rendu, 1280, 720)
+2. Quand la fenetre sera redimensionnée (soit avec SDL_WINDOW_RESIZABLE en flag de SDL_CreateWindow, ou avec SDL_SetWindowSize()) :
+   tous les éléments seront eux aussi redimensionnés en accord avec la résolution
+Il faudra créer les images en se basant sur la taille de l'étape 1 et cela sera bon pour toutes les autres tailles avec cet algo
+*/
+
+
     this->manette = SDL_GameControllerOpen(0);
     if(this->manette == nullptr)
         std::cout << "pas de manette";
 
     //activer les evenements manette
     CHK(SDL_GameControllerEventState(SDL_ENABLE), SDL_GetError());
-    //si dans menu où il y a l'inputfield, alors appeler cette fonction
+    //pour les inputfield
     SDL_StartTextInput();
 }
 

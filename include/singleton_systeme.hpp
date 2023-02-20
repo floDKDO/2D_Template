@@ -84,6 +84,8 @@ class SingletonSysteme
         int posX_joueur;
         int posY_joueur;
 
+        SDL_Rect camera;
+
         //TODO : attribut Etat*
 
         std::fstream fichier_sauvegarde;

@@ -23,7 +23,7 @@ class Joueur
         void SetValue(bool dep[4], int indice);
         void Draw(SDL_Renderer* rendu);
         void HandleEvents(SDL_Event e, SingletonSysteme* sing_syst);
-        void Update(Uint32& timeStep);
+        void Update(Uint32& timeStep, SingletonSysteme* sing_syst);
 
         SDL_Color couleur;
         SDL_Texture* texture;

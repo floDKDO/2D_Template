@@ -31,7 +31,7 @@ class Tuile
         void HandleEvents(SDL_Event e, SingletonSysteme* sing_syst);
         bool collision(SDL_Rect dest_joueur, int x, int y);
 
-        void Update(Uint32& timeStep);
+        void Update(Uint32& timeStep, SingletonSysteme* sing_syst);
         void Clean();
 
     protected:

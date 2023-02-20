@@ -39,14 +39,16 @@ void Tuile::Draw(SDL_Renderer* rendu)
 }
 
 
-void Tuile::Update(Uint32& timeStep)
+void Tuile::Update(Uint32& timeStep, SingletonSysteme* sing_syst)
 {
+    (void)timeStep;
     if(isAnimated == true)
     {
         Uint32 seconds = SDL_GetTicks() / 200; //200 => rapidité de l'animation
         int sprite = seconds % nb_images;
         srcRect = {espacement_tuiles_x * sprite, 0, 16, 16};
     }
+    this->position = {position.x + sing_syst->camera.x, position.y + sing_syst->camera.y, position.w, position.h};
 }
 
 

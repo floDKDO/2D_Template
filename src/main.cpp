@@ -1,9 +1,3 @@
-#include <iostream>
-#include <SDL2/SDL.h>
-#include <SDL2/SDL_image.h>
-#include <SDL2/SDL_ttf.h>
-#include <SDL2/SDL_mixer.h>
-
 #include "singleton_systeme.hpp"
 #include "inputfield.hpp"
 #include "bouton.hpp"
@@ -143,11 +137,6 @@ int main(int argc, char* argv[])
     MenuChoixNom menuChoixNom(&SingletonSysteme::instance());
     EnJeu enJeu(&SingletonSysteme::instance());
 
-    // EN JEU ////////////////////////////////////////////////////////////////////////////////
-    SDL_Texture* texture = init_texture("./img/fond.png", SingletonSysteme::instance().rendu);
-    SDL_Rect dest = init_rect_from_image(0, 0, texture);
-    //////////////////////////////////////////////////////////////////////////////////////////
-
     Uint32 timeStep = SDL_GetTicks();
 
     bool quitter = false;
@@ -198,7 +187,6 @@ int main(int argc, char* argv[])
             }
         }
 
-        //fond
         CHK(SDL_SetRenderDrawColor(SingletonSysteme::instance().rendu, 0, 0, 0, 255), SDL_GetError());
         CHK(SDL_RenderClear(SingletonSysteme::instance().rendu), SDL_GetError());
 
@@ -218,16 +206,12 @@ int main(int argc, char* argv[])
         }
         else if(SingletonSysteme::instance().etat == EN_JEU)
         {
-            //fond
-            CHK(SDL_RenderCopy(SingletonSysteme::instance().rendu, texture, nullptr, &dest), SDL_GetError());
-
             enJeu.Draw(&SingletonSysteme::instance());
-            enJeu.Update(timeStep);
+            enJeu.Update(timeStep, &SingletonSysteme::instance());
         }
 
         SDL_RenderPresent(SingletonSysteme::instance().rendu);
     }
-    SDL_DestroyTexture(texture);
     SingletonSysteme::instance().Sauvegarder();
     SingletonSysteme::instance().Destroy();
     return EXIT_SUCCESS;

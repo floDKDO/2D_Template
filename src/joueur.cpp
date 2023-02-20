@@ -167,7 +167,7 @@ void Joueur::HandleEvents(SDL_Event e, SingletonSysteme* sing_syst)
     }
 }
 
-void Joueur::Update(Uint32& timeStep)
+void Joueur::Update(Uint32& timeStep, SingletonSysteme* sing_syst)
 {
     if(this->mode == VUE_DESSUS)
     {
@@ -217,4 +217,9 @@ void Joueur::Update(Uint32& timeStep)
             vitesseDeChute = 0;
         }
     }
+
+    sing_syst->camera.x = -position.x + LONGUEUR_FENETRE/2;
+    sing_syst->camera.y = -position.y + HAUTEUR_FENETRE/2;
+
+    this->position = {position.x + sing_syst->camera.x, position.y + sing_syst->camera.y, position.w, position.h};
 }

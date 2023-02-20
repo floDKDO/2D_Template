@@ -18,10 +18,11 @@ class EnJeu
         EnJeu(SingletonSysteme* sing_syst);
         Joueur joueur;
         std::vector<Tuile> tuiles;
+
         //TODO : collision joueur <-> tuiles
 
         void Draw(SingletonSysteme* sing_syst);
-        void Update(Uint32& timeStep);
+        void Update(Uint32& timeStep, SingletonSysteme* sing_syst);
         void HandleEvents(SDL_Event e, SingletonSysteme* sing_syst);
 
     protected:

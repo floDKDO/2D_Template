@@ -11,7 +11,7 @@ BoiteDeDialogue::BoiteDeDialogue(SDL_Color couleur, SDL_Rect position, std::vect
     NCHK(this->click_sound = Mix_LoadWAV("./sound/select.ogg"), Mix_GetError());
 
     //textes et textes_defilement ont la meme taille
-    for(int i = 0; i < textes.size(); i++)
+    for(long long unsigned int i = 0; i < textes.size(); i++)
     {
         textes_defilement.push_back(Texte(textes[i], "./font/lazy.ttf", taille_police, BLANC, position, rendu, "texte de " + name, true));
         this->textes_defilement[i].wrapLength = position.w;
