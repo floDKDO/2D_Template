@@ -1,11 +1,11 @@
 //Nom joueur
-FloDKDO
+flo
 //Mode fenetre
 0
 //Musique activee ?
 1
 //Son active ?
-0
+1
 //Touche déplacement haut
 Up
 //Touche déplacement bas

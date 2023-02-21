@@ -12,16 +12,16 @@
 class Texte
 {
     public:
-        Texte(std::string texte, std::string police, int taille_police, SDL_Color couleur, SDL_Rect position, SDL_Renderer* rendu, std::string name, bool dialogue);
-        void Draw(SDL_Renderer* rendu);
-        void Update(Uint32& timeStep);
+        Texte(std::string texte, std::string police, int taille_police, SDL_Color couleur, SDL_Rect position, SDL_Renderer* rendu, std::string name, bool isDialogue);
+        void draw(SDL_Renderer* rendu);
+        void update(Uint32& timeStep);
 
         SDL_Rect position;
         std::string texte;
 
         //si le texte est un dialogue avec un défilement
         std::string texteDefilement;
-        bool dialogue;
+        bool isDialogue;
         unsigned int indice;
         Uint32 wrapLength;
         ////////////////////////////////////////////////

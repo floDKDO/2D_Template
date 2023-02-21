@@ -21,12 +21,12 @@ BoiteDeDialogue::BoiteDeDialogue(SDL_Color couleur, SDL_Rect position, std::vect
 
 
 
-void BoiteDeDialogue::Draw(SDL_Renderer* rendu)
+void BoiteDeDialogue::draw(SDL_Renderer* rendu)
 {
     CHK(SDL_SetRenderDrawColor(rendu, this->couleur.r, this->couleur.g, this->couleur.b, this->couleur.a), SDL_GetError());
     CHK(SDL_RenderFillRect(rendu, &(this->position)), SDL_GetError());
 
-    this->textes_defilement[indice_texte_courant].Draw(rendu);
+    this->textes_defilement[indice_texte_courant].draw(rendu);
 
     if(this->dialogue_fini == true)
     {
@@ -36,7 +36,7 @@ void BoiteDeDialogue::Draw(SDL_Renderer* rendu)
 }
 
 
-void BoiteDeDialogue::HandleEvents(SDL_Event e, SingletonSysteme* sing_syst)
+void BoiteDeDialogue::handleEvents(SDL_Event e, SingletonSysteme* sing_syst)
 {
     //si le texte est complètement affiché
     if(dialogue_fini == true)
@@ -61,9 +61,9 @@ void BoiteDeDialogue::HandleEvents(SDL_Event e, SingletonSysteme* sing_syst)
 }
 
 
-void BoiteDeDialogue::Update(Uint32& timeStep)
+void BoiteDeDialogue::update(Uint32& timeStep)
 {
-    this->textes_defilement[indice_texte_courant].Update(timeStep);
+    this->textes_defilement[indice_texte_courant].update(timeStep);
     if(this->textes_defilement[indice_texte_courant].texteDefilement.length() == this->textes_defilement[indice_texte_courant].texte.length())
     {
         this->dialogue_fini = true;
@@ -82,12 +82,12 @@ void BoiteDeDialogue::Update(Uint32& timeStep)
 }
 
 
-bool BoiteDeDialogue::collision(SDL_Rect dest_joueur, int x, int y)
+bool BoiteDeDialogue::collision(SDL_Rect dest, int x, int y)
 {
-    if(dest_joueur.y + dest_joueur.h > y
-    && dest_joueur.y < y
-    && dest_joueur.x + dest_joueur.w > x
-    && dest_joueur.x < x)
+    if(dest.y + dest.h > y
+    && dest.y < y
+    && dest.x + dest.w > x
+    && dest.x < x)
     {
         return true;
     }

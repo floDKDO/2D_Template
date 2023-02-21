@@ -123,14 +123,8 @@ int main(int argc, char* argv[])
     (void)argc;
     (void)argv;
 
-    SingletonSysteme::instance().Charger();
-    SingletonSysteme::instance().Init();
-
-    std::string mode;
-    if(SingletonSysteme::instance().mode_fenetre == PLEIN_ECRAN)
-        mode = "PLEIN ECRAN";
-    else if(SingletonSysteme::instance().mode_fenetre == FENETRE)
-        mode = "FENETRE";
+    SingletonSysteme::instance().charger();
+    SingletonSysteme::instance().init();
 
     MenuPrincipal menuPrincipal(&SingletonSysteme::instance());
     MenuOptions menuOptions(&SingletonSysteme::instance());
@@ -151,7 +145,7 @@ int main(int argc, char* argv[])
 
                     if(e.window.event == SDL_WINDOWEVENT_CLOSE)
                     {
-                        SingletonSysteme::instance().Sauvegarder();
+                        SingletonSysteme::instance().sauvegarder();
                         quitter = true;
                     }
                     break;
@@ -160,7 +154,7 @@ int main(int argc, char* argv[])
 
                     if(e.key.keysym.sym == SDLK_ESCAPE)
                     {
-                        SingletonSysteme::instance().Sauvegarder();
+                        SingletonSysteme::instance().sauvegarder();
                         quitter = true;
                     }
                     break;
@@ -171,19 +165,19 @@ int main(int argc, char* argv[])
 
             if(SingletonSysteme::instance().etat == MENU_PRINCIPAL)
             {
-                menuPrincipal.HandleEvents(e, &SingletonSysteme::instance());
+                menuPrincipal.handleEvents(e, &SingletonSysteme::instance());
             }
             else if(SingletonSysteme::instance().etat == MENU_OPTIONS)
             {
-                menuOptions.HandleEvents(e, &SingletonSysteme::instance());
+                menuOptions.handleEvents(e, &SingletonSysteme::instance());
             }
             else if(SingletonSysteme::instance().etat == DEMANDE_NOM)
             {
-                menuChoixNom.HandleEvents(e, &SingletonSysteme::instance());
+                menuChoixNom.handleEvents(e, &SingletonSysteme::instance());
             }
             else if(SingletonSysteme::instance().etat == EN_JEU)
             {
-                enJeu.HandleEvents(e, &SingletonSysteme::instance());
+                enJeu.handleEvents(e, &SingletonSysteme::instance());
             }
         }
 
@@ -192,27 +186,27 @@ int main(int argc, char* argv[])
 
         if(SingletonSysteme::instance().etat == MENU_PRINCIPAL)
         {
-            menuPrincipal.Draw(&SingletonSysteme::instance());
-            menuPrincipal.Update(timeStep);
+            menuPrincipal.draw(&SingletonSysteme::instance());
+            menuPrincipal.update(timeStep);
         }
         else if(SingletonSysteme::instance().etat == MENU_OPTIONS)
         {
-            menuOptions.Draw(&SingletonSysteme::instance());
+            menuOptions.draw(&SingletonSysteme::instance());
         }
         else if(SingletonSysteme::instance().etat == DEMANDE_NOM)
         {
-            menuChoixNom.Draw(&SingletonSysteme::instance());
-            menuChoixNom.Update(timeStep);
+            menuChoixNom.draw(&SingletonSysteme::instance());
+            menuChoixNom.update(timeStep);
         }
         else if(SingletonSysteme::instance().etat == EN_JEU)
         {
-            enJeu.Draw(&SingletonSysteme::instance());
-            enJeu.Update(timeStep, &SingletonSysteme::instance());
+            enJeu.draw(&SingletonSysteme::instance());
+            enJeu.update(timeStep, &SingletonSysteme::instance());
         }
 
         SDL_RenderPresent(SingletonSysteme::instance().rendu);
     }
-    SingletonSysteme::instance().Sauvegarder();
-    SingletonSysteme::instance().Destroy();
+    SingletonSysteme::instance().sauvegarder();
+    SingletonSysteme::instance().destroy();
     return EXIT_SUCCESS;
 }

@@ -23,13 +23,13 @@ Inputfield::Inputfield(std::string police, int taille_police, SDL_Color couleur,
     SDL_SetTextInputRect(&(this->zone_de_texte));
 }
 
-bool Inputfield::collision(SDL_Rect dest_joueur, int x, int y)
+bool Inputfield::collision(SDL_Rect dest, int x, int y)
 {
     //si pas de collision
-    if(dest_joueur.y + dest_joueur.h > y
-    && dest_joueur.y < y
-    && dest_joueur.x + dest_joueur.w > x
-    && dest_joueur.x < x)
+    if(dest.y + dest.h > y
+    && dest.y < y
+    && dest.x + dest.w > x
+    && dest.x < x)
     {
         return true;
     }
@@ -39,9 +39,9 @@ bool Inputfield::collision(SDL_Rect dest_joueur, int x, int y)
     }
 }
 
-void Inputfield::Draw(SDL_Renderer* rendu)
+void Inputfield::draw(SDL_Renderer* rendu)
 {
-    texte.Draw(rendu);
+    texte.draw(rendu);
 
     zone_de_texte.w = texte.surface->w;
     zone_de_texte.h = texte.surface->h;
@@ -53,18 +53,18 @@ void Inputfield::Draw(SDL_Renderer* rendu)
     if(texte.texte.length() == 0)
     {
         if(this->mode_edition == false)
-            texte_placeHolder.Draw(rendu);
+            texte_placeHolder.draw(rendu);
 
         curseur.position.x = fond_de_texte.x - place;
     }
     else curseur.position.x = fond_de_texte.x + zone_de_texte.w - place;
 
     if(this->mode_edition == true && affiche_curseur == true)
-        curseur.Draw(rendu);
+        curseur.draw(rendu);
 }
 
 
-void Inputfield::Update(Uint32& timeStep)
+void Inputfield::update(Uint32& timeStep)
 {
     //toutes les demis secondes, alterner affichage et non affichage
     if(SDL_GetTicks() - timeStep > 500)
@@ -79,7 +79,7 @@ void Inputfield::Update(Uint32& timeStep)
 }
 
 
-void Inputfield::HandleEvents(SDL_Event e, SingletonSysteme* sing_syst)
+void Inputfield::handleEvents(SDL_Event e, SingletonSysteme* sing_syst)
 {
     int x, y; //position x et y de la souris
     SDL_GetMouseState(&x, &y);
@@ -107,28 +107,28 @@ void Inputfield::HandleEvents(SDL_Event e, SingletonSysteme* sing_syst)
                 {
                     if(this->selectOnUp != nullptr)
                     {
-                        this->fonc(this->selectOnUp, sing_syst);
+                        this->selectNew(this->selectOnUp, sing_syst);
                     }
                 }
                 else if(e.key.keysym.sym == SDLK_DOWN)
                 {
                     if(this->selectOnDown != nullptr)
                     {
-                        this->fonc(this->selectOnDown, sing_syst);
+                        this->selectNew(this->selectOnDown, sing_syst);
                     }
                 }
                 else if(e.key.keysym.sym == SDLK_LEFT)
                 {
                     if(this->selectOnLeft != nullptr)
                     {
-                        this->fonc(this->selectOnLeft, sing_syst);
+                        this->selectNew(this->selectOnLeft, sing_syst);
                     }
                 }
                 else if(e.key.keysym.sym == SDLK_RIGHT)
                 {
                     if(this->selectOnRight != nullptr)
                     {
-                        this->fonc(this->selectOnRight, sing_syst);
+                        this->selectNew(this->selectOnRight, sing_syst);
                     }
                 }
 
@@ -170,28 +170,28 @@ void Inputfield::HandleEvents(SDL_Event e, SingletonSysteme* sing_syst)
                 {
                     if(this->selectOnUp != nullptr)
                     {
-                        this->fonc(this->selectOnUp, sing_syst);
+                        this->selectNew(this->selectOnUp, sing_syst);
                     }
                 }
                 else if(e.cbutton.button == SDL_CONTROLLER_BUTTON_DPAD_DOWN)
                 {
                     if(this->selectOnDown != nullptr)
                     {
-                        this->fonc(this->selectOnDown, sing_syst);
+                        this->selectNew(this->selectOnDown, sing_syst);
                     }
                 }
                 else if(e.cbutton.button == SDL_CONTROLLER_BUTTON_DPAD_LEFT)
                 {
                     if(this->selectOnLeft != nullptr)
                     {
-                        this->fonc(this->selectOnLeft, sing_syst);
+                        this->selectNew(this->selectOnLeft, sing_syst);
                     }
                 }
                 else if(e.cbutton.button == SDL_CONTROLLER_BUTTON_DPAD_RIGHT)
                 {
                     if(this->selectOnRight != nullptr)
                     {
-                        this->fonc(this->selectOnRight, sing_syst);
+                        this->selectNew(this->selectOnRight, sing_syst);
                     }
                 }
 
@@ -220,7 +220,6 @@ void Inputfield::HandleEvents(SDL_Event e, SingletonSysteme* sing_syst)
         {
             if(collision(fond_de_texte, x, y) == true && mode_edition == false)
             {   //si on clique sur l'inputfield et qu'on est pas en mode édition
-                inOnPointerEnter = true;
                 this->etat = SELECTED;
                 mode_edition = true;
                 if(sing_syst->son_active == true)
@@ -230,7 +229,6 @@ void Inputfield::HandleEvents(SDL_Event e, SingletonSysteme* sing_syst)
             }
             else if(collision(fond_de_texte, x, y) == false && mode_edition == true)
             {   //si on clique autre part que sur l'inputfield et qu'on est en mode édition
-                inOnPointerEnter = false;
                 mode_edition = false;
                 if(funcPtr != nullptr)
                     funcPtr(sing_syst, this); //si on clic en dehors de l'inputfield alors qu'on le modifie, la fonction se lance
@@ -269,7 +267,7 @@ void Inputfield::setUnselected(Selectionnable* previous)
 }
 
 
-void Inputfield::fonc(Selectionnable* ui, SingletonSysteme* sing_syst)
+void Inputfield::selectNew(Selectionnable* ui, SingletonSysteme* sing_syst)
 {
     this->setUnselected(this);
     this->setSelected(ui);

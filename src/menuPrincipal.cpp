@@ -7,29 +7,23 @@ MenuPrincipal::MenuPrincipal(SingletonSysteme* sing_syst)
 ,bouton_nouvelle_partie(ROUGE, VERT, BLEU, GRIS, {550, 350, 200, 100}, &fonc_bouton_nouvelle_partie, "NOUVELLE PARTIE", 30, sing_syst->rendu, "Bouton nouvelle partie")
 ,bouton_options(ROUGE, VERT, BLEU, GRIS, {550, 475, 200, 100}, &fonc_bouton_options, "OPTIONS", 30, sing_syst->rendu, "Bouton options")
 ,bouton_quitter(ROUGE, VERT, BLEU, GRIS, {550, 600, 200, 100}, &fonc_bouton_quitter, "QUITTER", 30, sing_syst->rendu, "Bouton quitter")
-,boite(GRIS, {100, 600, 200, 100}, {"Bonjour joueur\n, comment allez vous? Il est bien mon jeu, n'est-ce pas? Dis OUIIIIIIIIIIIIIIIIIIIIIII!",
-                                    "kdkjerdherhnderhjncdkxejnrkfcekckrfrkcf,kr,k dssssssssssssssssssssssssssssssssssssssssssssssssss"
-                                    }
-       , 15, sing_syst->rendu, "Boite de dialogue")
 {
-    bouton_options.setSelectedIfMove(&bouton_nouvelle_partie, &bouton_quitter, nullptr, nullptr);
-    bouton_continuer.setSelectedIfMove(nullptr, &bouton_nouvelle_partie, nullptr, nullptr);
-
-    if(SingletonSysteme::instance().nom_joueur.empty() == true)
+    if(sing_syst->nom_joueur.empty() == true)
     {
         bouton_nouvelle_partie.setSelected(&bouton_nouvelle_partie);
         bouton_nouvelle_partie.setSelectedIfMove(nullptr, &bouton_options, nullptr, nullptr);
     }
     else
     {
-        bouton_continuer.setSelected(&bouton_continuer);
         bouton_nouvelle_partie.setSelectedIfMove(&bouton_continuer, &bouton_options, nullptr, nullptr);
+        bouton_continuer.setSelected(&bouton_continuer);
+        bouton_continuer.setSelectedIfMove(nullptr, &bouton_nouvelle_partie, nullptr, nullptr);
+        this->ui.push_back(&(this->bouton_continuer));
     }
 
+    bouton_options.setSelectedIfMove(&bouton_nouvelle_partie, &bouton_quitter, nullptr, nullptr);
     bouton_quitter.setSelectedIfMove(&bouton_options, nullptr, nullptr, nullptr);
 
-    if(sing_syst->nom_joueur.empty() == false)
-        this->ui.push_back(&(this->bouton_continuer));
     this->ui.push_back(&(this->bouton_nouvelle_partie));
     this->ui.push_back(&(this->bouton_options));
     this->ui.push_back(&(this->bouton_quitter));
@@ -58,31 +52,27 @@ Selectionnable* MenuPrincipal::getSelected(void)
     return ui_selected;
 }
 
-void MenuPrincipal::Draw(SingletonSysteme* sing_syst)
+void MenuPrincipal::draw(SingletonSysteme* sing_syst)
 {
     if(sing_syst->nom_joueur.empty() == false)
     {
-        bouton_continuer.Draw(sing_syst->rendu);
-        texte_nom_joueur.Draw(sing_syst->rendu);
+        bouton_continuer.draw(sing_syst->rendu);
+        texte_nom_joueur.draw(sing_syst->rendu);
     }
 
-    bouton_nouvelle_partie.Draw(sing_syst->rendu);
-    bouton_options.Draw(sing_syst->rendu);
-    bouton_quitter.Draw(sing_syst->rendu);
-    this->titre.Draw(sing_syst->rendu);
-    this->boite.Draw(sing_syst->rendu);
+    bouton_nouvelle_partie.draw(sing_syst->rendu);
+    bouton_options.draw(sing_syst->rendu);
+    bouton_quitter.draw(sing_syst->rendu);
+    this->titre.draw(sing_syst->rendu);
 }
 
-void MenuPrincipal::Update(Uint32& timeStep)
+void MenuPrincipal::update(Uint32& timeStep)
 {
-    bouton_nouvelle_partie.texte.Update(timeStep);
-    bouton_options.texte.Update(timeStep);
-    bouton_quitter.texte.Update(timeStep);
-    boite.Update(timeStep);
+    (void)timeStep;
 }
 
 
-void MenuPrincipal::HandleEvents(SDL_Event e, SingletonSysteme* sing_syst)
+void MenuPrincipal::handleEvents(SDL_Event e, SingletonSysteme* sing_syst)
 {
     int x, y; //position x et y de la souris
     SDL_GetMouseState(&x, &y);
@@ -94,13 +84,11 @@ void MenuPrincipal::HandleEvents(SDL_Event e, SingletonSysteme* sing_syst)
 
         if(e.type == SDL_MOUSEMOTION)
         {
-            if(s->collision(s->position, x, y) == true && s->inOnPointerEnter == false) //CA SERT A QUELQUE CHOSE???/////////////////////////////////////////////////////////////////
+            if(s->collision(s->position, x, y) == true) //TODO : CA SERT A QUELQUE CHOSE???/////////////////////////////////////////////////////////////////
                 this->resetSelected(); //seul ajout
         }
-        s->HandleEvents(e, sing_syst);
+        s->handleEvents(e, sing_syst);
     }
-
-    this->boite.HandleEvents(e, sing_syst);
 }
 
 
@@ -108,8 +96,8 @@ void MenuPrincipal::fonc_bouton_quitter(SingletonSysteme* sing_syst, Selectionna
 {
     (void)bouton;
     std::cout << "click quitter" << std::endl;
-    sing_syst->Sauvegarder();
-    sing_syst->Destroy(); //il faut tout clean...
+    sing_syst->sauvegarder();
+    sing_syst->destroy(); //il faut tout clean...
     exit(EXIT_SUCCESS);
 }
 
@@ -126,7 +114,7 @@ void MenuPrincipal::fonc_bouton_nouvelle_partie(SingletonSysteme* sing_syst, Sel
     std::cout << "click nouvelle partie" << std::endl;
     if(sing_syst->nom_joueur.empty() == false)
     {
-        sing_syst->Supprimmer();
+        sing_syst->supprimmer();
     }
     sing_syst->etat = DEMANDE_NOM;
 }

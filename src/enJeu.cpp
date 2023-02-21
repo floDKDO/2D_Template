@@ -12,34 +12,34 @@ EnJeu::EnJeu(SingletonSysteme* sing_syst)
 
 
 
-void EnJeu::Draw(SingletonSysteme* sing_syst)
+void EnJeu::draw(SingletonSysteme* sing_syst)
 {
-    this->joueur.Draw(sing_syst->rendu);
+    this->joueur.draw(sing_syst->rendu);
     for(long long unsigned int i = 0; i < tuiles.size(); i++)
     {
-        this->tuiles[i].Draw(sing_syst->rendu);
+        this->tuiles[i].draw(sing_syst->rendu);
     }
 }
 
 
-void EnJeu::Update(Uint32& timeStep, SingletonSysteme* sing_syst)
+void EnJeu::update(Uint32& timeStep, SingletonSysteme* sing_syst)
 {
-    this->joueur.Update(timeStep, sing_syst);
+    this->joueur.update(timeStep, sing_syst, tuiles);
     for(long long unsigned int i = 0; i < tuiles.size(); i++)
     {
-        this->tuiles[i].Update(timeStep, sing_syst);
+        this->tuiles[i].update(timeStep, sing_syst);
     }
 }
 
 
-void EnJeu::HandleEvents(SDL_Event e, SingletonSysteme* sing_syst)
+void EnJeu::handleEvents(SDL_Event e, SingletonSysteme* sing_syst)
 {
     int x, y; //position x et y de la souris
     SDL_GetMouseState(&x, &y);
 
-    this->joueur.HandleEvents(e, sing_syst);
+    this->joueur.handleEvents(e, sing_syst);
     for(long long unsigned int i = 0; i < tuiles.size(); i++)
     {
-        //this->tuiles[i].HandleEvents(e, sing_syst);
+        //this->tuiles[i].handleEvents(e, sing_syst);
     }
 }

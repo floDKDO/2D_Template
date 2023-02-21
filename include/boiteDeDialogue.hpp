@@ -32,10 +32,10 @@ class BoiteDeDialogue
 
         long long unsigned int indice_texte_courant;
 
-        void Draw(SDL_Renderer* rendu);
-        void HandleEvents(SDL_Event e, SingletonSysteme* sing_syst);
-        void Update(Uint32& timeStep);
-        bool collision(SDL_Rect dest_joueur, int x, int y);
+        void draw(SDL_Renderer* rendu);
+        void handleEvents(SDL_Event e, SingletonSysteme* sing_syst);
+        void update(Uint32& timeStep);
+        bool collision(SDL_Rect dest, int x, int y);
 
     protected:
 

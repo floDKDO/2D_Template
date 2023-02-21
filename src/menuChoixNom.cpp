@@ -53,16 +53,15 @@ Selectionnable* MenuChoixNom::getSelected(void)
 }
 
 
-void MenuChoixNom::Draw(SingletonSysteme* sing_syst)
+void MenuChoixNom::draw(SingletonSysteme* sing_syst)
 {
-    inputfield.Draw(sing_syst->rendu);
-    demande_nom.Draw(sing_syst->rendu);
-    bouton_valider.Draw(sing_syst->rendu);
+    inputfield.draw(sing_syst->rendu);
+    demande_nom.draw(sing_syst->rendu);
+    bouton_valider.draw(sing_syst->rendu);
     if(inputfield.etat == SELECTED)
         bouton_valider.etat = NORMAL;
     if(bouton_valider.etat == SELECTED)
     {
-        inputfield.inOnPointerEnter = false;
         inputfield.mode_edition = false;
         if(inputfield.funcPtr != nullptr)
             inputfield.funcPtr(sing_syst, &inputfield); //si on clic en dehors de l'inputfield alors qu'on le modifie, la fonction se lance
@@ -70,13 +69,13 @@ void MenuChoixNom::Draw(SingletonSysteme* sing_syst)
 }
 
 
-void MenuChoixNom::Update(Uint32& timeStep)
+void MenuChoixNom::update(Uint32& timeStep)
 {
-    inputfield.Update(timeStep);
+    inputfield.update(timeStep);
 }
 
 
-void MenuChoixNom::HandleEvents(SDL_Event e, SingletonSysteme* sing_syst)
+void MenuChoixNom::handleEvents(SDL_Event e, SingletonSysteme* sing_syst)
 {
     int x, y; //position x et y de la souris
     SDL_GetMouseState(&x, &y);
@@ -85,9 +84,9 @@ void MenuChoixNom::HandleEvents(SDL_Event e, SingletonSysteme* sing_syst)
     {
         if(e.type == SDL_MOUSEMOTION)
         {
-            if(s->collision(s->position, x, y) == true && s->inOnPointerEnter == false)
+            if(s->collision(s->position, x, y) == true /*&& s->inOnPointerEnter == false*/)
                 this->resetSelected(); //seul ajout
         }
-        s->HandleEvents(e, sing_syst);
+        s->handleEvents(e, sing_syst);
     }
 }

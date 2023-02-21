@@ -52,13 +52,13 @@ Toggle::Toggle(std::string image_normal, std::string image_hover, std::string im
 }
 
 
-bool Toggle::collision(SDL_Rect dest_joueur, int x, int y)
+bool Toggle::collision(SDL_Rect dest, int x, int y)
 {
     //si pas de collision
-    if(dest_joueur.y + dest_joueur.h > y
-    && dest_joueur.y < y
-    && dest_joueur.x + dest_joueur.w > x
-    && dest_joueur.x < x)
+    if(dest.y + dest.h > y
+    && dest.y < y
+    && dest.x + dest.w > x
+    && dest.x < x)
     {
         return true;
     }
@@ -69,7 +69,7 @@ bool Toggle::collision(SDL_Rect dest_joueur, int x, int y)
 }
 
 
-void Toggle::Draw(SDL_Renderer* rendu)
+void Toggle::draw(SDL_Renderer* rendu)
 {
     if(this->hasImage == false)
     {
@@ -110,7 +110,7 @@ void Toggle::Draw(SDL_Renderer* rendu)
             CHK(SDL_RenderCopy(rendu, image_selected, nullptr, &(this->position)), SDL_GetError());
         }
     }
-    texte.Draw(rendu);
+    texte.draw(rendu);
 
     //mettre le coche ou non
     if(this->isChecked == true)
@@ -119,7 +119,7 @@ void Toggle::Draw(SDL_Renderer* rendu)
     }
 }
 
-void Toggle::HandleEvents(SDL_Event e, SingletonSysteme* sing_syst)
+void Toggle::handleEvents(SDL_Event e, SingletonSysteme* sing_syst)
 {
     int x, y; //position x et y de la souris
     SDL_GetMouseState(&x, &y);
@@ -144,12 +144,10 @@ void Toggle::HandleEvents(SDL_Event e, SingletonSysteme* sing_syst)
     {
         if(collision(this->position, x, y) == true)
         {
-            inOnPointerEnter = true;
             this->onPointerEnter(e, sing_syst);
         }
         else
         {
-            inOnPointerEnter = false;
             this->onPointerExit(e, sing_syst);
         }
     }
@@ -177,28 +175,28 @@ void Toggle::onKeyPressed(SDL_Event e, SingletonSysteme* sing_syst)
         {
             if(this->selectOnUp != nullptr)
             {
-                this->fonc(this->selectOnUp, sing_syst);
+                this->selectNew(this->selectOnUp, sing_syst);
             }
         }
         else if(e.key.keysym.sym == SDLK_DOWN)
         {
             if(this->selectOnDown != nullptr)
             {
-                this->fonc(this->selectOnDown, sing_syst);
+                this->selectNew(this->selectOnDown, sing_syst);
             }
         }
         else if(e.key.keysym.sym == SDLK_LEFT)
         {
             if(this->selectOnLeft != nullptr)
             {
-                this->fonc(this->selectOnLeft, sing_syst);
+                this->selectNew(this->selectOnLeft, sing_syst);
             }
         }
         else if(e.key.keysym.sym == SDLK_RIGHT)
         {
             if(this->selectOnRight != nullptr)
             {
-                this->fonc(this->selectOnRight, sing_syst);
+                this->selectNew(this->selectOnRight, sing_syst);
             }
         }
 
@@ -235,28 +233,28 @@ void Toggle::onControllerButtonPressed(SDL_Event e, SingletonSysteme* sing_syst)
         {
             if(this->selectOnUp != nullptr)
             {
-                this->fonc(this->selectOnUp, sing_syst);
+                this->selectNew(this->selectOnUp, sing_syst);
             }
         }
         else if(e.cbutton.button == SDL_CONTROLLER_BUTTON_DPAD_DOWN)
         {
             if(this->selectOnDown != nullptr)
             {
-                this->fonc(this->selectOnDown, sing_syst);
+                this->selectNew(this->selectOnDown, sing_syst);
             }
         }
         else if(e.cbutton.button == SDL_CONTROLLER_BUTTON_DPAD_LEFT)
         {
             if(this->selectOnLeft != nullptr)
             {
-                this->fonc(this->selectOnLeft, sing_syst);
+                this->selectNew(this->selectOnLeft, sing_syst);
             }
         }
         else if(e.cbutton.button == SDL_CONTROLLER_BUTTON_DPAD_RIGHT)
         {
             if(this->selectOnRight != nullptr)
             {
-                this->fonc(this->selectOnRight, sing_syst);
+                this->selectNew(this->selectOnRight, sing_syst);
             }
         }
 
@@ -366,7 +364,7 @@ void Toggle::setUnselected(Selectionnable* previous)
         previous->etat = NORMAL;
 }
 
-void Toggle::fonc(Selectionnable* ui, SingletonSysteme* sing_syst)
+void Toggle::selectNew(Selectionnable* ui, SingletonSysteme* sing_syst)
 {
     this->setUnselected(this);
     this->setSelected(ui);

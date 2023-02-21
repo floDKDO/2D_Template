@@ -27,12 +27,12 @@ class Tuile
         bool isAnimated;
         std::string chemin;
 
-        void Draw(SDL_Renderer* rendu);
-        void HandleEvents(SDL_Event e, SingletonSysteme* sing_syst);
-        bool collision(SDL_Rect dest_joueur, int x, int y);
+        void draw(SDL_Renderer* rendu);
+        void handleEvents(SDL_Event e, SingletonSysteme* sing_syst);
+        bool collision(SDL_Rect dest, int x, int y);
 
-        void Update(Uint32& timeStep, SingletonSysteme* sing_syst);
-        void Clean();
+        void update(Uint32& timeStep, SingletonSysteme* sing_syst);
+        void clean();
 
     protected:
 

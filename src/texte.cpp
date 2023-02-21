@@ -1,6 +1,6 @@
 #include "texte.hpp"
 
-Texte::Texte(std::string texte, std::string police, int taille_police, SDL_Color couleur, SDL_Rect position, SDL_Renderer* rendu, std::string name, bool dialogue)
+Texte::Texte(std::string texte, std::string police, int taille_police, SDL_Color couleur, SDL_Rect position, SDL_Renderer* rendu, std::string name, bool isDialogue)
 {
     (void)rendu;
     NCHK(this->police = TTF_OpenFont(police.c_str(), taille_police), TTF_GetError());
@@ -10,15 +10,15 @@ Texte::Texte(std::string texte, std::string police, int taille_police, SDL_Color
     this->position = position;
     this->name = name;
     // dialogue //////////////
-    this->dialogue = dialogue;
+    this->isDialogue = isDialogue;
     this->indice = 0;
     this->texteDefilement = "";
     //////////////////////////
 }
 
-void Texte::Draw(SDL_Renderer* rendu)
+void Texte::draw(SDL_Renderer* rendu)
 {
-    if(dialogue == false)
+    if(isDialogue == false)
     {
         if(this->texte.length() > 0)
         {
@@ -41,9 +41,9 @@ void Texte::Draw(SDL_Renderer* rendu)
 }
 
 
-void Texte::Update(Uint32& timeStep)
+void Texte::update(Uint32& timeStep)
 {
-    if(dialogue == true)
+    if(isDialogue == true)
     {
         if(SDL_GetTicks() - timeStep > 10 && indice < texte.length()) //200 => vitesse de défilement (200 ms par lettre)
         {

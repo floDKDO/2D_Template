@@ -2,7 +2,7 @@
 
 
 //initialise les librairies (SDL2, SDL_TTF, SDL_Mixer, SDL_IMG), créer la fenêtre et le rendu, met l'état du jeu en MENU_PRINCIPAL et active les entrées au clavier pour les inputfields
-void SingletonSysteme::Init(void)
+void SingletonSysteme::init(void)
 {
     this->etat = MENU_PRINCIPAL;
 
@@ -48,7 +48,7 @@ Il faudra créer les images en se basant sur la taille de l'étape 1 et cela sera 
     SDL_StartTextInput();
 }
 
-void SingletonSysteme::Charger(void)
+void SingletonSysteme::charger(void)
 {
     fichier_sauvegarde.open("./fichier_sauvegarde.txt", std::ios::in); //ouvrir le fichier en lecture
     std::string ligne;
@@ -61,7 +61,9 @@ void SingletonSysteme::Charger(void)
             {
                 if(ligne.find("//") != std::string::npos) //si la ligne contient un commentaire
                     continue; //passer à la ligne suivante
+
                 numero_ligne_effective += 1;
+
                 switch(numero_ligne_effective)
                 {
                     case 1:
@@ -183,7 +185,7 @@ void SingletonSysteme::Charger(void)
 }
 
 
-void SingletonSysteme::Sauvegarder(void)
+void SingletonSysteme::sauvegarder(void)
 {
     fichier_sauvegarde.open("./fichier_sauvegarde.txt", std::ios::out | std::ios::trunc); //ouvrir le fichier en écriture et supprimer ce qu'il contient s'il n'est pas vide
     if(fichier_sauvegarde.is_open() == true)
@@ -223,7 +225,7 @@ void SingletonSysteme::Sauvegarder(void)
     fichier_sauvegarde.close();
 }
 
-void SingletonSysteme::Supprimmer(void)
+void SingletonSysteme::supprimmer(void)
 {
     fichier_sauvegarde.open("./fichier_sauvegarde.txt", std::ios::out | std::ios::trunc); //ouvrir le fichier en écriture et supprimer ce qu'il contient s'il n'est pas vide
     this->nom_joueur = "";
@@ -234,7 +236,7 @@ void SingletonSysteme::Supprimmer(void)
 
 
 //nettoyage
-void SingletonSysteme::Destroy(void)
+void SingletonSysteme::destroy(void)
 {
     SDL_StopTextInput();
     SDL_DestroyRenderer(rendu);

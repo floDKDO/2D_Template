@@ -13,13 +13,29 @@ Joueur::Joueur(unsigned int pv, SDL_Color couleur, SDL_Rect position, mode_affic
     this->mode = mode;
 
     // Que pour mode vue de cote
-    this->surSol = true;
+    /*this->surSol = true;
     this->vitesseDeChute = 0;
-    this->hauteur_saut = 12;
+    this->hauteur_saut = 12;*/
     ////////////////////////////
 }
 
-void Joueur::ResetAllValues(bool dep[4])
+bool Joueur::collision(SDL_Rect dest_joueur, Tuile tuile)
+{
+    //si pas de collision
+    if(dest_joueur.y + dest_joueur.h > tuile.position.y
+    && dest_joueur.y < tuile.position.y +  + tuile.position.h
+    && dest_joueur.x + dest_joueur.w > tuile.position.x
+    && dest_joueur.x < tuile.position.x + tuile.position.w)
+    {
+        return true;
+    }
+    else
+    {
+        return false;
+    }
+}
+
+void Joueur::resetAllValues(bool dep[4])
 {
     for(int i = 0; i < 4; i++)
     {
@@ -27,19 +43,19 @@ void Joueur::ResetAllValues(bool dep[4])
     }
 }
 
-void Joueur::SetValue(bool dep[4], int indice)
+void Joueur::setValue(bool dep[4], int indice)
 {
-    ResetAllValues(dep);
+    resetAllValues(dep);
     dep[indice] = true;
 }
 
-void Joueur::Draw(SDL_Renderer* rendu)
+void Joueur::draw(SDL_Renderer* rendu)
 {
     CHK(SDL_SetRenderDrawColor(rendu, this->couleur.r, this->couleur.g, this->couleur.b, this->couleur.a), SDL_GetError());
     CHK(SDL_RenderFillRect(rendu, &(this->position)), SDL_GetError());
 }
 
-void Joueur::HandleEvents(SDL_Event e, SingletonSysteme* sing_syst)
+void Joueur::handleEvents(SDL_Event e, SingletonSysteme* sing_syst)
 {
     if(this->mode == VUE_DESSUS)
     {
@@ -47,54 +63,46 @@ void Joueur::HandleEvents(SDL_Event e, SingletonSysteme* sing_syst)
         {
             if(e.key.keysym.sym == sing_syst->touches.dep_haut)
             {
-                SetValue(dep, 0);
+                setValue(dep, 0);
             }
             else if(e.key.keysym.sym == sing_syst->touches.dep_bas)
             {
-                SetValue(dep, 1);
+                setValue(dep, 1);
             }
             else if(e.key.keysym.sym == sing_syst->touches.dep_gauche)
             {
-                SetValue(dep, 2);
+                setValue(dep, 2);
             }
             else if(e.key.keysym.sym == sing_syst->touches.dep_droite)
             {
-                SetValue(dep, 3);
+                setValue(dep, 3);
             }
-            sing_syst->posX_joueur = this->position.x;
-            sing_syst->posY_joueur = this->position.y;
-        }
-        else if(e.type == SDL_KEYUP)
-        {
-            ResetAllValues(this->dep);
         }
         else if(e.type == SDL_CONTROLLERBUTTONDOWN)
         {
             if(e.cbutton.button == sing_syst->touches_1.dep_haut)
             {
-                SetValue(dep, 0);
+                setValue(dep, 0);
             }
             else if(e.cbutton.button == sing_syst->touches_1.dep_bas)
             {
-                SetValue(dep, 1);
+                setValue(dep, 1);
             }
             else if(e.cbutton.button == sing_syst->touches_1.dep_gauche)
             {
-                SetValue(dep, 2);
+                setValue(dep, 2);
             }
             else if(e.cbutton.button == sing_syst->touches_1.dep_droite)
             {
-                SetValue(dep, 3);
+                setValue(dep, 3);
             }
-            sing_syst->posX_joueur = this->position.x;
-            sing_syst->posY_joueur = this->position.y;
         }
-        else if(e.type == SDL_CONTROLLERBUTTONUP)
+        else if(e.type == SDL_KEYUP || e.type == SDL_CONTROLLERBUTTONUP)
         {
-            ResetAllValues(this->dep);
+            resetAllValues(this->dep);
         }
     }
-    else if(this->mode == VUE_COTE)
+    /*else if(this->mode == VUE_COTE)
     {
         if(e.type == SDL_KEYDOWN)
         {
@@ -164,11 +172,53 @@ void Joueur::HandleEvents(SDL_Event e, SingletonSysteme* sing_syst)
                 ResetAllValues(this->dep);
             }
         }
-    }
+    }*/
 }
 
-void Joueur::Update(Uint32& timeStep, SingletonSysteme* sing_syst)
+void Joueur::update(Uint32& timeStep, SingletonSysteme* sing_syst, std::vector<Tuile> tuiles)
 {
+    for(long long unsigned int i = 0; i < tuiles.size(); i++)
+    {
+        //on regarde les collisions uniquement avec les tuiles non passables
+        if(tuiles[i].estPassable == false)
+        {
+            SDL_Rect copie = this->position;
+            if(dep[0] == true)
+            {
+                copie.y -= 32; //taille d'une tuile
+                if(collision(copie, tuiles[i]) == true)
+                    dep[0] = false;
+            }
+            else if(dep[1] == true)
+            {
+                copie.y += 32;
+                if(collision(copie, tuiles[i]) == true)
+                    dep[1] = false;
+            }
+            else if(dep[2] == true)
+            {
+                copie.x -= 32;
+                if(collision(copie, tuiles[i]) == true)
+                    dep[2] = false;
+            }
+            else if(dep[3] == true)
+            {
+                copie.x += 32;
+                if(collision(copie, tuiles[i]) == true)
+                    dep[3] = false;
+            }
+        }
+    }
+
+    //pour la sauvegarde de la position du joueur
+    sing_syst->posX_joueur = this->position.x;
+    sing_syst->posY_joueur = this->position.y;
+
+    //pour la camera
+    sing_syst->camera.x = -position.x - position.w/2 + LONGUEUR_FENETRE/2;
+    sing_syst->camera.y = -position.y - position.h/2 + HAUTEUR_FENETRE/2;
+    this->position = {position.x + sing_syst->camera.x, position.y + sing_syst->camera.y, position.w, position.h};
+
     if(this->mode == VUE_DESSUS)
     {
         if(SDL_GetTicks() - timeStep > (80 / this->multiplication_vitesse))
@@ -193,7 +243,7 @@ void Joueur::Update(Uint32& timeStep, SingletonSysteme* sing_syst)
             timeStep = SDL_GetTicks();
         }
     }
-    else if(this->mode == VUE_COTE)
+    /*else if(this->mode == VUE_COTE)
     {
         if(SDL_GetTicks() - timeStep > (80 / this->multiplication_vitesse))
         {
@@ -216,10 +266,5 @@ void Joueur::Update(Uint32& timeStep, SingletonSysteme* sing_syst)
             surSol = true;
             vitesseDeChute = 0;
         }
-    }
-
-    sing_syst->camera.x = -position.x - position.w/2 + LONGUEUR_FENETRE/2;
-    sing_syst->camera.y = -position.y - position.h/2 + HAUTEUR_FENETRE/2;
-
-    this->position = {position.x + sing_syst->camera.x, position.y + sing_syst->camera.y, position.w, position.h};
+    }*/
 }

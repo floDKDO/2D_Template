@@ -25,7 +25,6 @@ MenuOptions::MenuOptions(SingletonSysteme* sing_syst)
         bouton_options_fenetre.texte.texte = "PLEIN ECRAN";
     else if(sing_syst->mode_fenetre == FENETRE)
         bouton_options_fenetre.texte.texte = "FENETRE";
-    //HAUT, BAS, GAUCHE, DROITE
 
     if(sing_syst->manette != nullptr)
     {
@@ -94,27 +93,32 @@ Selectionnable* MenuOptions::getSelected(void)
     return ui_selected;
 }
 
-void MenuOptions::Draw(SingletonSysteme* sing_syst)
+void MenuOptions::draw(SingletonSysteme* sing_syst)
 {
     for(Selectionnable* s : ui)
     {
-        s->Draw(sing_syst->rendu);
+        s->draw(sing_syst->rendu);
     }
-    texte_touche_haut.Draw(sing_syst->rendu);
-    texte_touche_bas.Draw(sing_syst->rendu);
-    texte_touche_gauche.Draw(sing_syst->rendu);
-    texte_touche_droite.Draw(sing_syst->rendu);
-    mode_ecran.Draw(sing_syst->rendu);
+    texte_touche_haut.draw(sing_syst->rendu);
+    texte_touche_bas.draw(sing_syst->rendu);
+    texte_touche_gauche.draw(sing_syst->rendu);
+    texte_touche_droite.draw(sing_syst->rendu);
+    mode_ecran.draw(sing_syst->rendu);
 
     if(sing_syst->manette != nullptr)
     {
-        texte_clavier.Draw(sing_syst->rendu);
-        texte_manette.Draw(sing_syst->rendu);
+        texte_clavier.draw(sing_syst->rendu);
+        texte_manette.draw(sing_syst->rendu);
     }
 }
 
+void MenuOptions::update(Uint32& timeStep)
+{
+    (void)timeStep;
+}
 
-void MenuOptions::HandleEvents(SDL_Event e, SingletonSysteme* sing_syst)
+
+void MenuOptions::handleEvents(SDL_Event e, SingletonSysteme* sing_syst)
 {
     int x, y; //position x et y de la souris
     SDL_GetMouseState(&x, &y);
@@ -123,10 +127,10 @@ void MenuOptions::HandleEvents(SDL_Event e, SingletonSysteme* sing_syst)
     {
         if(e.type == SDL_MOUSEMOTION)
         {
-            if(s->collision(s->position, x, y) == true && s->inOnPointerEnter == false)
+            if(s->collision(s->position, x, y) == true /*&& s->inOnPointerEnter == false*/)
                 this->resetSelected(); //seul ajout
         }
-        s->HandleEvents(e, sing_syst);
+        s->handleEvents(e, sing_syst);
     }
 }
 

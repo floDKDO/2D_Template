@@ -64,11 +64,11 @@ class SingletonSysteme
             return *instance;
         }
 
-        void Init();
-        void Sauvegarder();
-        void Charger();
-        void Supprimmer();
-        void Destroy();
+        void init();
+        void sauvegarder();
+        void charger();
+        void supprimmer();
+        void destroy();
 
         touches_clavier touches;
         touches_manette touches_1;

@@ -33,9 +33,9 @@ class MenuChoixNom
         void resetSelected(void);
         Selectionnable* getSelected(void);
 
-        void Draw(SingletonSysteme* sing_syst);
-        void HandleEvents(SDL_Event e, SingletonSysteme* sing_syst);
-        void Update(Uint32& timeStep);
+        void draw(SingletonSysteme* sing_syst);
+        void handleEvents(SDL_Event e, SingletonSysteme* sing_syst);
+        void update(Uint32& timeStep);
 
     protected:
 

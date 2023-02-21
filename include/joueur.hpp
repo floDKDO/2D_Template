@@ -9,6 +9,9 @@
 
 #include "singleton_systeme.hpp"
 
+#include <vector>
+#include "tuile.hpp"
+
 enum mode_affichage
 {
     VUE_DESSUS,
@@ -19,11 +22,12 @@ class Joueur
 {
     public:
         Joueur(unsigned int pv, SDL_Color couleur, SDL_Rect position, mode_affichage mode);
-        void ResetAllValues(bool dep[4]);
-        void SetValue(bool dep[4], int indice);
-        void Draw(SDL_Renderer* rendu);
-        void HandleEvents(SDL_Event e, SingletonSysteme* sing_syst);
-        void Update(Uint32& timeStep, SingletonSysteme* sing_syst);
+        bool collision(SDL_Rect dest_joueur, Tuile tuile);
+        void resetAllValues(bool dep[4]);
+        void setValue(bool dep[4], int indice);
+        void draw(SDL_Renderer* rendu);
+        void handleEvents(SDL_Event e, SingletonSysteme* sing_syst);
+        void update(Uint32& timeStep, SingletonSysteme* sing_syst, std::vector<Tuile> tuiles);
 
         SDL_Color couleur;
         SDL_Texture* texture;

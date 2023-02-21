@@ -13,8 +13,6 @@
 #include "bouton.hpp"
 #include "texte.hpp"
 
-#include "boiteDeDialogue.hpp"
-
 #include "singleton_systeme.hpp"
 
 class MenuPrincipal
@@ -30,8 +28,6 @@ class MenuPrincipal
         Bouton bouton_options;
         Bouton bouton_quitter;
 
-        BoiteDeDialogue boite;
-
         //static sinon probleme de type avec le pointeur de fonction
         static void fonc_bouton_quitter(SingletonSysteme* sing_syst, Selectionnable* bouton);
         static void fonc_bouton_options(SingletonSysteme* sing_syst, Selectionnable* bouton);
@@ -41,9 +37,9 @@ class MenuPrincipal
         void resetSelected(void);
         Selectionnable* getSelected(void);
 
-        void Draw(SingletonSysteme* sing_syst);
-        void Update(Uint32& timeStep);
-        void HandleEvents(SDL_Event e, SingletonSysteme* sing_syst);
+        void draw(SingletonSysteme* sing_syst);
+        void update(Uint32& timeStep);
+        void handleEvents(SDL_Event e, SingletonSysteme* sing_syst);
 
     protected:
 

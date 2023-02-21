@@ -23,7 +23,7 @@ Tuile::Tuile(std::string chemin, SDL_Rect position, unsigned int nb_images, int 
 }
 
 
-void Tuile::Draw(SDL_Renderer* rendu)
+void Tuile::draw(SDL_Renderer* rendu)
 {
     if((this->texture = IMG_LoadTexture(rendu, this->chemin.c_str())) == nullptr)
     {
@@ -39,7 +39,7 @@ void Tuile::Draw(SDL_Renderer* rendu)
 }
 
 
-void Tuile::Update(Uint32& timeStep, SingletonSysteme* sing_syst)
+void Tuile::update(Uint32& timeStep, SingletonSysteme* sing_syst)
 {
     (void)timeStep;
     if(isAnimated == true)
