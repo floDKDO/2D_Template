@@ -37,6 +37,8 @@ SDL_Rect init_rect_from_image(int x, int y, SDL_Texture* texture)
 }
 
 
+
+
 /* Algo de modification de taille de fenetre
 1. Partir d'une taille de résolution de base et donc d'une taille de fenetre de base (ex : 1280 * 720)
 => fenetre = SDL_CreateWindow("Mon jeu", SDL_WINDOWPOS_CENTERED, SDL_WINDOWPOS_CENTERED, LONGUEUR_FENETRE, 1280, 720)

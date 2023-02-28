@@ -2,6 +2,7 @@
 #define __EN__JEU__HPP__
 
 #include <iostream>
+#include <sstream>
 #include <SDL2/SDL.h>
 #include <SDL2/SDL_image.h>
 #include <SDL2/SDL_ttf.h>
@@ -19,6 +20,7 @@ class EnJeu
         Joueur joueur;
         std::vector<Tuile> tuiles;
 
+        void initTuiles(void);
         void draw(SingletonSysteme* sing_syst);
         void update(Uint32& timeStep, SingletonSysteme* sing_syst);
         void handleEvents(SDL_Event e, SingletonSysteme* sing_syst);

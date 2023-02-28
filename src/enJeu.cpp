@@ -4,10 +4,63 @@ EnJeu::EnJeu(SingletonSysteme* sing_syst)
 :joueur(100, BLEU, {160, 160, 32, 32}, VUE_DESSUS)
 {
     (void)sing_syst;
-    tuiles.push_back(Tuile("./img/animated_water.png", {200, 200, 200, 200}, 8, 17));
-    tuiles.push_back(Tuile("./img/animated_water.png", {400, 200, 200, 200}, 8, 17));
-    tuiles.push_back(Tuile("./img/animated_water.png", {2000, 200, 200, 200}, 8, 17));
-    tuiles.push_back(Tuile("./img/animated_water.png", {400, 2000, 200, 200}, 8, 17));
+    this->initTuiles();
+}
+
+
+void EnJeu::initTuiles(void)
+{
+    const int TILE_WIDTH = 16;
+    const int TILE_HEIGHT = 16;
+
+    int x = 0, y = 0;
+
+    std::ifstream fichier;
+    fichier.open("toto.map");
+
+    if(fichier.fail())
+    {
+		exit(EXIT_FAILURE);
+    }
+
+    std::string ligne;
+    std::vector<std::string> tuiles_fichier;
+
+    //lire le fichier ligne par ligne
+    while(std::getline(fichier, ligne))
+	{
+        std::stringstream ss(ligne);
+        std::string temp;
+
+        //séparer la ligne en mots avec les espaces (un espace entre chaque mot) comme délimiteur
+        while(getline(ss, temp, ' '))
+        {
+            tuiles_fichier.push_back(temp); //mettre les mots dans le tableau
+        }
+
+        //parcourir chaque mot du tableau => un mot est une tuile
+        for(long long unsigned int i = 0; i < tuiles_fichier.size(); i++)
+        {
+            if(tuiles_fichier[i] == "00")
+            {
+                this->tuiles.push_back(Tuile("./img/animated_water.png", {x, y, 16, 16}, 8, 17));
+            }
+            else if(tuiles_fichier[i] == "01")
+            {
+                this->tuiles.push_back(Tuile("./img/herbe.png", {x, y, 16, 16}));
+            }
+            //prochaine tuile
+            x += TILE_WIDTH;
+        }
+
+        //comme on change de ligne, alors on change le x à 0 (debut de ligne) et le y (+= hauteur tuile)
+        x = 0;
+        y += TILE_HEIGHT;
+
+        //on vide le tableau de string car cette ligne est finie
+        tuiles_fichier.clear();
+	}
+    fichier.close();
 }
 
 

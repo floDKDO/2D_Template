@@ -40,7 +40,7 @@ Il faudra créer les images en se basant sur la taille de l'étape 1 et cela sera 
 
     this->manette = SDL_GameControllerOpen(0);
     if(this->manette == nullptr)
-        std::cout << "pas de manette";
+        std::cout << "pas de manette" << std::endl;
 
     //activer les evenements manette
     CHK(SDL_GameControllerEventState(SDL_ENABLE), SDL_GetError());
