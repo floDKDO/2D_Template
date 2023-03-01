@@ -13,8 +13,8 @@ class Tuile
 {
     public:
         //chemin : endroit où la tuile est stockée
-        Tuile(std::string chemin, SDL_Rect position);
-        Tuile(std::string chemin, SDL_Rect position, unsigned int nb_images, int espacement_tuiles_x);
+        Tuile(std::string chemin, SDL_Rect position, bool estPassable);
+        Tuile(std::string chemin, SDL_Rect position, unsigned int nb_images, int espacement_tuiles_x, bool estPassable);
 
         unsigned int nb_images;
         //espacement des tuiles dans le tilesheet
