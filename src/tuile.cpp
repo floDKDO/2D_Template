@@ -1,20 +1,20 @@
 #include "tuile.hpp"
 
 //Tuile fixe
-Tuile::Tuile(std::string chemin, SDL_Rect position)
+Tuile::Tuile(std::string chemin, SDL_Rect position, bool estPassable)
 {
     this->position = position;
-    this->estPassable = false;
+    this->estPassable = estPassable;
     this->chemin = chemin;
     this->isAnimated = false;
 }
 
 
 //Tuile animée
-Tuile::Tuile(std::string chemin, SDL_Rect position, unsigned int nb_images, int espacement_tuiles_x)
+Tuile::Tuile(std::string chemin, SDL_Rect position, unsigned int nb_images, int espacement_tuiles_x, bool estPassable)
 {
     this->position = position;
-    this->estPassable = false;
+    this->estPassable = estPassable;
     this->chemin = chemin;
     this->isAnimated = true;
 

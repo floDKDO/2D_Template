@@ -1,7 +1,7 @@
 #include "enJeu.hpp"
 
 EnJeu::EnJeu(SingletonSysteme* sing_syst)
-:joueur(100, BLEU, {160, 160, 32, 32}, VUE_DESSUS)
+:joueur(100, BLEU, {192, 320, 64, 64}, VUE_DESSUS)
 {
     (void)sing_syst;
     this->initTuiles();
@@ -12,6 +12,9 @@ void EnJeu::initTuiles(void)
 {
     const int TILE_WIDTH = 16;
     const int TILE_HEIGHT = 16;
+
+    //de combien la taille des tuiles (16*16) sera multipliée sur l'écran
+    int facteur = 4;
 
     int x = 0, y = 0;
 
@@ -43,11 +46,11 @@ void EnJeu::initTuiles(void)
         {
             if(tuiles_fichier[i] == "00")
             {
-                this->tuiles.push_back(Tuile("./img/animated_water.png", {x, y, 16, 16}, 8, 17));
+                this->tuiles.push_back(Tuile("./img/animated_water.png", {x * facteur, y * facteur, TILE_WIDTH * facteur, TILE_HEIGHT * facteur}, 8, 17, false));
             }
             else if(tuiles_fichier[i] == "01")
             {
-                this->tuiles.push_back(Tuile("./img/herbe.png", {x, y, 16, 16}));
+                this->tuiles.push_back(Tuile("./img/herbe.png", {x * facteur, y * facteur, TILE_WIDTH * facteur, TILE_HEIGHT * facteur}, true));
             }
             //prochaine tuile
             x += TILE_WIDTH;
@@ -67,21 +70,21 @@ void EnJeu::initTuiles(void)
 
 void EnJeu::draw(SingletonSysteme* sing_syst)
 {
-    this->joueur.draw(sing_syst->rendu);
     for(long long unsigned int i = 0; i < tuiles.size(); i++)
     {
         this->tuiles[i].draw(sing_syst->rendu);
     }
+    this->joueur.draw(sing_syst->rendu);
 }
 
 
 void EnJeu::update(Uint32& timeStep, SingletonSysteme* sing_syst)
 {
-    this->joueur.update(timeStep, sing_syst, tuiles);
     for(long long unsigned int i = 0; i < tuiles.size(); i++)
     {
         this->tuiles[i].update(timeStep, sing_syst);
     }
+    this->joueur.update(timeStep, sing_syst, tuiles);
 }
 
 

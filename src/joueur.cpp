@@ -185,25 +185,25 @@ void Joueur::update(Uint32& timeStep, SingletonSysteme* sing_syst, std::vector<T
             SDL_Rect copie = this->position;
             if(dep[0] == true)
             {
-                copie.y -= 32; //taille d'une tuile
+                copie.y -= 16 * 4; //taille d'une tuile
                 if(collision(copie, tuiles[i]) == true)
                     dep[0] = false;
             }
             else if(dep[1] == true)
             {
-                copie.y += 32;
+                copie.y += 16 * 4;
                 if(collision(copie, tuiles[i]) == true)
                     dep[1] = false;
             }
             else if(dep[2] == true)
             {
-                copie.x -= 32;
+                copie.x -= 16 * 4;
                 if(collision(copie, tuiles[i]) == true)
                     dep[2] = false;
             }
             else if(dep[3] == true)
             {
-                copie.x += 32;
+                copie.x += 16 * 4;
                 if(collision(copie, tuiles[i]) == true)
                     dep[3] = false;
             }
@@ -225,19 +225,19 @@ void Joueur::update(Uint32& timeStep, SingletonSysteme* sing_syst, std::vector<T
         {
             if(dep[0] == true)
             {
-                this->position.y -= 32; //taille d'une tuile
+                this->position.y -= 16 * 4; //taille d'une tuile
             }
             else if(dep[1] == true)
             {
-                this->position.y += 32;
+                this->position.y += 16 * 4;
             }
             else if(dep[2] == true)
             {
-                this->position.x -= 32;
+                this->position.x -= 16 * 4;
             }
             else if(dep[3] == true)
             {
-                this->position.x += 32;
+                this->position.x += 16 * 4;
             }
 
             timeStep = SDL_GetTicks();
