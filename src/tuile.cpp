@@ -1,12 +1,15 @@
 #include "tuile.hpp"
 
 //Tuile fixe
-Tuile::Tuile(std::string chemin, SDL_Rect position, bool estPassable)
+Tuile::Tuile(std::string chemin, SDL_Rect position, bool estPassable, bool isWarp/*, int connection_carte*/)
 {
     this->position = position;
     this->estPassable = estPassable;
     this->chemin = chemin;
     this->isAnimated = false;
+    this->isWarp = isWarp;
+
+    //this->connection_carte = carte;
 }
 
 
@@ -23,7 +26,7 @@ Tuile::Tuile(std::string chemin, SDL_Rect position, unsigned int nb_images, int 
 }
 
 
-void Tuile::draw(SDL_Renderer* rendu)
+void Tuile::draw(SDL_Renderer* rendu, SingletonSysteme* sing_syst)
 {
     if((this->texture = IMG_LoadTexture(rendu, this->chemin.c_str())) == nullptr)
     {
@@ -31,9 +34,11 @@ void Tuile::draw(SDL_Renderer* rendu)
         exit(EXIT_FAILURE);
     }
 
+    SDL_Rect temp = {position.x - sing_syst->camera.x, position.y - sing_syst->camera.y, position.w, position.h};
+
     if(isAnimated == true)
     {
-        if(SDL_RenderCopy(rendu, texture, &srcRect, &position) < 0)
+        if(SDL_RenderCopy(rendu, texture, &srcRect, &temp) < 0)
         {
             std::cerr << SDL_GetError() << std::endl;
             exit(EXIT_FAILURE);
@@ -41,7 +46,7 @@ void Tuile::draw(SDL_Renderer* rendu)
     }
     else
     {
-        if(SDL_RenderCopy(rendu, texture, nullptr, &position) < 0)
+        if(SDL_RenderCopy(rendu, texture, nullptr, &temp) < 0)
         {
             std::cerr << SDL_GetError() << std::endl;
             exit(EXIT_FAILURE);
@@ -59,5 +64,4 @@ void Tuile::update(Uint32& timeStep, SingletonSysteme* sing_syst)
         int sprite = seconds % nb_images;
         srcRect = {espacement_tuiles_x * sprite, 0, 16, 16};
     }
-    this->position = {position.x + sing_syst->camera.x, position.y + sing_syst->camera.y, position.w, position.h};
 }

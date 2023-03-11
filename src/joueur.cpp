@@ -21,6 +21,8 @@ Joueur::Joueur(unsigned int pv, SDL_Color couleur, SDL_Rect position, mode_affic
 
 bool Joueur::collision(SDL_Rect dest_joueur, Tuile tuile)
 {
+    //if(tuile.isWarp == true)
+        //std::cout << tuile.position.x << std::endl;
     //si pas de collision
     if(dest_joueur.y + dest_joueur.h > tuile.position.y
     && dest_joueur.y < tuile.position.y +  + tuile.position.h
@@ -49,10 +51,11 @@ void Joueur::setValue(bool dep[4], int indice)
     dep[indice] = true;
 }
 
-void Joueur::draw(SDL_Renderer* rendu)
+void Joueur::draw(SDL_Renderer* rendu, SingletonSysteme* sing_syst)
 {
     CHK(SDL_SetRenderDrawColor(rendu, this->couleur.r, this->couleur.g, this->couleur.b, this->couleur.a), SDL_GetError());
-    CHK(SDL_RenderFillRect(rendu, &(this->position)), SDL_GetError());
+    SDL_Rect temp = {position.x - sing_syst->camera.x, position.y - sing_syst->camera.y, position.w, position.h};
+    CHK(SDL_RenderFillRect(rendu, &(temp)), SDL_GetError());
 }
 
 void Joueur::handleEvents(SDL_Event e, SingletonSysteme* sing_syst)
@@ -213,11 +216,6 @@ void Joueur::update(Uint32& timeStep, SingletonSysteme* sing_syst, std::vector<T
     //pour la sauvegarde de la position du joueur
     sing_syst->posX_joueur = this->position.x;
     sing_syst->posY_joueur = this->position.y;
-
-    //pour la camera
-    sing_syst->camera.x = -position.x - position.w/2 + LONGUEUR_FENETRE/2;
-    sing_syst->camera.y = -position.y - position.h/2 + HAUTEUR_FENETRE/2;
-    this->position = {position.x + sing_syst->camera.x, position.y + sing_syst->camera.y, position.w, position.h};
 
     if(this->mode == VUE_DESSUS)
     {

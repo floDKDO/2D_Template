@@ -1,11 +1,11 @@
 //Nom joueur
-fff
+yy
 //Mode fenetre
 0
 //Musique activee ?
 1
 //Son active ?
-1
+0
 //Touche déplacement haut
 Up
 //Touche déplacement bas

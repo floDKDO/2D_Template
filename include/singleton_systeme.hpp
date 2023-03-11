@@ -11,6 +11,10 @@
 #include <SDL2/SDL_ttf.h>
 #include <SDL2/SDL_mixer.h>
 
+#include <map>
+#include <utility>
+
+
 //macros pour gerer les retours de fonctions
 #define NCHK(op, type) do { if ((op) == nullptr){std::cerr << type << std::endl; exit(EXIT_FAILURE);} }while(0)
 #define CHK(op, type) do { if ((op) < 0){std::cerr << type << std::endl; exit(EXIT_FAILURE);} }while(0)
@@ -55,6 +59,10 @@ const SDL_Color BLEU = {0, 0, 255, 255};
 const SDL_Color BLANC = {255, 255, 255, 255};
 const SDL_Color GRIS = {127, 127, 127, 255};
 
+
+class Carte;
+
+
 class SingletonSysteme
 {
     public:
@@ -85,6 +93,8 @@ class SingletonSysteme
         int posY_joueur;
 
         SDL_Rect camera;
+
+        std::map<std::string, Carte*> cartes;
 
         //TODO : attribut Etat*
 

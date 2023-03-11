@@ -1,5 +1,7 @@
 #include "singleton_systeme.hpp"
 
+#include <carte.hpp>
+
 
 //initialise les librairies (SDL2, SDL_TTF, SDL_Mixer, SDL_IMG), créer la fenêtre et le rendu, met l'état du jeu en MENU_PRINCIPAL et active les entrées au clavier pour les inputfields
 void SingletonSysteme::init(void)
@@ -46,6 +48,13 @@ Il faudra créer les images en se basant sur la taille de l'étape 1 et cela sera 
     CHK(SDL_GameControllerEventState(SDL_ENABLE), SDL_GetError());
     //pour les inputfield
     SDL_StartTextInput();
+
+
+    cartes.insert(std::make_pair("toto.map", new Carte("toto.map")));
+    cartes.insert(std::make_pair("tutu.map", new Carte("tutu.map")));
+
+    cartes["toto.map"]->initConnections("toto.map", this);
+    cartes["tutu.map"]->initConnections("tutu.map", this);
 }
 
 void SingletonSysteme::charger(void)

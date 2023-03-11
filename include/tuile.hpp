@@ -9,11 +9,19 @@
 
 #include "singleton_systeme.hpp"
 
+/*enum connection_carte
+{
+    HAUT,
+    BAS,
+    GAUCHE,
+    DROITE
+};*/
+
 class Tuile
 {
     public:
         //chemin : endroit où la tuile est stockée
-        Tuile(std::string chemin, SDL_Rect position, bool estPassable);
+        Tuile(std::string chemin, SDL_Rect position, bool estPassable, bool isWarp/*, int connection_carte*/);
         Tuile(std::string chemin, SDL_Rect position, unsigned int nb_images, int espacement_tuiles_x, bool estPassable);
 
         unsigned int nb_images;
@@ -25,9 +33,11 @@ class Tuile
         SDL_Texture* texture;
         bool estPassable;
         bool isAnimated;
+        bool isWarp;
+        unsigned int id_porte; //valeur mise par la carte
         std::string chemin;
 
-        void draw(SDL_Renderer* rendu);
+        void draw(SDL_Renderer* rendu, SingletonSysteme* sing_syst);
         void handleEvents(SDL_Event e, SingletonSysteme* sing_syst);
         bool collision(SDL_Rect dest, int x, int y);
 

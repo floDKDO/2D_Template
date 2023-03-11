@@ -110,6 +110,8 @@ int main(int argc, char* argv[])
             }
         }
 
+        //std::cout << "camera : " << SingletonSysteme::instance().camera.x << std::endl;
+
         CHK(SDL_SetRenderDrawColor(SingletonSysteme::instance().rendu, 0, 0, 0, 255), SDL_GetError());
         CHK(SDL_RenderClear(SingletonSysteme::instance().rendu), SDL_GetError());
 
