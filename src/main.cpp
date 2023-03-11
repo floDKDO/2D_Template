@@ -10,32 +10,6 @@
 #include "tuile.hpp"
 #include "enJeu.hpp"
 
-SDL_Texture* init_texture(std::string image, SDL_Renderer* rendu)
-{
-    SDL_Texture* texture = nullptr;
-    NCHK(texture = IMG_LoadTexture(rendu, image.c_str()), IMG_GetError());
-    return texture;
-}
-
-SDL_Rect init_rect(int x, int y, int w, int h)
-{
-    SDL_Rect rect;
-    rect.x = x;
-    rect.y = y;
-    rect.w = w;
-    rect.h = h;
-    return rect;
-}
-
-//cette fonction permet de creer un rect qui est de la taille de la texture, donc de l'image
-SDL_Rect init_rect_from_image(int x, int y, SDL_Texture* texture)
-{
-    int w, h;
-    CHK(SDL_QueryTexture(texture, nullptr, nullptr, &w, &h), SDL_GetError());
-    SDL_Rect rect = init_rect(x, y, w, h);
-    return rect;
-}
-
 
 /* Algo de modification de taille de fenetre
 1. Partir d'une taille de résolution de base et donc d'une taille de fenetre de base (ex : 1280 * 720)
@@ -55,10 +29,13 @@ int main(int argc, char* argv[])
     SingletonSysteme::instance().charger();
     SingletonSysteme::instance().init();
 
-    MenuPrincipal menuPrincipal(&SingletonSysteme::instance());
-    MenuOptions menuOptions(&SingletonSysteme::instance());
-    MenuChoixNom menuChoixNom(&SingletonSysteme::instance());
-    EnJeu enJeu(&SingletonSysteme::instance());
+    SDL_Renderer* rendu = SingletonSysteme::instance().rendu;
+    SingletonSysteme* sing_syst = &SingletonSysteme::instance();
+
+    MenuPrincipal menuPrincipal(sing_syst);
+    MenuOptions menuOptions(sing_syst);
+    MenuChoixNom menuChoixNom(sing_syst);
+    EnJeu enJeu(sing_syst);
 
     Uint32 timeStep = SDL_GetTicks();
 
@@ -74,7 +51,7 @@ int main(int argc, char* argv[])
 
                     if(e.window.event == SDL_WINDOWEVENT_CLOSE)
                     {
-                        SingletonSysteme::instance().sauvegarder();
+                        sing_syst->sauvegarder();
                         quitter = true;
                     }
                     break;
@@ -83,7 +60,7 @@ int main(int argc, char* argv[])
 
                     if(e.key.keysym.sym == SDLK_ESCAPE)
                     {
-                        SingletonSysteme::instance().sauvegarder();
+                        sing_syst->sauvegarder();
                         quitter = true;
                     }
                     break;
@@ -92,52 +69,52 @@ int main(int argc, char* argv[])
                     break;
             }
 
-            if(SingletonSysteme::instance().etat == MENU_PRINCIPAL)
+            if(sing_syst->etat == MENU_PRINCIPAL)
             {
-                menuPrincipal.handleEvents(e, &SingletonSysteme::instance());
+                menuPrincipal.handleEvents(e, sing_syst);
             }
-            else if(SingletonSysteme::instance().etat == MENU_OPTIONS)
+            else if(sing_syst->etat == MENU_OPTIONS)
             {
-                menuOptions.handleEvents(e, &SingletonSysteme::instance());
+                menuOptions.handleEvents(e, sing_syst);
             }
-            else if(SingletonSysteme::instance().etat == DEMANDE_NOM)
+            else if(sing_syst->etat == DEMANDE_NOM)
             {
-                menuChoixNom.handleEvents(e, &SingletonSysteme::instance());
+                menuChoixNom.handleEvents(e, sing_syst);
             }
-            else if(SingletonSysteme::instance().etat == EN_JEU)
+            else if(sing_syst->etat == EN_JEU)
             {
-                enJeu.handleEvents(e, &SingletonSysteme::instance());
+                enJeu.handleEvents(e, sing_syst);
             }
         }
 
-        //std::cout << "camera : " << SingletonSysteme::instance().camera.x << std::endl;
+        //std::cout << "camera : " << sing_syst->camera.x << std::endl;
 
-        CHK(SDL_SetRenderDrawColor(SingletonSysteme::instance().rendu, 0, 0, 0, 255), SDL_GetError());
-        CHK(SDL_RenderClear(SingletonSysteme::instance().rendu), SDL_GetError());
+        CHK(SDL_SetRenderDrawColor(rendu, 0, 0, 0, 255), SDL_GetError());
+        CHK(SDL_RenderClear(rendu), SDL_GetError());
 
-        if(SingletonSysteme::instance().etat == MENU_PRINCIPAL)
+        if(sing_syst->etat == MENU_PRINCIPAL)
         {
-            menuPrincipal.draw(&SingletonSysteme::instance());
+            menuPrincipal.draw(rendu, sing_syst);
             menuPrincipal.update(timeStep);
         }
-        else if(SingletonSysteme::instance().etat == MENU_OPTIONS)
+        else if(sing_syst->etat == MENU_OPTIONS)
         {
-            menuOptions.draw(&SingletonSysteme::instance());
+            menuOptions.draw(rendu, sing_syst);
         }
-        else if(SingletonSysteme::instance().etat == DEMANDE_NOM)
+        else if(sing_syst->etat == DEMANDE_NOM)
         {
-            menuChoixNom.draw(&SingletonSysteme::instance());
+            menuChoixNom.draw(rendu, sing_syst);
             menuChoixNom.update(timeStep);
         }
-        else if(SingletonSysteme::instance().etat == EN_JEU)
+        else if(sing_syst->etat == EN_JEU)
         {
-            enJeu.draw(&SingletonSysteme::instance());
-            enJeu.update(timeStep, &SingletonSysteme::instance());
+            enJeu.draw(rendu, sing_syst->camera);
+            enJeu.update(timeStep, sing_syst);
         }
 
-        SDL_RenderPresent(SingletonSysteme::instance().rendu);
+        SDL_RenderPresent(rendu);
     }
-    SingletonSysteme::instance().sauvegarder();
-    SingletonSysteme::instance().destroy();
+    sing_syst->sauvegarder();
+    sing_syst->destroy();
     return EXIT_SUCCESS;
 }

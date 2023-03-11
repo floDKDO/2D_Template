@@ -37,7 +37,7 @@ class MenuPrincipal
         void resetSelected(void);
         Selectionnable* getSelected(void);
 
-        void draw(SingletonSysteme* sing_syst);
+        void draw(SDL_Renderer* rendu, SingletonSysteme* sing_syst);
         void update(Uint32& timeStep);
         void handleEvents(SDL_Event e, SingletonSysteme* sing_syst);
 

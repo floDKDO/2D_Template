@@ -25,7 +25,7 @@ void SingletonSysteme::init(void)
     CHK(Mix_OpenAudio(MIX_DEFAULT_FREQUENCY, MIX_DEFAULT_FORMAT, MIX_CHANNELS, 1024), Mix_GetError());
     NCHK(this->fenetre = SDL_CreateWindow("Mon jeu", SDL_WINDOWPOS_CENTERED, SDL_WINDOWPOS_CENTERED, LONGUEUR_FENETRE, HAUTEUR_FENETRE, flags), SDL_GetError());
     NCHK(this->rendu = SDL_CreateRenderer(this->fenetre, -1, SDL_RENDERER_ACCELERATED | SDL_RENDERER_PRESENTVSYNC), SDL_GetError());
-    CHK(SDL_SetRenderDrawBlendMode(rendu, SDL_BLENDMODE_BLEND), SDL_GetError()); //permettre la transparence
+    CHK(SDL_SetRenderDrawBlendMode(this->rendu, SDL_BLENDMODE_BLEND), SDL_GetError()); //permettre la transparence
     CHK(SDL_RenderSetLogicalSize(this->rendu, 1280, 720), SDL_GetError()); //720!
 
     this->camera = {0, 0, LONGUEUR_FENETRE, HAUTEUR_FENETRE};
@@ -50,23 +50,23 @@ Il faudra créer les images en se basant sur la taille de l'étape 1 et cela sera 
     SDL_StartTextInput();
 
 
-    cartes.insert(std::make_pair("toto.map", new Carte("toto.map")));
-    cartes.insert(std::make_pair("tutu.map", new Carte("tutu.map")));
+    this->cartes.insert(std::make_pair("toto.map", new Carte("toto.map")));
+    this->cartes.insert(std::make_pair("tutu.map", new Carte("tutu.map")));
 
-    cartes["toto.map"]->initConnections("toto.map", this);
-    cartes["tutu.map"]->initConnections("tutu.map", this);
+    this->cartes["toto.map"]->initConnections("toto.map", this);
+    this->cartes["tutu.map"]->initConnections("tutu.map", this);
 }
 
 void SingletonSysteme::charger(void)
 {
-    fichier_sauvegarde.open("./fichier_sauvegarde.txt", std::ios::in); //ouvrir le fichier en lecture
+    this->fichier_sauvegarde.open("./fichier_sauvegarde.txt", std::ios::in); //ouvrir le fichier en lecture
     std::string ligne;
     unsigned int numero_ligne_effective = 0;
-    if(fichier_sauvegarde.is_open() == true) //si le fichier est ouvert
+    if(this->fichier_sauvegarde.is_open() == true) //si le fichier est ouvert
     {
-        if(fichier_sauvegarde.peek() != std::ifstream::traits_type::eof()) //si le fichier n'est pas vide
+        if(this->fichier_sauvegarde.peek() != std::ifstream::traits_type::eof()) //si le fichier n'est pas vide
         {
-            while(std::getline(fichier_sauvegarde, ligne))
+            while(std::getline(this->fichier_sauvegarde, ligne))
             {
                 if(ligne.find("//") != std::string::npos) //si la ligne contient un commentaire
                     continue; //passer à la ligne suivante
@@ -190,7 +190,7 @@ void SingletonSysteme::charger(void)
             this->posY_joueur = 96;*/
         }
     }
-    fichier_sauvegarde.close();
+    this->fichier_sauvegarde.close();
 }
 
 

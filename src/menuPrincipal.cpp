@@ -52,18 +52,18 @@ Selectionnable* MenuPrincipal::getSelected(void)
     return ui_selected;
 }
 
-void MenuPrincipal::draw(SingletonSysteme* sing_syst)
+void MenuPrincipal::draw(SDL_Renderer* rendu, SingletonSysteme* sing_syst)
 {
     if(sing_syst->nom_joueur.empty() == false)
     {
-        bouton_continuer.draw(sing_syst->rendu);
-        texte_nom_joueur.draw(sing_syst->rendu);
+        bouton_continuer.draw(rendu);
+        texte_nom_joueur.draw(rendu);
     }
 
-    bouton_nouvelle_partie.draw(sing_syst->rendu);
-    bouton_options.draw(sing_syst->rendu);
-    bouton_quitter.draw(sing_syst->rendu);
-    this->titre.draw(sing_syst->rendu);
+    bouton_nouvelle_partie.draw(rendu);
+    bouton_options.draw(rendu);
+    bouton_quitter.draw(rendu);
+    this->titre.draw(rendu);
 }
 
 void MenuPrincipal::update(Uint32& timeStep)
@@ -84,7 +84,7 @@ void MenuPrincipal::handleEvents(SDL_Event e, SingletonSysteme* sing_syst)
 
         if(e.type == SDL_MOUSEMOTION)
         {
-            if(s->collision(s->position, x, y) == true) //TODO : CA SERT A QUELQUE CHOSE???/////////////////////////////////////////////////////////////////
+            if(s->collision(s->position, x, y) == true)
                 this->resetSelected(); //seul ajout
         }
         s->handleEvents(e, sing_syst);

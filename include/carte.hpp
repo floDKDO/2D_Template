@@ -23,25 +23,15 @@ class Carte
         Carte(std::string fichier_carte);
 
         std::string fichier_carte;
-        Carte* connection_haut;
-        Carte* connection_bas;
-        Carte* connection_gauche;
-        Carte* connection_droite;
 
         std::vector<Carte*> cartes;
-
         std::vector<Tuile> tuiles;
 
         int x_depart, y_depart;
 
-        int limite_haut;
-        int limite_bas;
-        int limite_gauche;
-        int limite_droite;
-
         void initConnections(std::string fichier_carte, SingletonSysteme* sing_syst);
         void initTuiles(std::string fichier_carte);
-        void draw(SDL_Renderer* rendu, SingletonSysteme* sing_syst);
+        void draw(SDL_Renderer* rendu, SDL_Rect camera);
         void update(Uint32& timeStep, SingletonSysteme* sing_syst);
 
     protected:

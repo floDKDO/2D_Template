@@ -53,11 +53,11 @@ Selectionnable* MenuChoixNom::getSelected(void)
 }
 
 
-void MenuChoixNom::draw(SingletonSysteme* sing_syst)
+void MenuChoixNom::draw(SDL_Renderer* rendu, SingletonSysteme* sing_syst)
 {
-    inputfield.draw(sing_syst->rendu);
-    demande_nom.draw(sing_syst->rendu);
-    bouton_valider.draw(sing_syst->rendu);
+    inputfield.draw(rendu);
+    demande_nom.draw(rendu);
+    bouton_valider.draw(rendu);
     if(inputfield.etat == SELECTED)
         bouton_valider.etat = NORMAL;
     if(bouton_valider.etat == SELECTED)

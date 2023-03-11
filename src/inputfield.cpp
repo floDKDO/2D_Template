@@ -25,7 +25,6 @@ Inputfield::Inputfield(std::string police, int taille_police, SDL_Color couleur,
 
 bool Inputfield::collision(SDL_Rect dest, int x, int y)
 {
-    //si pas de collision
     if(dest.y + dest.h > y
     && dest.y < y
     && dest.x + dest.w > x

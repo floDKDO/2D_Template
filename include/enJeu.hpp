@@ -24,7 +24,7 @@ class EnJeu
 
         bool changement_de_carte;
 
-        void draw(SingletonSysteme* sing_syst);
+        void draw(SDL_Renderer* rendu, SDL_Rect camera);
         void update(Uint32& timeStep, SingletonSysteme* sing_syst);
         void handleEvents(SDL_Event e, SingletonSysteme* sing_syst);
 

@@ -25,7 +25,7 @@ class Joueur
         bool collision(SDL_Rect dest_joueur, Tuile tuile);
         void resetAllValues(bool dep[4]);
         void setValue(bool dep[4], int indice);
-        void draw(SDL_Renderer* rendu, SingletonSysteme* sing_syst);
+        void draw(SDL_Renderer* rendu, SDL_Rect camera);
         void handleEvents(SDL_Event e, SingletonSysteme* sing_syst);
         void update(Uint32& timeStep, SingletonSysteme* sing_syst, std::vector<Tuile> tuiles);
 

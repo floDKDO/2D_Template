@@ -5,16 +5,7 @@
 Carte::Carte(std::string fichier_carte)
 {
     this->fichier_carte = fichier_carte;
-
     this->initTuiles(this->fichier_carte);
-    this->connection_haut = nullptr;
-    this->connection_bas = nullptr;
-    this->connection_gauche = nullptr;
-    this->connection_droite = nullptr;
-    //this->initConnections(this->fichier_carte);
-
-    this->limite_haut = 0;
-    this->limite_gauche = 0;
 }
 
 
@@ -48,26 +39,9 @@ void Carte::initConnections(std::string fichier_carte, SingletonSysteme* sing_sy
             {
                 //enlever le " " au début
                 mots[1].erase(0, 1);
-                std::cout << mots[1] << std::endl;
+                //std::cout << mots[1] << std::endl;
 
                 this->cartes.push_back(sing_syst->cartes[mots[1]]);
-
-                /*if(ligne.find("Connection haut : ") != std::string::npos)
-                {
-                    this->connection_haut = sing_syst->cartes[mots[1]];
-                }
-                else if(ligne.find("Connection bas : ") != std::string::npos)
-                {
-                    this->connection_bas = sing_syst->cartes[mots[1]];
-                }
-                else if(ligne.find("Connection gauche : ") != std::string::npos)
-                {
-                    this->connection_gauche = sing_syst->cartes[mots[1]];
-                }
-                else if(ligne.find("Connection droite : ") != std::string::npos)
-                {
-                    this->connection_droite = sing_syst->cartes[mots[1]];
-                }*/
             }
         }
 	}
@@ -84,9 +58,6 @@ void Carte::initTuiles(std::string fichier_carte)
     int facteur = 4;
 
     int x = 0, y = 0;
-
-    int x_max = x;
-    int y_max = y;
 
     unsigned int compteur_de_porte = 0;
 
@@ -125,12 +96,6 @@ void Carte::initTuiles(std::string fichier_carte)
             //SIMPLIFICATION POSSIBLE : nom des tuiles = tuiles_fichier[i]
             //=> this->tuiles.push_back(Tuile("./img/" + tuiles_fichier[i] + ".png", {x * facteur, y * facteur, TILE_WIDTH * facteur, TILE_HEIGHT * facteur}, 8, 17, false));
 
-            if(y*facteur > y_max)
-                y_max = y*facteur;
-
-            if(x*facteur > x_max)
-                x_max = x*facteur;
-
             if(tuiles_fichier[i].find("00") != std::string::npos) //00 ou 00(D)
             {
                 this->tuiles.push_back(Tuile("./img/animated_water.png", {x * facteur, y * facteur, TILE_WIDTH * facteur, TILE_HEIGHT * facteur}, 8, 17, false));
@@ -148,8 +113,8 @@ void Carte::initTuiles(std::string fichier_carte)
 
             if(tuiles_fichier[i].find("(D)") != std::string::npos) //la tuile est déjà dans le vector
             {
-                x_depart = tuiles.back().position.x;
-                y_depart = tuiles.back().position.y;
+                this->x_depart = tuiles.back().position.x;
+                this->y_depart = tuiles.back().position.y;
             }
 
             //prochaine tuile
@@ -163,23 +128,15 @@ void Carte::initTuiles(std::string fichier_carte)
         //on vide le tableau de string car cette ligne est finie
         tuiles_fichier.clear();
 	}
-
-	/*std::cout << "x_max: " << x_max << std::endl;
-    std::cout << "y_max : " << y_max << std::endl;*/
-
-    this->limite_droite = x_max;
-    this->limite_bas = y_max;
-
-
     fichier.close();
 }
 
 
-void Carte::draw(SDL_Renderer* rendu, SingletonSysteme* sing_syst)
+void Carte::draw(SDL_Renderer* rendu, SDL_Rect camera)
 {
     for(long long unsigned int i = 0; i < tuiles.size(); i++)
     {
-        tuiles[i].draw(rendu, sing_syst);
+        this->tuiles[i].draw(rendu, camera);
     }
 }
 
@@ -188,12 +145,6 @@ void Carte::update(Uint32& timeStep, SingletonSysteme* sing_syst)
 {
     for(long long unsigned int i = 0; i < tuiles.size(); i++)
     {
-        tuiles[i].update(timeStep, sing_syst);
+        this->tuiles[i].update(timeStep, sing_syst);
     }
-
-    //obligé de faire cela car les limites changent selon la caméra car le joueur est toujours au centre de l'écran
-    /*this->limite_haut += sing_syst->camera.y;
-    this->limite_bas += sing_syst->camera.y;
-    this->limite_gauche += sing_syst->camera.x;
-    this->limite_droite += sing_syst->camera.x;*/
 }

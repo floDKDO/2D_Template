@@ -21,9 +21,6 @@ Joueur::Joueur(unsigned int pv, SDL_Color couleur, SDL_Rect position, mode_affic
 
 bool Joueur::collision(SDL_Rect dest_joueur, Tuile tuile)
 {
-    //if(tuile.isWarp == true)
-        //std::cout << tuile.position.x << std::endl;
-    //si pas de collision
     if(dest_joueur.y + dest_joueur.h > tuile.position.y
     && dest_joueur.y < tuile.position.y +  + tuile.position.h
     && dest_joueur.x + dest_joueur.w > tuile.position.x
@@ -51,10 +48,10 @@ void Joueur::setValue(bool dep[4], int indice)
     dep[indice] = true;
 }
 
-void Joueur::draw(SDL_Renderer* rendu, SingletonSysteme* sing_syst)
+void Joueur::draw(SDL_Renderer* rendu, SDL_Rect camera)
 {
     CHK(SDL_SetRenderDrawColor(rendu, this->couleur.r, this->couleur.g, this->couleur.b, this->couleur.a), SDL_GetError());
-    SDL_Rect temp = {position.x - sing_syst->camera.x, position.y - sing_syst->camera.y, position.w, position.h};
+    SDL_Rect temp = {position.x - camera.x, position.y - camera.y, position.w, position.h};
     CHK(SDL_RenderFillRect(rendu, &(temp)), SDL_GetError());
 }
 
@@ -190,25 +187,25 @@ void Joueur::update(Uint32& timeStep, SingletonSysteme* sing_syst, std::vector<T
             {
                 copie.y -= 16 * 4; //taille d'une tuile
                 if(collision(copie, tuiles[i]) == true)
-                    dep[0] = false;
+                    this->dep[0] = false;
             }
             else if(dep[1] == true)
             {
                 copie.y += 16 * 4;
                 if(collision(copie, tuiles[i]) == true)
-                    dep[1] = false;
+                    this->dep[1] = false;
             }
             else if(dep[2] == true)
             {
                 copie.x -= 16 * 4;
                 if(collision(copie, tuiles[i]) == true)
-                    dep[2] = false;
+                    this->dep[2] = false;
             }
             else if(dep[3] == true)
             {
                 copie.x += 16 * 4;
                 if(collision(copie, tuiles[i]) == true)
-                    dep[3] = false;
+                    this->dep[3] = false;
             }
         }
     }
@@ -221,19 +218,19 @@ void Joueur::update(Uint32& timeStep, SingletonSysteme* sing_syst, std::vector<T
     {
         if(SDL_GetTicks() - timeStep > (80 / this->multiplication_vitesse))
         {
-            if(dep[0] == true)
+            if(this->dep[0] == true)
             {
                 this->position.y -= 16 * 4; //taille d'une tuile
             }
-            else if(dep[1] == true)
+            else if(this->dep[1] == true)
             {
                 this->position.y += 16 * 4;
             }
-            else if(dep[2] == true)
+            else if(this->dep[2] == true)
             {
                 this->position.x -= 16 * 4;
             }
-            else if(dep[3] == true)
+            else if(this->dep[3] == true)
             {
                 this->position.x += 16 * 4;
             }

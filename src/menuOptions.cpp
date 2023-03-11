@@ -93,22 +93,22 @@ Selectionnable* MenuOptions::getSelected(void)
     return ui_selected;
 }
 
-void MenuOptions::draw(SingletonSysteme* sing_syst)
+void MenuOptions::draw(SDL_Renderer* rendu, SingletonSysteme* sing_syst)
 {
     for(Selectionnable* s : ui)
     {
-        s->draw(sing_syst->rendu);
+        s->draw(rendu);
     }
-    texte_touche_haut.draw(sing_syst->rendu);
-    texte_touche_bas.draw(sing_syst->rendu);
-    texte_touche_gauche.draw(sing_syst->rendu);
-    texte_touche_droite.draw(sing_syst->rendu);
-    mode_ecran.draw(sing_syst->rendu);
+    texte_touche_haut.draw(rendu);
+    texte_touche_bas.draw(rendu);
+    texte_touche_gauche.draw(rendu);
+    texte_touche_droite.draw(rendu);
+    mode_ecran.draw(rendu);
 
     if(sing_syst->manette != nullptr)
     {
-        texte_clavier.draw(sing_syst->rendu);
-        texte_manette.draw(sing_syst->rendu);
+        texte_clavier.draw(rendu);
+        texte_manette.draw(rendu);
     }
 }
 

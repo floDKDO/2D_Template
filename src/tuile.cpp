@@ -26,7 +26,7 @@ Tuile::Tuile(std::string chemin, SDL_Rect position, unsigned int nb_images, int 
 }
 
 
-void Tuile::draw(SDL_Renderer* rendu, SingletonSysteme* sing_syst)
+void Tuile::draw(SDL_Renderer* rendu, SDL_Rect camera)
 {
     if((this->texture = IMG_LoadTexture(rendu, this->chemin.c_str())) == nullptr)
     {
@@ -34,11 +34,11 @@ void Tuile::draw(SDL_Renderer* rendu, SingletonSysteme* sing_syst)
         exit(EXIT_FAILURE);
     }
 
-    SDL_Rect temp = {position.x - sing_syst->camera.x, position.y - sing_syst->camera.y, position.w, position.h};
+    SDL_Rect temp = {this->position.x - camera.x, this->position.y - camera.y, this->position.w, this->position.h};
 
     if(isAnimated == true)
     {
-        if(SDL_RenderCopy(rendu, texture, &srcRect, &temp) < 0)
+        if(SDL_RenderCopy(rendu, this->texture, &(this->srcRect), &temp) < 0)
         {
             std::cerr << SDL_GetError() << std::endl;
             exit(EXIT_FAILURE);
@@ -46,7 +46,7 @@ void Tuile::draw(SDL_Renderer* rendu, SingletonSysteme* sing_syst)
     }
     else
     {
-        if(SDL_RenderCopy(rendu, texture, nullptr, &temp) < 0)
+        if(SDL_RenderCopy(rendu, this->texture, nullptr, &temp) < 0)
         {
             std::cerr << SDL_GetError() << std::endl;
             exit(EXIT_FAILURE);
@@ -58,10 +58,11 @@ void Tuile::draw(SDL_Renderer* rendu, SingletonSysteme* sing_syst)
 void Tuile::update(Uint32& timeStep, SingletonSysteme* sing_syst)
 {
     (void)timeStep;
+    (void)sing_syst;
     if(isAnimated == true)
     {
         Uint32 seconds = SDL_GetTicks() / 200; //200 => rapidité de l'animation
         int sprite = seconds % nb_images;
-        srcRect = {espacement_tuiles_x * sprite, 0, 16, 16};
+        this->srcRect = {espacement_tuiles_x * sprite, 0, 16, 16};
     }
 }

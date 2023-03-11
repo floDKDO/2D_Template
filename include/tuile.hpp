@@ -37,7 +37,7 @@ class Tuile
         unsigned int id_porte; //valeur mise par la carte
         std::string chemin;
 
-        void draw(SDL_Renderer* rendu, SingletonSysteme* sing_syst);
+        void draw(SDL_Renderer* rendu, SDL_Rect camera);
         void handleEvents(SDL_Event e, SingletonSysteme* sing_syst);
         bool collision(SDL_Rect dest, int x, int y);
 
