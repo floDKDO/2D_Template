@@ -24,10 +24,14 @@ void EnJeu::update(Uint32& timeStep, SingletonSysteme* sing_syst)
     this->carte_actuelle->update(timeStep, sing_syst);
     this->joueur.update(timeStep, sing_syst, carte_actuelle->tuiles);
 
+
+    //TODO : à simplifier !
+
     for(long long unsigned int i = 0; i < carte_actuelle->tuiles.size(); i++)
     {
         if(this->joueur.collision(joueur.position, this->carte_actuelle->tuiles[i]) == true && this->carte_actuelle->tuiles[i].isWarp == true)
         {
+            //aller vers la nouvelle carte
             if(changement_de_carte == false)
             {
                 //std::cout << "collision avec une porte" << std::endl;
@@ -55,7 +59,37 @@ void EnJeu::update(Uint32& timeStep, SingletonSysteme* sing_syst)
             this->changement_de_carte = false;
         }
     }
-    //std::cout << this->carte_actuelle->x_depart << " et " << this->joueur.position.x << std::endl;
+
+    //on sort de la carte dans laquelle ont est arrivé après avoir pris la porte en sortant par une extrémité
+    //revenir dans la carte principale
+    if(this->carte_actuelle->limite_haut == this->joueur.position.y && this->carte_actuelle->est_carte_principale == false && this->carte_actuelle->connection_haut != nullptr)
+    {
+        this->carte_actuelle = this->carte_actuelle->connection_haut;
+        this->joueur.position.x = this->carte_actuelle->x_depart;
+        this->joueur.position.y = this->carte_actuelle->y_depart;
+        this->changement_de_carte = true;
+    }
+    else if(this->carte_actuelle->limite_bas == this->joueur.position.y && this->carte_actuelle->est_carte_principale == false && this->carte_actuelle->connection_bas != nullptr)
+    {
+        this->carte_actuelle = this->carte_actuelle->connection_bas;
+        this->joueur.position.x = this->carte_actuelle->x_depart;
+        this->joueur.position.y = this->carte_actuelle->y_depart;
+        this->changement_de_carte = true;
+    }
+    else if(this->carte_actuelle->limite_gauche == this->joueur.position.y && this->carte_actuelle->est_carte_principale == false && this->carte_actuelle->connection_gauche != nullptr)
+    {
+        this->carte_actuelle = this->carte_actuelle->connection_gauche;
+        this->joueur.position.x = this->carte_actuelle->x_depart;
+        this->joueur.position.y = this->carte_actuelle->y_depart;
+        this->changement_de_carte = true;
+    }
+    else if(this->carte_actuelle->limite_droite == this->joueur.position.y && this->carte_actuelle->est_carte_principale == false && this->carte_actuelle->connection_droite != nullptr)
+    {
+        this->carte_actuelle = this->carte_actuelle->connection_droite;
+        this->joueur.position.x = this->carte_actuelle->x_depart;
+        this->joueur.position.y = this->carte_actuelle->y_depart;
+        this->changement_de_carte = true;
+    }
     //std::cout << changement_de_carte << std::endl;
 }
 

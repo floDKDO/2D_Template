@@ -21,6 +21,10 @@ Il faudra créer les images en se basant sur la taille de l'étape 1 et cela sera 
 */
 
 
+
+//TODO : problème de fuites de mémoire !
+
+
 int main(int argc, char* argv[])
 {
     (void)argc;

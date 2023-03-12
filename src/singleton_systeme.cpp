@@ -50,11 +50,14 @@ Il faudra créer les images en se basant sur la taille de l'étape 1 et cela sera 
     SDL_StartTextInput();
 
 
-    this->cartes.insert(std::make_pair("toto.map", new Carte("toto.map")));
-    this->cartes.insert(std::make_pair("tutu.map", new Carte("tutu.map")));
+    this->cartes.insert(std::make_pair("toto.map", new Carte("toto.map", true)));
+    this->cartes.insert(std::make_pair("tutu.map", new Carte("tutu.map", false)));
 
     this->cartes["toto.map"]->initConnections("toto.map", this);
     this->cartes["tutu.map"]->initConnections("tutu.map", this);
+
+    //this->cartes["toto.map"]->initConnections1("toto.map", this);
+    this->cartes["tutu.map"]->initConnections1("tutu.map", this);
 }
 
 void SingletonSysteme::charger(void)
