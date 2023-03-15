@@ -40,7 +40,7 @@ void EnJeu::update(Uint32& timeStep, SingletonSysteme* sing_syst)
                 this->carte_actuelle->x_depart = this->carte_actuelle->tuiles[i].position.x;
                 this->carte_actuelle->y_depart = this->carte_actuelle->tuiles[i].position.y;
 
-                this->carte_actuelle = this->carte_actuelle->cartes[this->carte_actuelle->tuiles[i].id_porte];
+                this->carte_actuelle = this->carte_actuelle->warp_cartes[this->carte_actuelle->tuiles[i].id_porte];
 
                 //placer le joueur au bon endroit dans la nouvelle carte
                 this->joueur.position.x = this->carte_actuelle->x_depart;
@@ -51,6 +51,9 @@ void EnJeu::update(Uint32& timeStep, SingletonSysteme* sing_syst)
         }
     }
 
+    //TODO : quand le joueur prend une porte, il arrive toujours à (limite bas - une tuile) en y sur la carte, le x pouvant varier
+    //TODO : trouver une meilleure alternative à (D) => faire comme DewfordTown/map.json de PokeRuby de GitHub (trouver une librairie json)
+
     if(changement_de_carte == true) //si j'ai changé de carte et que je me trouve sur une porte, alors pas de changement immédiat de carte
     {
         if(this->joueur.position.x >= this->carte_actuelle->x_depart + 64 || this->joueur.position.x <= this->carte_actuelle->x_depart - 64
@@ -60,7 +63,7 @@ void EnJeu::update(Uint32& timeStep, SingletonSysteme* sing_syst)
         }
     }
 
-    //on sort de la carte dans laquelle ont est arrivé après avoir pris la porte en sortant par une extrémité
+    //on sort de la carte dans laquelle on est arrivé après avoir pris la porte en sortant par une extrémité
     //revenir dans la carte principale
     if(this->carte_actuelle->limite_haut == this->joueur.position.y && this->carte_actuelle->est_carte_principale == false && this->carte_actuelle->connection_haut != nullptr)
     {
