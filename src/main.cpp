@@ -21,14 +21,34 @@ Il faudra créer les images en se basant sur la taille de l'étape 1 et cela sera 
 */
 
 
-
-//TODO : problème de fuites de mémoire !
-
-
 int main(int argc, char* argv[])
 {
     (void)argc;
     (void)argv;
+
+    /* //un champ qui possède une seule valeur
+
+        std::ifstream f("base.json");
+        //Créer l'objet json contenant tous les champs du fichier
+        json data = json::parse(f);
+        //récupérer la valeur écrite après "name":, si non trouvé, alors afficher "not found"
+        std::string name = data.value("name", "not found");
+        // Print the value
+        std::cout << "Name: " << name << std::endl;
+    */
+
+      /*  //un champ qui possède plusieurs valeurs contenant plusieurs champs (un tableau) : ici on récupère x
+
+        std::ifstream f("base.json");
+        //Créer l'objet json contenant tous les champs du fichier
+        json data = json::parse(f);
+        //récupérer les valeurs écrites après "warp_events":
+        json name = data["warp_events"];
+        // Print the values
+        for(long long unsigned int i = 0; i < name.size(); i++)
+            std::cout << "Name: " << name[i]["x"] << std::endl;
+    */
+
 
     SingletonSysteme::instance().charger();
     SingletonSysteme::instance().init();

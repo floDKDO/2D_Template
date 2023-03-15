@@ -52,6 +52,7 @@ void Tuile::draw(SDL_Renderer* rendu, SDL_Rect camera)
             exit(EXIT_FAILURE);
         }
     }
+    SDL_DestroyTexture(texture);
 }
 
 

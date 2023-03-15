@@ -38,6 +38,8 @@ void Texte::draw(SDL_Renderer* rendu)
     position.h = surface->h;
     NCHK(texture = SDL_CreateTextureFromSurface(rendu, surface), SDL_GetError());
     CHK(SDL_RenderCopy(rendu, texture, nullptr, &position), SDL_GetError());
+    SDL_DestroyTexture(texture);
+    SDL_FreeSurface(surface);
 }
 
 

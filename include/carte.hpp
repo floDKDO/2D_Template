@@ -13,6 +13,9 @@
 
 #include <tuile.hpp>
 
+#include <../json.hpp>
+using json = nlohmann::json;
+
 
 class SingletonSysteme;
 
@@ -22,12 +25,17 @@ class Carte
     public:
         Carte(std::string fichier_carte, bool est_carte_principale);
 
+        //CHAMPS DU JSON
+        unsigned int id_carte;
+        std::string nom_carte;
         std::string fichier_carte;
-
+        Mix_Music* musique;
         Carte* connection_haut;
         Carte* connection_bas;
         Carte* connection_gauche;
         Carte* connection_droite;
+        std::vector<Carte*> warp_cartes; //contient les cartes atteignables par warp
+        ////////////////////////////////
 
         int limite_haut;
         int limite_bas;
@@ -36,11 +44,11 @@ class Carte
 
         bool est_carte_principale;
 
-        std::vector<Carte*> cartes;
         std::vector<Tuile> tuiles;
 
         int x_depart, y_depart;
 
+        void initJson(std::string fichier_carte, SingletonSysteme* sing_syst);
         void initConnections(std::string fichier_carte, SingletonSysteme* sing_syst);
         void initConnections1(std::string fichier_carte, SingletonSysteme* sing_syst);
         void initTuiles(std::string fichier_carte);

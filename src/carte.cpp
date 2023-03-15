@@ -6,9 +6,72 @@ Carte::Carte(std::string fichier_carte, bool est_carte_principale)
 {
     this->est_carte_principale = est_carte_principale;
     this->fichier_carte = fichier_carte;
+
+    this->connection_haut = nullptr;
+    this->connection_bas = nullptr;
+    this->connection_gauche = nullptr;
+    this->connection_droite = nullptr;
+
     this->initTuiles(this->fichier_carte);
     this->limite_haut = 0;
     this->limite_gauche = 0;
+}
+
+
+void Carte::initJson(std::string fichier_carte, SingletonSysteme* sing_syst)
+{
+    /*
+    - ID MAP : val
+    - NOM_FICHIER_MAP : fichier.map
+    - NOM MAP : val
+    - MUSIQUE : val
+    - CONNECTIONS : direction(nord, sud, ouest, est), carte atteinte, x et y de la direction
+    - WARPS : x et y de la warp, carte atteinte
+    - OBJETS / PERSOS: image, x et y de l'objet, mouvements si perso, longueur en x et y des mouvements
+    */
+
+    std::ifstream fichier(fichier_carte);
+    json data = json::parse(fichier);
+
+    std::string id_carte = data.value("id", "not found");
+    if(sscanf(id_carte.c_str(), "%d", &(this->id_carte)) != 0)
+    {
+        std::cerr << "Erreur" << std::endl;
+        exit(EXIT_FAILURE);
+    }
+    std::string nom_carte = data.value("name", "not found");
+    this->nom_carte = nom_carte;
+    std::string layout_carte = data.value("layout", "not found");
+    this->fichier_carte = layout_carte;
+    std::string music_carte = data.value("music", "not found");
+    NCHK(this->musique = Mix_LoadMUS(music_carte.c_str()), Mix_GetError());;
+
+    //<=>initConnections1
+    json connections_carte = data["connections"];
+    if(connections_carte.is_null() == false)
+    {
+        for(long long unsigned int i = 0; i < connections_carte.size(); i++)
+        {
+            if(connections_carte[i]["direction"] == "up")
+                this->connection_haut = sing_syst->cartes[connections_carte[i]["map"]];
+            else if(connections_carte[i]["direction"] == "down")
+                this->connection_bas = sing_syst->cartes[connections_carte[i]["map"]];
+            else if(connections_carte[i]["direction"] == "left")
+                this->connection_gauche = sing_syst->cartes[connections_carte[i]["map"]];
+            else if(connections_carte[i]["direction"] == "right")
+                this->connection_droite = sing_syst->cartes[connections_carte[i]["map"]];
+        }
+    }
+
+    //<=>initConnections
+    json warp_events_carte = data["warp_events"];
+    if(warp_events_carte.is_null() == false)
+    {
+        for(long long unsigned int i = 0; i < warp_events_carte.size(); i++)
+            this->warp_cartes.push_back(sing_syst->cartes[warp_events_carte[i]["dest_map"]]);
+    }
+
+    fichier.close();
 }
 
 
@@ -44,7 +107,7 @@ void Carte::initConnections(std::string fichier_carte, SingletonSysteme* sing_sy
                 mots[1].erase(0, 1);
                 //std::cout << mots[1] << std::endl;
 
-                this->cartes.push_back(sing_syst->cartes[mots[1]]);
+                this->warp_cartes.push_back(sing_syst->cartes[mots[1]]);
             }
         }
 	}
@@ -183,6 +246,14 @@ void Carte::initTuiles(std::string fichier_carte)
             else if(tuiles_fichier[i].find("02") != std::string::npos) //02 ou 02(D) (fait changer de zone)
             {
                 this->tuiles.push_back(Tuile("./img/porte.png", {x * facteur, y * facteur, TILE_WIDTH * facteur, TILE_HEIGHT * facteur}, true, true));
+                this->tuiles.back().isDoor = true;
+                this->tuiles.back().id_porte = compteur_de_porte; //indice de la carte à charger lors d'un changement de carte
+                compteur_de_porte += 1;
+            }
+            else if(tuiles_fichier[i].find("03") != std::string::npos) //02 ou 02(D) (fait changer de zone)
+            {
+                this->tuiles.push_back(Tuile("./img/stairs.png", {x * facteur, y * facteur, TILE_WIDTH * facteur, TILE_HEIGHT * facteur}, true, true));
+                this->tuiles.back().isStairs = true;
                 this->tuiles.back().id_porte = compteur_de_porte; //indice de la carte à charger lors d'un changement de carte
                 compteur_de_porte += 1;
             }

@@ -33,7 +33,12 @@ class Tuile
         SDL_Texture* texture;
         bool estPassable;
         bool isAnimated;
+
         bool isWarp;
+        bool isDoor;
+        bool isStairs;
+
+
         unsigned int id_porte; //valeur mise par la carte
         std::string chemin;
 
