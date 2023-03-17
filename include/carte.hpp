@@ -19,6 +19,15 @@ using json = nlohmann::json;
 
 class SingletonSysteme;
 
+struct carte_warp
+{
+    Carte* warp_carte;
+    int x_warp;
+    int y_warp;
+    int x_arrive;
+    int y_arrive;
+};
+
 
 class Carte
 {
@@ -34,7 +43,8 @@ class Carte
         Carte* connection_bas;
         Carte* connection_gauche;
         Carte* connection_droite;
-        std::vector<Carte*> warp_cartes; //contient les cartes atteignables par warp
+
+        std::vector<struct carte_warp> warp_cartes_test; //contient les cartes atteignables par warp, x_warp, y_warp, x_arrive et y_arrive
         ////////////////////////////////
 
         int limite_haut;
@@ -42,15 +52,11 @@ class Carte
         int limite_gauche;
         int limite_droite;
 
-        bool est_carte_principale;
+        bool est_carte_principale; //ce booléen est inutile mais il permet de dire que la carte principale n'a pas de connexions
 
         std::vector<Tuile> tuiles;
 
-        int x_depart, y_depart;
-
         void initJson(std::string fichier_carte, SingletonSysteme* sing_syst);
-        void initConnections(std::string fichier_carte, SingletonSysteme* sing_syst);
-        void initConnections1(std::string fichier_carte, SingletonSysteme* sing_syst);
         void initTuiles(std::string fichier_carte);
         void draw(SDL_Renderer* rendu, SDL_Rect camera);
         void update(Uint32& timeStep, SingletonSysteme* sing_syst);

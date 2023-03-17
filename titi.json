@@ -1,7 +1,7 @@
 {
-  "id": "CARTE_1",
-  "name": "Carte1",
-  "layout": "toto.map",
+  "id": "CARTE_3",
+  "name": "Carte3",
+  "layout": "titi.map",
   "music": "theme.ogg",
   "region_map_section": "MAPSEC_LAVARIDGE_TOWN",
   "weather": "WEATHER_SUNNY",
@@ -9,8 +9,10 @@
   "show_map_name": true,
   "warp_events": [
     {
-      "x": 12,
-      "y": 15,
+      "x_warp": 11,
+      "y_warp": 6,
+      "x_dest": 11,
+      "y_dest": 11,
       "dest_map": "tutu.map"
     }
   ]

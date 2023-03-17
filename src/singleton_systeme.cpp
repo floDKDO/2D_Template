@@ -54,9 +54,9 @@ Il faudra créer les images en se basant sur la taille de l'étape 1 et cela sera 
     this->cartes.insert(std::make_pair("tutu.map", new Carte("tutu.map", false)));
     this->cartes.insert(std::make_pair("titi.map", new Carte("titi.map", false)));
 
-    this->cartes["toto.map"]->initJson("carte1.json", this);
-    this->cartes["tutu.map"]->initJson("carte2.json", this);
-    this->cartes["titi.map"]->initJson("carte3.json", this);
+    this->cartes["toto.map"]->initJson("toto.json", this);
+    this->cartes["tutu.map"]->initJson("tutu.json", this);
+    this->cartes["titi.map"]->initJson("titi.json", this);
 
 }
 

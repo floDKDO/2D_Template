@@ -21,10 +21,11 @@ class Tuile
 {
     public:
         //chemin : endroit où la tuile est stockée
-        Tuile(std::string chemin, SDL_Rect position, bool estPassable, bool isWarp/*, int connection_carte*/);
+        Tuile(std::string chemin, SDL_Rect position, bool estPassable, bool isWarp);
         Tuile(std::string chemin, SDL_Rect position, unsigned int nb_images, int espacement_tuiles_x, bool estPassable);
 
         unsigned int nb_images;
+
         //espacement des tuiles dans le tilesheet
         int espacement_tuiles_x;
 
@@ -35,11 +36,7 @@ class Tuile
         bool isAnimated;
 
         bool isWarp;
-        bool isDoor;
-        bool isStairs;
 
-
-        unsigned int id_porte; //valeur mise par la carte
         std::string chemin;
 
         void draw(SDL_Renderer* rendu, SDL_Rect camera);

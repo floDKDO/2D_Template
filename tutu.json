@@ -15,8 +15,10 @@
   ],
   "warp_events": [
     {
-      "x": 12,
-      "y": 15,
+      "x_warp": 11,
+      "y_warp": 11,
+      "x_dest": 11,
+      "y_dest": 6,
       "dest_map": "titi.map"
     }
   ]

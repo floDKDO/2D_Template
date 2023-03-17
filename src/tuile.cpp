@@ -1,15 +1,13 @@
 #include "tuile.hpp"
 
 //Tuile fixe
-Tuile::Tuile(std::string chemin, SDL_Rect position, bool estPassable, bool isWarp/*, int connection_carte*/)
+Tuile::Tuile(std::string chemin, SDL_Rect position, bool estPassable, bool isWarp)
 {
     this->position = position;
     this->estPassable = estPassable;
     this->chemin = chemin;
     this->isAnimated = false;
     this->isWarp = isWarp;
-
-    //this->connection_carte = carte;
 }
 
 
