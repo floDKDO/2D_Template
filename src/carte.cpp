@@ -15,21 +15,12 @@ Carte::Carte(std::string fichier_carte, bool est_carte_principale)
     this->initTuiles(this->fichier_carte);
     this->limite_haut = 0;
     this->limite_gauche = 0;
+    this->une_fois = true;
 }
 
 
 void Carte::initJson(std::string fichier_carte, SingletonSysteme* sing_syst)
 {
-    /*
-    - ID MAP : val
-    - NOM_FICHIER_MAP : fichier.map
-    - NOM MAP : val
-    - MUSIQUE : val
-    - CONNECTIONS : direction(nord, sud, ouest, est), carte atteinte, x et y de la direction
-    - WARPS : x et y de la warp, carte atteinte
-    - OBJETS / PERSOS: image, x et y de l'objet, mouvements si perso, longueur en x et y des mouvements
-    */
-
     std::ifstream fichier(fichier_carte);
     json data = json::parse(fichier);
 
@@ -44,7 +35,7 @@ void Carte::initJson(std::string fichier_carte, SingletonSysteme* sing_syst)
     std::string layout_carte = data.value("layout", "not found");
     this->fichier_carte = layout_carte;
     std::string music_carte = data.value("music", "not found");
-    NCHK(this->musique = Mix_LoadMUS(music_carte.c_str()), Mix_GetError());;
+    NCHK(this->musique = Mix_LoadMUS(music_carte.c_str()), Mix_GetError());
 
     json connections_carte = data["connections"];
     if(connections_carte.is_null() == false)
@@ -174,6 +165,15 @@ void Carte::initTuiles(std::string fichier_carte)
     fichier.close();
 }
 
+void Carte::jouerMusique(void)
+{
+    if(une_fois == true)
+    {
+        Mix_PlayMusic(this->musique, 1);
+        une_fois = false;
+    }
+}
+
 
 void Carte::draw(SDL_Renderer* rendu, SDL_Rect camera)
 {
@@ -186,6 +186,7 @@ void Carte::draw(SDL_Renderer* rendu, SDL_Rect camera)
 
 void Carte::update(Uint32& timeStep, SingletonSysteme* sing_syst)
 {
+    //jouerMusique();
     for(long long unsigned int i = 0; i < tuiles.size(); i++)
     {
         this->tuiles[i].update(timeStep, sing_syst);

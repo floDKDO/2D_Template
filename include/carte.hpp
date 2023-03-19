@@ -52,12 +52,15 @@ class Carte
         int limite_gauche;
         int limite_droite;
 
+        bool une_fois;
+
         bool est_carte_principale; //ce booléen est inutile mais il permet de dire que la carte principale n'a pas de connexions
 
         std::vector<Tuile> tuiles;
 
         void initJson(std::string fichier_carte, SingletonSysteme* sing_syst);
         void initTuiles(std::string fichier_carte);
+        void jouerMusique(void);
         void draw(SDL_Renderer* rendu, SDL_Rect camera);
         void update(Uint32& timeStep, SingletonSysteme* sing_syst);
 
