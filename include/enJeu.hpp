@@ -20,6 +20,10 @@ class EnJeu
 
         Carte* carte_actuelle;
 
+        SDL_Rect carre_noir;
+        bool enTransition;
+        int alpha;
+
         Joueur joueur;
 
         bool changement_de_carte;

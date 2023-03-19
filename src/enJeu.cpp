@@ -6,6 +6,8 @@ EnJeu::EnJeu(SingletonSysteme* sing_syst)
     (void)sing_syst;
     this->carte_actuelle = sing_syst->cartes["toto.map"];
     this->changement_de_carte = false;
+    this->carre_noir = {0, 0, LONGUEUR_FENETRE, HAUTEUR_FENETRE};
+    this->alpha = 255;
 }
 
 
@@ -16,13 +18,36 @@ void EnJeu::draw(SDL_Renderer* rendu, SDL_Rect camera)
 
     this->carte_actuelle->draw(rendu, camera);
     this->joueur.draw(rendu, camera);
+
+    if(this->enTransition == true)
+    {
+        SDL_SetRenderDrawColor(rendu, 0, 0, 0, this->alpha);
+        SDL_RenderFillRect(rendu, &this->carre_noir);
+    }
 }
 
 
 void EnJeu::update(Uint32& timeStep, SingletonSysteme* sing_syst)
 {
-    this->carte_actuelle->update(timeStep, sing_syst);
-    this->joueur.update(timeStep, sing_syst, carte_actuelle->tuiles);
+    if(this->enTransition == false)
+    {
+        this->carte_actuelle->update(timeStep, sing_syst);
+        this->joueur.update(timeStep, sing_syst, carte_actuelle->tuiles);
+    }
+    else
+    {
+        if(alpha > 0)
+        {
+            //std::cout << alpha << std::endl;
+            this->alpha -= 51; //51 est un diviseur de 255
+        }
+        else
+        {
+            this->enTransition = false;
+            alpha = 255;
+        }
+    }
+
 
     //position que le joueur a lors du changement de carte
     //sert de référence pour savoir si le joueur s'est déplacé ou pas pour modifier en conséquence changement_de_porte
@@ -53,6 +78,8 @@ void EnJeu::update(Uint32& timeStep, SingletonSysteme* sing_syst)
 
                         previous_x = this->joueur.position.x;
                         previous_y = this->joueur.position.y;
+
+                        this->enTransition = true;
 
                         this->carte_actuelle = this->carte_actuelle->warp_cartes_test[k].warp_carte;
                     }
@@ -94,6 +121,7 @@ void EnJeu::update(Uint32& timeStep, SingletonSysteme* sing_syst)
 
         this->joueur.position.y = this->carte_actuelle->limite_bas;
         this->changement_de_carte = true;
+        this->enTransition = true;
     }
     else if(this->carte_actuelle->limite_bas == this->joueur.position.y && this->carte_actuelle->est_carte_principale == false && this->carte_actuelle->connection_bas != nullptr)
     {
@@ -110,6 +138,7 @@ void EnJeu::update(Uint32& timeStep, SingletonSysteme* sing_syst)
         this->joueur.position.x = val;
         this->joueur.position.y = this->carte_actuelle->limite_haut;
         this->changement_de_carte = true;
+        this->enTransition = true;
     }
     else if(this->carte_actuelle->limite_gauche == this->joueur.position.y && this->carte_actuelle->est_carte_principale == false && this->carte_actuelle->connection_gauche != nullptr)
     {
@@ -126,6 +155,7 @@ void EnJeu::update(Uint32& timeStep, SingletonSysteme* sing_syst)
         this->joueur.position.x = this->carte_actuelle->limite_droite;
         this->joueur.position.y = val;
         this->changement_de_carte = true;
+        this->enTransition = true;
     }
     else if(this->carte_actuelle->limite_droite == this->joueur.position.y && this->carte_actuelle->est_carte_principale == false && this->carte_actuelle->connection_droite != nullptr)
     {
@@ -142,6 +172,7 @@ void EnJeu::update(Uint32& timeStep, SingletonSysteme* sing_syst)
         this->joueur.position.x = this->carte_actuelle->limite_gauche;
         this->joueur.position.y = val;
         this->changement_de_carte = true;
+        this->enTransition = true;
     }
     //std::cout << changement_de_carte << std::endl;
 }
