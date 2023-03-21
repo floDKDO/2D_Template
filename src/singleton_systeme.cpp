@@ -58,6 +58,8 @@ Il faudra créer les images en se basant sur la taille de l'étape 1 et cela sera 
     this->cartes["tutu.map"]->initJson("tutu.json", this);
     this->cartes["titi.map"]->initJson("titi.json", this);
 
+    NCHK(this->son_collision = Mix_LoadWAV("./collision.ogg"), Mix_GetError());
+
 }
 
 void SingletonSysteme::charger(void)
@@ -250,6 +252,8 @@ void SingletonSysteme::supprimmer(void)
 //nettoyage
 void SingletonSysteme::destroy(void)
 {
+    SDL_GameControllerClose(manette);
+    Mix_FreeChunk(son_collision);
     SDL_StopTextInput();
     SDL_DestroyRenderer(rendu);
     SDL_DestroyWindow(fenetre);

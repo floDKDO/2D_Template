@@ -36,6 +36,7 @@ void EnJeu::update(Uint32& timeStep, SingletonSysteme* sing_syst)
     }
     else
     {
+        // TODO : pour simuler la nuit ou l'après midi, mettre un carré de la couleur adaptée
         if(alpha > 0)
         {
             //std::cout << alpha << std::endl;

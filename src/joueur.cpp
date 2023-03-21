@@ -177,6 +177,7 @@ void Joueur::handleEvents(SDL_Event e, SingletonSysteme* sing_syst)
 
 void Joueur::update(Uint32& timeStep, SingletonSysteme* sing_syst, std::vector<Tuile> tuiles)
 {
+    static bool une_fois = true;
     for(long long unsigned int i = 0; i < tuiles.size(); i++)
     {
         //on regarde les collisions uniquement avec les tuiles non passables
@@ -187,25 +188,85 @@ void Joueur::update(Uint32& timeStep, SingletonSysteme* sing_syst, std::vector<T
             {
                 copie.y -= 16 * 4; //taille d'une tuile
                 if(collision(copie, tuiles[i]) == true)
+                {
+                    if(une_fois == true)
+                    {
+                        CHK(Mix_PlayChannel(1, sing_syst->son_collision, 0), Mix_GetError());
+                        une_fois = false;
+                    }
+                    if(une_fois == false)
+                    {
+                        if(SDL_GetTicks() - timeStep > 200)
+                        {
+                            CHK(Mix_PlayChannel(1, sing_syst->son_collision, 0), Mix_GetError());
+                            timeStep = SDL_GetTicks();
+                        }
+                    }
                     this->dep[0] = false;
+                }
             }
             else if(dep[1] == true)
             {
                 copie.y += 16 * 4;
                 if(collision(copie, tuiles[i]) == true)
+                {
+                    if(une_fois == true)
+                    {
+                        CHK(Mix_PlayChannel(1, sing_syst->son_collision, 0), Mix_GetError());
+                        une_fois = false;
+                    }
+                    if(une_fois == false)
+                    {
+                        if(SDL_GetTicks() - timeStep > 200)
+                        {
+                            CHK(Mix_PlayChannel(1, sing_syst->son_collision, 0), Mix_GetError());
+                            timeStep = SDL_GetTicks();
+                        }
+                    }
                     this->dep[1] = false;
+                }
             }
             else if(dep[2] == true)
             {
                 copie.x -= 16 * 4;
                 if(collision(copie, tuiles[i]) == true)
+                {
+                    if(une_fois == true)
+                    {
+                        CHK(Mix_PlayChannel(1, sing_syst->son_collision, 0), Mix_GetError());
+                        une_fois = false;
+                    }
+                    if(une_fois == false)
+                    {
+                        if(SDL_GetTicks() - timeStep > 200)
+                        {
+                            CHK(Mix_PlayChannel(1, sing_syst->son_collision, 0), Mix_GetError());
+                            timeStep = SDL_GetTicks();
+                        }
+                    }
                     this->dep[2] = false;
+                }
             }
             else if(dep[3] == true)
             {
                 copie.x += 16 * 4;
                 if(collision(copie, tuiles[i]) == true)
+                {
+                    if(une_fois == true)
+                    {
+                        CHK(Mix_PlayChannel(1, sing_syst->son_collision, 0), Mix_GetError());
+                        une_fois = false;
+                    }
+                    if(une_fois == false)
+                    {
+                        if(SDL_GetTicks() - timeStep > 200)
+                        {
+                            CHK(Mix_PlayChannel(1, sing_syst->son_collision, 0), Mix_GetError());
+                            timeStep = SDL_GetTicks();
+                        }
+                    }
                     this->dep[3] = false;
+                }
             }
         }
     }
@@ -221,21 +282,27 @@ void Joueur::update(Uint32& timeStep, SingletonSysteme* sing_syst, std::vector<T
             if(this->dep[0] == true)
             {
                 this->position.y -= 16 * 4; //taille d'une tuile
+                une_fois = true;
+                 timeStep = SDL_GetTicks();
             }
             else if(this->dep[1] == true)
             {
                 this->position.y += 16 * 4;
+                une_fois = true;
+                 timeStep = SDL_GetTicks();
             }
             else if(this->dep[2] == true)
             {
                 this->position.x -= 16 * 4;
+                une_fois = true;
+                 timeStep = SDL_GetTicks();
             }
             else if(this->dep[3] == true)
             {
                 this->position.x += 16 * 4;
+                une_fois = true;
+                 timeStep = SDL_GetTicks();
             }
-
-            timeStep = SDL_GetTicks();
         }
     }
     /*else if(this->mode == VUE_COTE)

@@ -88,6 +88,7 @@ class SingletonSysteme
         std::string nom_joueur;
         int posX_joueur;
         int posY_joueur;
+        Mix_Chunk* son_collision;
 
         SDL_Rect camera;
 
