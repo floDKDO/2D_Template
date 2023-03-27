@@ -21,8 +21,8 @@ class Tuile
 {
     public:
         //chemin : endroit où la tuile est stockée
-        Tuile(std::string chemin, SDL_Rect position, bool estPassable, bool isWarp);
-        Tuile(std::string chemin, SDL_Rect position, unsigned int nb_images, int espacement_tuiles_x, bool estPassable);
+        Tuile(std::string chemin, SDL_Rect position, bool estPassable, bool isWarp, SDL_Renderer* rendu);
+        Tuile(std::string chemin, SDL_Rect position, unsigned int nb_images, int espacement_tuiles_x, bool estPassable, SDL_Renderer* rendu);
 
         unsigned int nb_images;
 

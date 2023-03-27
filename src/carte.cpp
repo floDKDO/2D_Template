@@ -2,7 +2,7 @@
 
 #include <singleton_systeme.hpp>
 
-Carte::Carte(std::string fichier_carte, bool est_carte_principale)
+Carte::Carte(std::string fichier_carte, bool est_carte_principale, SingletonSysteme* sing_syst)
 {
     this->est_carte_principale = est_carte_principale;
     this->fichier_carte = fichier_carte;
@@ -12,7 +12,7 @@ Carte::Carte(std::string fichier_carte, bool est_carte_principale)
     this->connection_gauche = nullptr;
     this->connection_droite = nullptr;
 
-    this->initTuiles(this->fichier_carte);
+    this->initTuiles(this->fichier_carte, sing_syst);
     this->limite_haut = 0;
     this->limite_gauche = 0;
     this->une_fois = true;
@@ -76,7 +76,7 @@ void Carte::initJson(std::string fichier_carte, SingletonSysteme* sing_syst)
 }
 
 
-void Carte::initTuiles(std::string fichier_carte)
+void Carte::initTuiles(std::string fichier_carte, SingletonSysteme* sing_syst)
 {
     const int TILE_WIDTH = 16;
     const int TILE_HEIGHT = 16;
@@ -132,19 +132,19 @@ void Carte::initTuiles(std::string fichier_carte)
 
             if(tuiles_fichier[i].find("00") != std::string::npos) //00 ou 00(D)
             {
-                this->tuiles.push_back(Tuile("./img/animated_water.png", {x * facteur, y * facteur, TILE_WIDTH * facteur, TILE_HEIGHT * facteur}, 8, 17, false));
+                this->tuiles.push_back(Tuile("./img/animated_water.png", {x * facteur, y * facteur, TILE_WIDTH * facteur, TILE_HEIGHT * facteur}, 8, 17, false, sing_syst->rendu));
             }
             else if(tuiles_fichier[i].find("01") != std::string::npos) //01 ou 01(D)
             {
-                this->tuiles.push_back(Tuile("./img/herbe.png", {x * facteur, y * facteur, TILE_WIDTH * facteur, TILE_HEIGHT * facteur}, true, false));
+                this->tuiles.push_back(Tuile("./img/herbe.png", {x * facteur, y * facteur, TILE_WIDTH * facteur, TILE_HEIGHT * facteur}, true, false, sing_syst->rendu));
             }
             else if(tuiles_fichier[i].find("02") != std::string::npos) //02 ou 02(D) (fait changer de zone)
             {
-                this->tuiles.push_back(Tuile("./img/porte.png", {x * facteur, y * facteur, TILE_WIDTH * facteur, TILE_HEIGHT * facteur}, true, true));
+                this->tuiles.push_back(Tuile("./img/porte.png", {x * facteur, y * facteur, TILE_WIDTH * facteur, TILE_HEIGHT * facteur}, true, true, sing_syst->rendu));
             }
             else if(tuiles_fichier[i].find("03") != std::string::npos) //02 ou 02(D) (fait changer de zone)
             {
-                this->tuiles.push_back(Tuile("./img/stairs.png", {x * facteur, y * facteur, TILE_WIDTH * facteur, TILE_HEIGHT * facteur}, true, true));
+                this->tuiles.push_back(Tuile("./img/stairs.png", {x * facteur, y * facteur, TILE_WIDTH * facteur, TILE_HEIGHT * facteur}, true, true, sing_syst->rendu));
             }
 
             //prochaine tuile

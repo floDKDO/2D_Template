@@ -1,18 +1,24 @@
 #include "tuile.hpp"
 
 //Tuile fixe
-Tuile::Tuile(std::string chemin, SDL_Rect position, bool estPassable, bool isWarp)
+Tuile::Tuile(std::string chemin, SDL_Rect position, bool estPassable, bool isWarp, SDL_Renderer* rendu)
 {
     this->position = position;
     this->estPassable = estPassable;
     this->chemin = chemin;
     this->isAnimated = false;
     this->isWarp = isWarp;
+
+    if((this->texture = IMG_LoadTexture(rendu, this->chemin.c_str())) == nullptr)
+    {
+        std::cerr << IMG_GetError() << std::endl;
+        exit(EXIT_FAILURE);
+    }
 }
 
 
 //Tuile animée
-Tuile::Tuile(std::string chemin, SDL_Rect position, unsigned int nb_images, int espacement_tuiles_x, bool estPassable)
+Tuile::Tuile(std::string chemin, SDL_Rect position, unsigned int nb_images, int espacement_tuiles_x, bool estPassable, SDL_Renderer* rendu)
 {
     this->position = position;
     this->estPassable = estPassable;
@@ -21,17 +27,17 @@ Tuile::Tuile(std::string chemin, SDL_Rect position, unsigned int nb_images, int 
 
     this->nb_images = nb_images;
     this->espacement_tuiles_x = espacement_tuiles_x;
-}
 
-
-void Tuile::draw(SDL_Renderer* rendu, SDL_Rect camera)
-{
     if((this->texture = IMG_LoadTexture(rendu, this->chemin.c_str())) == nullptr)
     {
         std::cerr << IMG_GetError() << std::endl;
         exit(EXIT_FAILURE);
     }
+}
 
+
+void Tuile::draw(SDL_Renderer* rendu, SDL_Rect camera)
+{
     SDL_Rect temp = {this->position.x - camera.x, this->position.y - camera.y, this->position.w, this->position.h};
 
     if(isAnimated == true)
@@ -50,7 +56,6 @@ void Tuile::draw(SDL_Renderer* rendu, SDL_Rect camera)
             exit(EXIT_FAILURE);
         }
     }
-    SDL_DestroyTexture(texture);
 }
 
 

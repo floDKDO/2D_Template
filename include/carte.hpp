@@ -32,7 +32,7 @@ struct carte_warp
 class Carte
 {
     public:
-        Carte(std::string fichier_carte, bool est_carte_principale);
+        Carte(std::string fichier_carte, bool est_carte_principale, SingletonSysteme* sing_syst);
 
         //CHAMPS DU JSON
         unsigned int id_carte;
@@ -59,7 +59,7 @@ class Carte
         std::vector<Tuile> tuiles;
 
         void initJson(std::string fichier_carte, SingletonSysteme* sing_syst);
-        void initTuiles(std::string fichier_carte);
+        void initTuiles(std::string fichier_carte, SingletonSysteme* sing_syst);
         void jouerMusique(void);
         void draw(SDL_Renderer* rendu, SDL_Rect camera);
         void update(Uint32& timeStep, SingletonSysteme* sing_syst);

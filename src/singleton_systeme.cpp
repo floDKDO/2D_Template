@@ -50,9 +50,9 @@ Il faudra créer les images en se basant sur la taille de l'étape 1 et cela sera 
     SDL_StartTextInput();
 
 
-    this->cartes.insert(std::make_pair("toto.map", new Carte("toto.map", true)));
-    this->cartes.insert(std::make_pair("tutu.map", new Carte("tutu.map", false)));
-    this->cartes.insert(std::make_pair("titi.map", new Carte("titi.map", false)));
+    this->cartes.insert(std::make_pair("toto.map", new Carte("toto.map", true, this)));
+    this->cartes.insert(std::make_pair("tutu.map", new Carte("tutu.map", false, this)));
+    this->cartes.insert(std::make_pair("titi.map", new Carte("titi.map", false, this)));
 
     this->cartes["toto.map"]->initJson("toto.json", this);
     this->cartes["tutu.map"]->initJson("tutu.json", this);

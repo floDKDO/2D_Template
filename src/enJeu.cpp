@@ -40,7 +40,7 @@ void EnJeu::update(Uint32& timeStep, SingletonSysteme* sing_syst)
         if(alpha > 0)
         {
             //std::cout << alpha << std::endl;
-            this->alpha -= 51; //51 est un diviseur de 255
+            this->alpha -= 15; //15 est un diviseur de 255
         }
         else
         {
