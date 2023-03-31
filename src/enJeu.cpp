@@ -49,6 +49,14 @@ void EnJeu::update(Uint32& timeStep, SingletonSysteme* sing_syst)
         }
     }
 
+    for(long long unsigned int i = 0; i < carte_actuelle->objects.size(); i++)
+    {
+        if(this->joueur.collision(joueur.position, this->carte_actuelle->objects[i].position) == true)
+        {
+            std::cout << "collision avec un objet !" << std::endl;
+        }
+    }
+
 
     //position que le joueur a lors du changement de carte
     //sert de référence pour savoir si le joueur s'est déplacé ou pas pour modifier en conséquence changement_de_porte
@@ -58,31 +66,31 @@ void EnJeu::update(Uint32& timeStep, SingletonSysteme* sing_syst)
 
     for(long long unsigned int i = 0; i < carte_actuelle->tuiles.size(); i++)
     {
-        if(this->joueur.collision(joueur.position, this->carte_actuelle->tuiles[i]) == true && this->carte_actuelle->tuiles[i].isWarp == true)
+        if(this->joueur.collision(joueur.position, this->carte_actuelle->tuiles[i].position) == true && this->carte_actuelle->tuiles[i].isWarp == true)
         {
             //aller vers la nouvelle carte
             if(changement_de_carte == false)
             {
-                for(long long unsigned int k = 0; k < this->carte_actuelle->warp_cartes_test.size(); k++)
+                for(long long unsigned int k = 0; k < this->carte_actuelle->warp_cartes.size(); k++)
                 {
-                    //std::cout << joueur.position.x << " et " << this->carte_actuelle->warp_cartes_test[k].x_depart;
+                    //std::cout << joueur.position.x << " et " << this->carte_actuelle->warp_cartes[k].x_depart;
 
                     //trouver le warp_event que le joueur a déclenché
-                    if(this->carte_actuelle->warp_cartes_test[k].x_warp >= joueur.position.x
-                    && this->carte_actuelle->warp_cartes_test[k].x_warp <= joueur.position.x + joueur.position.w
-                    && this->carte_actuelle->warp_cartes_test[k].y_warp >= joueur.position.y
-                    && this->carte_actuelle->warp_cartes_test[k].y_warp <= joueur.position.y + joueur.position.h)
+                    if(this->carte_actuelle->warp_cartes[k].x_warp >= joueur.position.x
+                    && this->carte_actuelle->warp_cartes[k].x_warp <= joueur.position.x + joueur.position.w
+                    && this->carte_actuelle->warp_cartes[k].y_warp >= joueur.position.y
+                    && this->carte_actuelle->warp_cartes[k].y_warp <= joueur.position.y + joueur.position.h)
                     {
                         //placer le joueur au bon endroit dans la nouvelle carte
-                        this->joueur.position.x = this->carte_actuelle->warp_cartes_test[k].x_arrive;
-                        this->joueur.position.y = this->carte_actuelle->warp_cartes_test[k].y_arrive;
+                        this->joueur.position.x = this->carte_actuelle->warp_cartes[k].x_arrive;
+                        this->joueur.position.y = this->carte_actuelle->warp_cartes[k].y_arrive;
 
                         previous_x = this->joueur.position.x;
                         previous_y = this->joueur.position.y;
 
                         this->enTransition = true;
 
-                        this->carte_actuelle = this->carte_actuelle->warp_cartes_test[k].warp_carte;
+                        this->carte_actuelle = this->carte_actuelle->warp_cartes[k].warp_carte;
                     }
                 }
                 this->changement_de_carte = true;

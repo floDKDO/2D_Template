@@ -15,5 +15,25 @@
       "y_dest": 20,
       "dest_map": "tutu.map"
     }
+  ],
+  "object_events": [
+   {
+      "id_objet": "OBJ_EVENT_GFX_MAN_1",
+      "graphics": "./img/objet.png",
+      "pos_x": 13,
+      "pos_y": 114,
+      "movement_type": "MOVEMENT_TYPE_WALK_SEQUENCE_DOWN_LEFT_UP_RIGHT",
+      "movement_range_x": 2,
+      "movement_range_y": 2
+    },
+    {
+      "id_objet": "OBJ_EVENT_GFX_BERRY_TREE",
+      "graphics": "./img/objet.png",
+      "pos_x": 10,
+      "pos_y": 5,
+      "movement_type": "MOVEMENT_TYPE_BERRY_TREE_GROWTH",
+      "movement_range_x": 0,
+      "movement_range_y": 0
+    }
   ]
 }

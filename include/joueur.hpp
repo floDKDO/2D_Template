@@ -22,7 +22,7 @@ class Joueur
 {
     public:
         Joueur(unsigned int pv, SDL_Color couleur, SDL_Rect position, mode_affichage mode);
-        bool collision(SDL_Rect dest_joueur, Tuile tuile);
+        bool collision(SDL_Rect dest_joueur, SDL_Rect position);
         void resetAllValues(bool dep[4]);
         void setValue(bool dep[4], int indice);
         void draw(SDL_Renderer* rendu, SDL_Rect camera);

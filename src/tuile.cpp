@@ -9,11 +9,7 @@ Tuile::Tuile(std::string chemin, SDL_Rect position, bool estPassable, bool isWar
     this->isAnimated = false;
     this->isWarp = isWarp;
 
-    if((this->texture = IMG_LoadTexture(rendu, this->chemin.c_str())) == nullptr)
-    {
-        std::cerr << IMG_GetError() << std::endl;
-        exit(EXIT_FAILURE);
-    }
+    NCHK(this->texture = IMG_LoadTexture(rendu, this->chemin.c_str()), IMG_GetError());
 }
 
 
@@ -28,11 +24,7 @@ Tuile::Tuile(std::string chemin, SDL_Rect position, unsigned int nb_images, int 
     this->nb_images = nb_images;
     this->espacement_tuiles_x = espacement_tuiles_x;
 
-    if((this->texture = IMG_LoadTexture(rendu, this->chemin.c_str())) == nullptr)
-    {
-        std::cerr << IMG_GetError() << std::endl;
-        exit(EXIT_FAILURE);
-    }
+    NCHK(this->texture = IMG_LoadTexture(rendu, this->chemin.c_str()), IMG_GetError());
 }
 
 
@@ -42,19 +34,11 @@ void Tuile::draw(SDL_Renderer* rendu, SDL_Rect camera)
 
     if(isAnimated == true)
     {
-        if(SDL_RenderCopy(rendu, this->texture, &(this->srcRect), &temp) < 0)
-        {
-            std::cerr << SDL_GetError() << std::endl;
-            exit(EXIT_FAILURE);
-        }
+        CHK(SDL_RenderCopy(rendu, this->texture, &(this->srcRect), &temp), SDL_GetError());
     }
     else
     {
-        if(SDL_RenderCopy(rendu, this->texture, nullptr, &temp) < 0)
-        {
-            std::cerr << SDL_GetError() << std::endl;
-            exit(EXIT_FAILURE);
-        }
+        CHK(SDL_RenderCopy(rendu, this->texture, nullptr, &temp), SDL_GetError());
     }
 }
 

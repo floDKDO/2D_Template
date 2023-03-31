@@ -9,13 +9,6 @@
 
 #include "singleton_systeme.hpp"
 
-/*enum connection_carte
-{
-    HAUT,
-    BAS,
-    GAUCHE,
-    DROITE
-};*/
 
 class Tuile
 {
@@ -41,10 +34,8 @@ class Tuile
 
         void draw(SDL_Renderer* rendu, SDL_Rect camera);
         void handleEvents(SDL_Event e, SingletonSysteme* sing_syst);
-        bool collision(SDL_Rect dest, int x, int y);
 
         void update(Uint32& timeStep, SingletonSysteme* sing_syst);
-        void clean();
 
     protected:
 

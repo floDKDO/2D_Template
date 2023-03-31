@@ -19,12 +19,12 @@ Joueur::Joueur(unsigned int pv, SDL_Color couleur, SDL_Rect position, mode_affic
     ////////////////////////////
 }
 
-bool Joueur::collision(SDL_Rect dest_joueur, Tuile tuile)
+bool Joueur::collision(SDL_Rect dest_joueur, SDL_Rect position)
 {
-    if(dest_joueur.y + dest_joueur.h > tuile.position.y
-    && dest_joueur.y < tuile.position.y +  + tuile.position.h
-    && dest_joueur.x + dest_joueur.w > tuile.position.x
-    && dest_joueur.x < tuile.position.x + tuile.position.w)
+    if(dest_joueur.y + dest_joueur.h > position.y
+    && dest_joueur.y < position.y + position.h
+    && dest_joueur.x + dest_joueur.w > position.x
+    && dest_joueur.x < position.x + position.w)
     {
         return true;
     }
@@ -187,7 +187,7 @@ void Joueur::update(Uint32& timeStep, SingletonSysteme* sing_syst, std::vector<T
             if(dep[0] == true)
             {
                 copie.y -= 16 * 4; //taille d'une tuile
-                if(collision(copie, tuiles[i]) == true)
+                if(collision(copie, tuiles[i].position) == true)
                 {
                     if(sing_syst->son_active == true)
                     {
@@ -211,7 +211,7 @@ void Joueur::update(Uint32& timeStep, SingletonSysteme* sing_syst, std::vector<T
             else if(dep[1] == true)
             {
                 copie.y += 16 * 4;
-                if(collision(copie, tuiles[i]) == true)
+                if(collision(copie, tuiles[i].position) == true)
                 {
                     if(sing_syst->son_active == true)
                     {
@@ -235,7 +235,7 @@ void Joueur::update(Uint32& timeStep, SingletonSysteme* sing_syst, std::vector<T
             else if(dep[2] == true)
             {
                 copie.x -= 16 * 4;
-                if(collision(copie, tuiles[i]) == true)
+                if(collision(copie, tuiles[i].position) == true)
                 {
                     if(sing_syst->son_active == true)
                     {
@@ -259,7 +259,7 @@ void Joueur::update(Uint32& timeStep, SingletonSysteme* sing_syst, std::vector<T
             else if(dep[3] == true)
             {
                 copie.x += 16 * 4;
-                if(collision(copie, tuiles[i]) == true)
+                if(collision(copie, tuiles[i].position) == true)
                 {
                     if(sing_syst->son_active == true)
                     {

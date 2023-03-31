@@ -68,7 +68,27 @@ void Carte::initJson(std::string fichier_carte, SingletonSysteme* sing_syst)
             arrive_y = (arrive_y * (16 * 4)) - (16 * 4);
 
             struct carte_warp s = {sing_syst->cartes[warp_events_carte[i]["dest_map"]], warp_x, warp_y, arrive_x, arrive_y};
-            this->warp_cartes_test.push_back(s);
+            this->warp_cartes.push_back(s);
+        }
+    }
+
+    json object_events_carte = data["object_events"];
+    if(object_events_carte.is_null() == false)
+    {
+        for(long long unsigned int i = 0; i < object_events_carte.size(); i++)
+        {
+            //std::string id_objet = object_events_carte[i]["id_objet"];
+            std::string graphics = object_events_carte[i]["graphics"];
+            int pos_x = object_events_carte[i]["pos_x"];
+            pos_x = (pos_x * (16 * 4)) - (16 * 4); //16*4 = largeur d'une tuile, -16*4 car on veut l'indice (tuile 0 position 0,0)
+            int pos_y = object_events_carte[i]["pos_y"];
+            pos_y = (pos_y * (16 * 4)) - (16 * 4);
+            SDL_Rect position = {pos_x, pos_y, 64, 64};
+
+            Objet o(graphics, sing_syst->rendu, position);
+            //o.id_objet = id_objet;
+
+            this->objects.push_back(o);
         }
     }
 
@@ -180,6 +200,11 @@ void Carte::draw(SDL_Renderer* rendu, SDL_Rect camera)
     for(long long unsigned int i = 0; i < tuiles.size(); i++)
     {
         this->tuiles[i].draw(rendu, camera);
+    }
+
+    for(long long unsigned int i = 0; i < objects.size(); i++)
+    {
+        this->objects[i].draw(rendu, camera);
     }
 }
 
