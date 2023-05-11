@@ -15,6 +15,7 @@ class Texte
         Texte(std::string texte, std::string police, int taille_police, SDL_Color couleur, SDL_Rect position, SDL_Renderer* rendu, std::string name, bool isDialogue);
         void draw(SDL_Renderer* rendu);
         void update(Uint32& timeStep);
+        void editText(std::string nouveau_texte, SDL_Renderer* rendu);
 
         SDL_Rect position;
         std::string texte;

@@ -21,6 +21,8 @@ enum mode_affichage
 class Joueur
 {
     public:
+
+        //TODO : enlever les "dep" des paramètres
         Joueur(unsigned int pv, SDL_Color couleur, SDL_Rect position, mode_affichage mode);
         bool collision(SDL_Rect dest_joueur, SDL_Rect position);
         void resetAllValues(bool dep[4]);
@@ -28,6 +30,7 @@ class Joueur
         void draw(SDL_Renderer* rendu, SDL_Rect camera);
         void handleEvents(SDL_Event e, SingletonSysteme* sing_syst);
         void update(Uint32& timeStep, SingletonSysteme* sing_syst, std::vector<Tuile> tuiles);
+        void playSoundCollision(Uint32& timeStep, SingletonSysteme* sing_syst);
 
         SDL_Color couleur;
         SDL_Texture* texture;
@@ -35,6 +38,7 @@ class Joueur
         unsigned int pv;
         unsigned int multiplication_vitesse;
         mode_affichage mode;
+        bool une_fois;
 
         // Que pour mode vue de cote
         bool surSol;

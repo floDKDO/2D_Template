@@ -38,15 +38,19 @@ bool Inputfield::collision(SDL_Rect dest, int x, int y)
     }
 }
 
+//TODO : la texture est réutilisée après texte.draw (qui la destroy) : c'est pas bon...
 void Inputfield::draw(SDL_Renderer* rendu)
 {
     texte.draw(rendu);
+
+    texte.editText(texte.texte, rendu);
 
     zone_de_texte.w = texte.surface->w;
     zone_de_texte.h = texte.surface->h;
 
     CHK(SDL_SetRenderDrawColor(rendu, 255, 255, 255, 255), SDL_GetError());
     CHK(SDL_RenderFillRect(rendu, &fond_de_texte), SDL_GetError());
+    //BUG ICI
     CHK(SDL_RenderCopy(rendu, texte.texture, nullptr, &zone_de_texte), SDL_GetError());
 
     if(texte.texte.length() == 0)

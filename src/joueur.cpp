@@ -175,9 +175,30 @@ void Joueur::handleEvents(SDL_Event e, SingletonSysteme* sing_syst)
     }*/
 }
 
+void Joueur::playSoundCollision(Uint32& timeStep, SingletonSysteme* sing_syst)
+{
+    if(sing_syst->son_active == true)
+    {
+        if(une_fois == true)
+        {
+            CHK(Mix_PlayChannel(1, sing_syst->son_collision, 0), Mix_GetError());
+            une_fois = false;
+        }
+        if(une_fois == false)
+        {
+            if(SDL_GetTicks() - timeStep > 200)
+            {
+                CHK(Mix_PlayChannel(1, sing_syst->son_collision, 0), Mix_GetError());
+                timeStep = SDL_GetTicks();
+            }
+        }
+    }
+}
+
+
 void Joueur::update(Uint32& timeStep, SingletonSysteme* sing_syst, std::vector<Tuile> tuiles)
 {
-    static bool une_fois = true;
+    //TODO : faire en sorte que le "une_fois" ne soit pas à la fois dans playSoundCollision et dans update
     for(long long unsigned int i = 0; i < tuiles.size(); i++)
     {
         //on regarde les collisions uniquement avec les tuiles non passables
@@ -189,22 +210,7 @@ void Joueur::update(Uint32& timeStep, SingletonSysteme* sing_syst, std::vector<T
                 copie.y -= 16 * 4; //taille d'une tuile
                 if(collision(copie, tuiles[i].position) == true)
                 {
-                    if(sing_syst->son_active == true)
-                    {
-                        if(une_fois == true)
-                        {
-                            CHK(Mix_PlayChannel(1, sing_syst->son_collision, 0), Mix_GetError());
-                            une_fois = false;
-                        }
-                        if(une_fois == false)
-                        {
-                            if(SDL_GetTicks() - timeStep > 200)
-                            {
-                                CHK(Mix_PlayChannel(1, sing_syst->son_collision, 0), Mix_GetError());
-                                timeStep = SDL_GetTicks();
-                            }
-                        }
-                    }
+                    playSoundCollision(timeStep, sing_syst);
                     this->dep[0] = false;
                 }
             }
@@ -213,22 +219,7 @@ void Joueur::update(Uint32& timeStep, SingletonSysteme* sing_syst, std::vector<T
                 copie.y += 16 * 4;
                 if(collision(copie, tuiles[i].position) == true)
                 {
-                    if(sing_syst->son_active == true)
-                    {
-                        if(une_fois == true)
-                        {
-                            CHK(Mix_PlayChannel(1, sing_syst->son_collision, 0), Mix_GetError());
-                            une_fois = false;
-                        }
-                        if(une_fois == false)
-                        {
-                            if(SDL_GetTicks() - timeStep > 200)
-                            {
-                                CHK(Mix_PlayChannel(1, sing_syst->son_collision, 0), Mix_GetError());
-                                timeStep = SDL_GetTicks();
-                            }
-                        }
-                    }
+                    playSoundCollision(timeStep, sing_syst);
                     this->dep[1] = false;
                 }
             }
@@ -237,22 +228,7 @@ void Joueur::update(Uint32& timeStep, SingletonSysteme* sing_syst, std::vector<T
                 copie.x -= 16 * 4;
                 if(collision(copie, tuiles[i].position) == true)
                 {
-                    if(sing_syst->son_active == true)
-                    {
-                        if(une_fois == true)
-                        {
-                            CHK(Mix_PlayChannel(1, sing_syst->son_collision, 0), Mix_GetError());
-                            une_fois = false;
-                        }
-                        if(une_fois == false)
-                        {
-                            if(SDL_GetTicks() - timeStep > 200)
-                            {
-                                CHK(Mix_PlayChannel(1, sing_syst->son_collision, 0), Mix_GetError());
-                                timeStep = SDL_GetTicks();
-                            }
-                        }
-                    }
+                    playSoundCollision(timeStep, sing_syst);
                     this->dep[2] = false;
                 }
             }
@@ -261,22 +237,7 @@ void Joueur::update(Uint32& timeStep, SingletonSysteme* sing_syst, std::vector<T
                 copie.x += 16 * 4;
                 if(collision(copie, tuiles[i].position) == true)
                 {
-                    if(sing_syst->son_active == true)
-                    {
-                        if(une_fois == true)
-                        {
-                            CHK(Mix_PlayChannel(1, sing_syst->son_collision, 0), Mix_GetError());
-                            une_fois = false;
-                        }
-                        if(une_fois == false)
-                        {
-                            if(SDL_GetTicks() - timeStep > 200)
-                            {
-                                CHK(Mix_PlayChannel(1, sing_syst->son_collision, 0), Mix_GetError());
-                                timeStep = SDL_GetTicks();
-                            }
-                        }
-                    }
+                    playSoundCollision(timeStep, sing_syst);
                     this->dep[3] = false;
                 }
             }
@@ -295,25 +256,25 @@ void Joueur::update(Uint32& timeStep, SingletonSysteme* sing_syst, std::vector<T
             {
                 this->position.y -= 16 * 4; //taille d'une tuile
                 une_fois = true;
-                 timeStep = SDL_GetTicks();
+                timeStep = SDL_GetTicks();
             }
             else if(this->dep[1] == true)
             {
                 this->position.y += 16 * 4;
                 une_fois = true;
-                 timeStep = SDL_GetTicks();
+                timeStep = SDL_GetTicks();
             }
             else if(this->dep[2] == true)
             {
                 this->position.x -= 16 * 4;
                 une_fois = true;
-                 timeStep = SDL_GetTicks();
+                timeStep = SDL_GetTicks();
             }
             else if(this->dep[3] == true)
             {
                 this->position.x += 16 * 4;
                 une_fois = true;
-                 timeStep = SDL_GetTicks();
+                timeStep = SDL_GetTicks();
             }
         }
     }

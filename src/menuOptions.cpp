@@ -6,7 +6,7 @@ MenuOptions::MenuOptions(SingletonSysteme* sing_syst)
 ,texte_touche_gauche("Gauche", "./font/lazy.ttf", 30, BLANC, {420, 260, 150, 60}, sing_syst->rendu, "texte touche_gauche", false)
 ,texte_touche_droite("Droite", "./font/lazy.ttf", 30, BLANC, {420, 340, 150, 60}, sing_syst->rendu, "texte touche_droite", false)
 ,mode_ecran("MODE ECRAN", "./font/lazy.ttf", 30, BLANC, {575, 500, 200, 100}, sing_syst->rendu, "texte mode_ecran", false)
-,bouton_options_fenetre(ROUGE, VERT, BLEU, GRIS, {575, 600, 200, 100}, &fonc_bouton_options_fenetre, "", 30, sing_syst->rendu, "Bouton options fenetre")
+,bouton_options_fenetre(ROUGE, VERT, BLEU, GRIS, {575, 600, 200, 100}, &fonc_bouton_options_fenetre, " ", 30, sing_syst->rendu, "Bouton options fenetre")
 ,bouton_options_retour(ROUGE, VERT, BLEU, GRIS, {100, 600, 200, 100}, &fonc_bouton_options_retour, "RETOUR", 30, sing_syst->rendu, "Bouton options retour")
 ,bouton_options_touche_haut(ROUGE, VERT, BLEU, GRIS, {600, 100, 150, 60}, &fonc_choix_touche, SDL_GetKeyName(sing_syst->touches.dep_haut), 30, sing_syst->rendu, "Bouton options touche haut")
 ,bouton_options_touche_bas(ROUGE, VERT, BLEU, GRIS, {600, 180, 150, 60}, &fonc_choix_touche, SDL_GetKeyName(sing_syst->touches.dep_bas), 30, sing_syst->rendu, "Bouton options touche bas")
@@ -21,10 +21,14 @@ MenuOptions::MenuOptions(SingletonSysteme* sing_syst)
 ,toggle_sound(BLANC, GRIS, GRIS, GRIS, {280, 100, 50, 50}, "SON", 30, &fonc_toggle_son, sing_syst->son_active, sing_syst->rendu, "toggle sound")
 ,toggle_musique(BLANC, GRIS, GRIS, GRIS, {1000, 100, 50, 50}, "MUSIQUE", 30, &fonc_toggle_musique, sing_syst->musique_activee, sing_syst->rendu, "toggle musique")
 {
-    if(sing_syst->mode_fenetre == PLEIN_ECRAN)
-        bouton_options_fenetre.texte.texte = "PLEIN ECRAN";
-    else if(sing_syst->mode_fenetre == FENETRE)
-        bouton_options_fenetre.texte.texte = "FENETRE";
+    if(sing_syst->mode_fenetre == FENETRE)
+    {
+        bouton_options_fenetre.texte.editText("FENETRE", sing_syst->rendu);
+    }
+    else if(sing_syst->mode_fenetre == PLEIN_ECRAN)
+    {
+        bouton_options_fenetre.texte.editText("PLEIN-ECRAN", sing_syst->rendu);
+    }
 
     if(sing_syst->manette != nullptr)
     {
@@ -159,11 +163,11 @@ void MenuOptions::fonc_bouton_options_fenetre(SingletonSysteme* sing_syst, Selec
     }
     if(sing_syst->mode_fenetre == FENETRE)
     {
-        dynamic_cast<Bouton*>(bouton)->texte.texte = "FENETRE";
+        dynamic_cast<Bouton*>(bouton)->texte.editText("FENETRE", sing_syst->rendu);
     }
     else if(sing_syst->mode_fenetre == PLEIN_ECRAN)
     {
-        dynamic_cast<Bouton*>(bouton)->texte.texte = "PLEIN-ECRAN";
+        dynamic_cast<Bouton*>(bouton)->texte.editText("PLEIN-ECRAN", sing_syst->rendu);
     }
 }
 
@@ -186,26 +190,49 @@ void MenuOptions::fonc_choix_touche(SingletonSysteme* sing_syst, Selectionnable*
             {
                 case SDL_KEYDOWN:
 
-                    if(e.key.keysym.sym != sing_syst->touches.dep_haut
-                    && e.key.keysym.sym != sing_syst->touches.dep_bas
-                    && e.key.keysym.sym != sing_syst->touches.dep_gauche
-                    && e.key.keysym.sym != sing_syst->touches.dep_droite)
+                    if (b->name.find("haut") != std::string::npos)
                     {
-                        if((b->texte.texte = SDL_GetKeyName(e.key.keysym.sym)).empty() == true)
+                        if(e.key.keysym.sym != sing_syst->touches.dep_bas
+                        && e.key.keysym.sym != sing_syst->touches.dep_gauche
+                        && e.key.keysym.sym != sing_syst->touches.dep_droite)
                         {
-                            std::cerr << "No name" << std::endl;
-                            exit(EXIT_FAILURE);
-                        }
-                        if (b->name.find("haut") != std::string::npos)
                             sing_syst->touches.dep_haut = e.key.keysym.sym;
-                        else if (b->name.find("bas") != std::string::npos)
+                            b->texte.editText(SDL_GetKeyName(e.key.keysym.sym), sing_syst->rendu);
+                            quitter = true;
+                        }
+                    }
+                    else if (b->name.find("bas") != std::string::npos)
+                    {
+                        if(e.key.keysym.sym != sing_syst->touches.dep_haut
+                        && e.key.keysym.sym != sing_syst->touches.dep_gauche
+                        && e.key.keysym.sym != sing_syst->touches.dep_droite)
+                        {
                             sing_syst->touches.dep_bas = e.key.keysym.sym;
-                        else if (b->name.find("gauche") != std::string::npos)
+                            b->texte.editText(SDL_GetKeyName(e.key.keysym.sym), sing_syst->rendu);
+                            quitter = true;
+                        }
+                    }
+                    else if (b->name.find("gauche") != std::string::npos)
+                    {
+                        if(e.key.keysym.sym != sing_syst->touches.dep_haut
+                        && e.key.keysym.sym != sing_syst->touches.dep_bas
+                        && e.key.keysym.sym != sing_syst->touches.dep_droite)
+                        {
                             sing_syst->touches.dep_gauche = e.key.keysym.sym;
-                        else if (b->name.find("droite") != std::string::npos)
+                            b->texte.editText(SDL_GetKeyName(e.key.keysym.sym), sing_syst->rendu);
+                            quitter = true;
+                        }
+                    }
+                    else if (b->name.find("droite") != std::string::npos)
+                    {
+                        if(e.key.keysym.sym != sing_syst->touches.dep_haut
+                        && e.key.keysym.sym != sing_syst->touches.dep_bas
+                        && e.key.keysym.sym != sing_syst->touches.dep_gauche)
+                        {
                             sing_syst->touches.dep_droite = e.key.keysym.sym;
-
-                        quitter = true;
+                            b->texte.editText(SDL_GetKeyName(e.key.keysym.sym), sing_syst->rendu);
+                            quitter = true;
+                        }
                     }
                     break;
 
