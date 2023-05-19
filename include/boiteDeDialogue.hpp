@@ -27,7 +27,8 @@ class BoiteDeDialogue
         Mix_Chunk* click_sound;
 
         SDL_Rect petit_carre;
-        bool dialogue_fini;
+        bool un_dialogue_fini;
+        bool tous_dialogues_finis;
         Uint8 alpha_carre;
 
         long long unsigned int indice_texte_courant;

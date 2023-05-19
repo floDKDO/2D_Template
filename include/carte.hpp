@@ -11,8 +11,8 @@
 #include <SDL2/SDL_ttf.h>
 #include <SDL2/SDL_mixer.h>
 
-#include <tuile.hpp>
-#include <objet.hpp>
+#include "tuile.hpp"
+#include "objet.hpp"
 
 #include <../json.hpp>
 using json = nlohmann::json;
@@ -46,6 +46,9 @@ class Carte
         Carte* connection_droite;
 
         std::vector<struct carte_warp> warp_cartes; //contient les cartes atteignables par warp, x_warp, y_warp, x_arrive et y_arrive
+
+
+        std::vector<ElementCarte*> elementCarte;
 
         std::vector<Objet> objects;
         ////////////////////////////////

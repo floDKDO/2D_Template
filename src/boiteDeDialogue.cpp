@@ -4,7 +4,8 @@ BoiteDeDialogue::BoiteDeDialogue(SDL_Color couleur, SDL_Rect position, std::vect
 {
     this->position = position;
     this->petit_carre = {position.x + position.w - 30, position.y + position.h - 30, 20, 20};
-    this->dialogue_fini = false;
+    this->un_dialogue_fini = false;
+    this->tous_dialogues_finis = false;
     this->alpha_carre = 0;
     this->name = name;
     this->couleur = couleur;
@@ -14,6 +15,7 @@ BoiteDeDialogue::BoiteDeDialogue(SDL_Color couleur, SDL_Rect position, std::vect
     for(long long unsigned int i = 0; i < textes.size(); i++)
     {
         textes_defilement.push_back(Texte(textes[i], "./font/lazy.ttf", taille_police, BLANC, position, rendu, "texte de " + name, true));
+        std::cout << textes_defilement[i].texteDefilement << std::endl;
         this->textes_defilement[i].wrapLength = position.w;
     }
     indice_texte_courant = 0; //indice du texte a afficher (d'abord = 0)
@@ -26,9 +28,10 @@ void BoiteDeDialogue::draw(SDL_Renderer* rendu)
     CHK(SDL_SetRenderDrawColor(rendu, this->couleur.r, this->couleur.g, this->couleur.b, this->couleur.a), SDL_GetError());
     CHK(SDL_RenderFillRect(rendu, &(this->position)), SDL_GetError());
 
-    this->textes_defilement[indice_texte_courant].draw(rendu);
+    if(textes_defilement.size() - 1 >= indice_texte_courant)
+        this->textes_defilement[indice_texte_courant].draw(rendu);
 
-    if(this->dialogue_fini == true)
+    if(this->un_dialogue_fini == true)
     {
         CHK(SDL_SetRenderDrawColor(rendu, 255, 255, 255, alpha_carre), SDL_GetError());
         CHK(SDL_RenderFillRect(rendu, &(this->petit_carre)), SDL_GetError());
@@ -39,7 +42,7 @@ void BoiteDeDialogue::draw(SDL_Renderer* rendu)
 void BoiteDeDialogue::handleEvents(SDL_Event e, SingletonSysteme* sing_syst)
 {
     //si le texte est complètement affiché
-    if(dialogue_fini == true)
+    if(un_dialogue_fini == true)
     {
         int x, y; //position x et y de la souris
         SDL_GetMouseState(&x, &y);
@@ -53,8 +56,9 @@ void BoiteDeDialogue::handleEvents(SDL_Event e, SingletonSysteme* sing_syst)
                 }
                 if(textes_defilement.size() - 1 > indice_texte_courant) //on incrémente uniquement s'il y a encore au moins un élément dans le vector
                     indice_texte_courant += 1;
+                else indice_texte_courant = textes_defilement.size(); //dernier appui qui ferme la boite
 
-                this->dialogue_fini = false;
+                this->un_dialogue_fini = false;
             }
         }
     }
@@ -63,21 +67,29 @@ void BoiteDeDialogue::handleEvents(SDL_Event e, SingletonSysteme* sing_syst)
 
 void BoiteDeDialogue::update(Uint32& timeStep)
 {
-    this->textes_defilement[indice_texte_courant].update(timeStep);
-    if(this->textes_defilement[indice_texte_courant].texteDefilement.length() == this->textes_defilement[indice_texte_courant].texte.length())
+    if(textes_defilement.size() - 1 >= indice_texte_courant)
     {
-        this->dialogue_fini = true;
+        this->textes_defilement[indice_texte_courant].update(timeStep);
+        if(this->textes_defilement[indice_texte_courant].texteDefilement.length() == this->textes_defilement[indice_texte_courant].texte.length())
+        {
+            this->un_dialogue_fini = true;
 
-        //toutes les demis secondes, alterner opaque et transparent
-        if(SDL_GetTicks() - timeStep > 500)
-        {
-            alpha_carre = 255;
+            //toutes les demis secondes, alterner opaque et transparent
+            if(SDL_GetTicks() - timeStep > 500)
+            {
+                alpha_carre = 255;
+            }
+            if(SDL_GetTicks() - timeStep > 1000)
+            {
+                alpha_carre = 0;
+                timeStep = SDL_GetTicks();
+            }
         }
-        if(SDL_GetTicks() - timeStep > 1000)
-        {
-            alpha_carre = 0;
-            timeStep = SDL_GetTicks();
-        }
+    }
+    else
+    {
+        //tous les dialogues ont été affiché donc on peut cacher la boite de dialogue
+        this->tous_dialogues_finis = true;
     }
 }
 

@@ -11,6 +11,7 @@ Joueur::Joueur(unsigned int pv, SDL_Color couleur, SDL_Rect position, mode_affic
     }
     this->multiplication_vitesse = 1; //de base, vitesse*1
     this->mode = mode;
+    this->interagit = false;
 
     // Que pour mode vue de cote
     /*this->surSol = true;
@@ -19,22 +20,7 @@ Joueur::Joueur(unsigned int pv, SDL_Color couleur, SDL_Rect position, mode_affic
     ////////////////////////////
 }
 
-bool Joueur::collision(SDL_Rect dest_joueur, SDL_Rect position)
-{
-    if(dest_joueur.y + dest_joueur.h > position.y
-    && dest_joueur.y < position.y + position.h
-    && dest_joueur.x + dest_joueur.w > position.x
-    && dest_joueur.x < position.x + position.w)
-    {
-        return true;
-    }
-    else
-    {
-        return false;
-    }
-}
-
-void Joueur::resetAllValues(bool dep[4])
+void Joueur::resetAllValues()
 {
     for(int i = 0; i < 4; i++)
     {
@@ -42,9 +28,9 @@ void Joueur::resetAllValues(bool dep[4])
     }
 }
 
-void Joueur::setValue(bool dep[4], int indice)
+void Joueur::setValue(int indice)
 {
-    resetAllValues(dep);
+    resetAllValues();
     dep[indice] = true;
 }
 
@@ -63,43 +49,48 @@ void Joueur::handleEvents(SDL_Event e, SingletonSysteme* sing_syst)
         {
             if(e.key.keysym.sym == sing_syst->touches.dep_haut)
             {
-                setValue(dep, 0);
+                setValue(0);
             }
             else if(e.key.keysym.sym == sing_syst->touches.dep_bas)
             {
-                setValue(dep, 1);
+                setValue(1);
             }
             else if(e.key.keysym.sym == sing_syst->touches.dep_gauche)
             {
-                setValue(dep, 2);
+                setValue(2);
             }
             else if(e.key.keysym.sym == sing_syst->touches.dep_droite)
             {
-                setValue(dep, 3);
+                setValue(3);
+            }
+            else if(e.key.keysym.sym == SDLK_SPACE)
+            {
+                interagit = true;
             }
         }
         else if(e.type == SDL_CONTROLLERBUTTONDOWN)
         {
             if(e.cbutton.button == sing_syst->touches_1.dep_haut)
             {
-                setValue(dep, 0);
+                setValue(0);
             }
             else if(e.cbutton.button == sing_syst->touches_1.dep_bas)
             {
-                setValue(dep, 1);
+                setValue(1);
             }
             else if(e.cbutton.button == sing_syst->touches_1.dep_gauche)
             {
-                setValue(dep, 2);
+                setValue(2);
             }
             else if(e.cbutton.button == sing_syst->touches_1.dep_droite)
             {
-                setValue(dep, 3);
+                setValue(3);
             }
         }
         else if(e.type == SDL_KEYUP || e.type == SDL_CONTROLLERBUTTONUP)
         {
-            resetAllValues(this->dep);
+            resetAllValues();
+            this->interagit = false;
         }
     }
     /*else if(this->mode == VUE_COTE)
@@ -175,31 +166,10 @@ void Joueur::handleEvents(SDL_Event e, SingletonSysteme* sing_syst)
     }*/
 }
 
-void Joueur::playSoundCollision(Uint32& timeStep, SingletonSysteme* sing_syst)
-{
-    if(sing_syst->son_active == true)
-    {
-        if(une_fois == true)
-        {
-            CHK(Mix_PlayChannel(1, sing_syst->son_collision, 0), Mix_GetError());
-            une_fois = false;
-        }
-        if(une_fois == false)
-        {
-            if(SDL_GetTicks() - timeStep > 200)
-            {
-                CHK(Mix_PlayChannel(1, sing_syst->son_collision, 0), Mix_GetError());
-                timeStep = SDL_GetTicks();
-            }
-        }
-    }
-}
 
-
-void Joueur::update(Uint32& timeStep, SingletonSysteme* sing_syst, std::vector<Tuile> tuiles)
+void Joueur::update(Uint32& timeStep, SingletonSysteme* sing_syst/*, std::vector<Tuile> tuiles*/)
 {
-    //TODO : faire en sorte que le "une_fois" ne soit pas à la fois dans playSoundCollision et dans update
-    for(long long unsigned int i = 0; i < tuiles.size(); i++)
+    /*for(long long unsigned int i = 0; i < tuiles.size(); i++)
     {
         //on regarde les collisions uniquement avec les tuiles non passables
         if(tuiles[i].estPassable == false)
@@ -242,7 +212,7 @@ void Joueur::update(Uint32& timeStep, SingletonSysteme* sing_syst, std::vector<T
                 }
             }
         }
-    }
+    }*/
 
     //pour la sauvegarde de la position du joueur
     sing_syst->posX_joueur = this->position.x;
@@ -255,25 +225,21 @@ void Joueur::update(Uint32& timeStep, SingletonSysteme* sing_syst, std::vector<T
             if(this->dep[0] == true)
             {
                 this->position.y -= 16 * 4; //taille d'une tuile
-                une_fois = true;
                 timeStep = SDL_GetTicks();
             }
             else if(this->dep[1] == true)
             {
                 this->position.y += 16 * 4;
-                une_fois = true;
                 timeStep = SDL_GetTicks();
             }
             else if(this->dep[2] == true)
             {
                 this->position.x -= 16 * 4;
-                une_fois = true;
                 timeStep = SDL_GetTicks();
             }
             else if(this->dep[3] == true)
             {
                 this->position.x += 16 * 4;
-                une_fois = true;
                 timeStep = SDL_GetTicks();
             }
         }

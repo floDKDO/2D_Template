@@ -8,6 +8,7 @@ Tuile::Tuile(std::string chemin, SDL_Rect position, bool estPassable, bool isWar
     this->chemin = chemin;
     this->isAnimated = false;
     this->isWarp = isWarp;
+    this->collisionAvecJoueur = false;
 
     NCHK(this->texture = IMG_LoadTexture(rendu, this->chemin.c_str()), IMG_GetError());
 }
@@ -20,6 +21,7 @@ Tuile::Tuile(std::string chemin, SDL_Rect position, unsigned int nb_images, int 
     this->estPassable = estPassable;
     this->chemin = chemin;
     this->isAnimated = true;
+    this->collisionAvecJoueur = false;
 
     this->nb_images = nb_images;
     this->espacement_tuiles_x = espacement_tuiles_x;
@@ -53,4 +55,11 @@ void Tuile::update(Uint32& timeStep, SingletonSysteme* sing_syst)
         int sprite = seconds % nb_images;
         this->srcRect = {espacement_tuiles_x * sprite, 0, 16, 16};
     }
+}
+
+
+void Tuile::handleEvents(SDL_Event e, SingletonSysteme* sing_syst)
+{
+    (void)e;
+    (void)sing_syst;
 }

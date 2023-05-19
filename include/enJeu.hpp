@@ -11,6 +11,7 @@
 #include "joueur.hpp"
 #include "tuile.hpp"
 #include "carte.hpp"
+#include "boiteDeDialogue.hpp"
 #include <vector>
 
 class EnJeu
@@ -26,7 +27,25 @@ class EnJeu
 
         Joueur joueur;
 
+        BoiteDeDialogue* b;
+
+        bool dialogue;
+
+
         bool changement_de_carte;
+
+        void playSoundCollision(Uint32& timeStep, SingletonSysteme* sing_syst);
+        bool une_fois; //pour son collision : collision entre une tuile et le joueur
+
+        bool collision(SDL_Rect dest_joueur, SDL_Rect position);
+        bool estACote(SDL_Rect dest_joueur, SDL_Rect position);
+        bool estDedans(SDL_Rect dest_joueur, SDL_Rect position);
+
+        void checkCollisionsPlayerMap(Uint32& timeStep, SingletonSysteme* sing_syst);
+        void checkPlayerTakesObjects();
+        void gereJoueurPrendWarp();
+        void gereJoueurSortExtremite();
+        void gereSelonTransition(Uint32& timeStep, SingletonSysteme* sing_syst);
 
         void draw(SDL_Renderer* rendu, SDL_Rect camera);
         void update(Uint32& timeStep, SingletonSysteme* sing_syst);

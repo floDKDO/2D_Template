@@ -20,8 +20,8 @@
    {
       "id_objet": "OBJ_EVENT_GFX_MAN_1",
       "graphics": "./img/objet.png",
-      "pos_x": 13,
-      "pos_y": 114,
+      "pos_x": 1,
+      "pos_y": 7,
       "movement_type": "MOVEMENT_TYPE_WALK_SEQUENCE_DOWN_LEFT_UP_RIGHT",
       "movement_range_x": 2,
       "movement_range_y": 2

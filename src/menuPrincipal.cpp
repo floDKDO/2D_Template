@@ -7,6 +7,7 @@ MenuPrincipal::MenuPrincipal(SingletonSysteme* sing_syst)
 ,bouton_nouvelle_partie(ROUGE, VERT, BLEU, GRIS, {550, 350, 200, 100}, &fonc_bouton_nouvelle_partie, "NOUVELLE PARTIE", 30, sing_syst->rendu, "Bouton nouvelle partie")
 ,bouton_options(ROUGE, VERT, BLEU, GRIS, {550, 475, 200, 100}, &fonc_bouton_options, "OPTIONS", 30, sing_syst->rendu, "Bouton options")
 ,bouton_quitter(ROUGE, VERT, BLEU, GRIS, {550, 600, 200, 100}, &fonc_bouton_quitter, "QUITTER", 30, sing_syst->rendu, "Bouton quitter")
+/*,b({0, 255, 255, 255}, {300, 300, 300, 100}, {"Vous avez obtenu objet X!", "Bravo!"}, 30, sing_syst->rendu, "boite A")*/
 {
     if(sing_syst->nom_joueur.empty() == true)
     {
@@ -64,11 +65,13 @@ void MenuPrincipal::draw(SDL_Renderer* rendu, SingletonSysteme* sing_syst)
     bouton_options.draw(rendu);
     bouton_quitter.draw(rendu);
     this->titre.draw(rendu);
+    //b.draw(rendu);
 }
 
 void MenuPrincipal::update(Uint32& timeStep)
 {
     (void)timeStep;
+    //b.update(timeStep);
 }
 
 
@@ -89,6 +92,7 @@ void MenuPrincipal::handleEvents(SDL_Event e, SingletonSysteme* sing_syst)
         }
         s->handleEvents(e, sing_syst);
     }
+    //b.handleEvents(e, sing_syst);
 }
 
 

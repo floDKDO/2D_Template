@@ -8,9 +8,10 @@
 #include <SDL2/SDL_mixer.h>
 
 #include "singleton_systeme.hpp"
+#include "elementCarte.hpp"
 
 
-class Tuile
+class Tuile : public ElementCarte
 {
     public:
         //chemin : endroit où la tuile est stockée
@@ -22,15 +23,11 @@ class Tuile
         //espacement des tuiles dans le tilesheet
         int espacement_tuiles_x;
 
-        SDL_Rect position;
         SDL_Rect srcRect;
         SDL_Texture* texture;
-        bool estPassable;
         bool isAnimated;
 
         bool isWarp;
-
-        std::string chemin;
 
         void draw(SDL_Renderer* rendu, SDL_Rect camera);
         void handleEvents(SDL_Event e, SingletonSysteme* sing_syst);

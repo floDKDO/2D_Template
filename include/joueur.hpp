@@ -22,15 +22,12 @@ class Joueur
 {
     public:
 
-        //TODO : enlever les "dep" des paramètres
         Joueur(unsigned int pv, SDL_Color couleur, SDL_Rect position, mode_affichage mode);
-        bool collision(SDL_Rect dest_joueur, SDL_Rect position);
-        void resetAllValues(bool dep[4]);
-        void setValue(bool dep[4], int indice);
+        void resetAllValues();
+        void setValue(int indice);
         void draw(SDL_Renderer* rendu, SDL_Rect camera);
         void handleEvents(SDL_Event e, SingletonSysteme* sing_syst);
-        void update(Uint32& timeStep, SingletonSysteme* sing_syst, std::vector<Tuile> tuiles);
-        void playSoundCollision(Uint32& timeStep, SingletonSysteme* sing_syst);
+        void update(Uint32& timeStep, SingletonSysteme* sing_syst/*, std::vector<Tuile> tuiles*/);
 
         SDL_Color couleur;
         SDL_Texture* texture;
@@ -38,7 +35,6 @@ class Joueur
         unsigned int pv;
         unsigned int multiplication_vitesse;
         mode_affichage mode;
-        bool une_fois;
 
         // Que pour mode vue de cote
         bool surSol;
@@ -47,6 +43,7 @@ class Joueur
         ////////////////////////////
 
         bool dep[4]; //dep[0] = HAUT, dep[1] = BAS, dep[2] = GAUCHE, dep[3] = DROITE
+        bool interagit; //il appuie sur le bouton d'intéraction
 
     protected:
 

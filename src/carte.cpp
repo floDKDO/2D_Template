@@ -92,6 +92,11 @@ void Carte::initJson(std::string fichier_carte, SingletonSysteme* sing_syst)
         }
     }
 
+    for(long long unsigned int i = 0; i < this->objects.size(); i++)
+    {
+        this->elementCarte.push_back(&this->objects[i]);
+    }
+
     fichier.close();
 }
 
@@ -182,6 +187,11 @@ void Carte::initTuiles(std::string fichier_carte, SingletonSysteme* sing_syst)
 	this->limite_droite = x_max + (TILE_WIDTH * facteur); //on ajoute une tuile : quand on quitte la carte, le joueur change de carte
 	this->limite_bas = y_max + (TILE_HEIGHT * facteur); //idem
 
+    for(long long unsigned int i = 0; i < this->tuiles.size(); i++)
+    {
+        this->elementCarte.push_back(&this->tuiles[i]);
+    }
+
     fichier.close();
 }
 
@@ -197,14 +207,9 @@ void Carte::jouerMusique(void)
 
 void Carte::draw(SDL_Renderer* rendu, SDL_Rect camera)
 {
-    for(long long unsigned int i = 0; i < tuiles.size(); i++)
+    for(long long unsigned int i = 0; i < elementCarte.size(); i++)
     {
-        this->tuiles[i].draw(rendu, camera);
-    }
-
-    for(long long unsigned int i = 0; i < objects.size(); i++)
-    {
-        this->objects[i].draw(rendu, camera);
+        this->elementCarte[i]->draw(rendu, camera);
     }
 }
 
@@ -212,8 +217,8 @@ void Carte::draw(SDL_Renderer* rendu, SDL_Rect camera)
 void Carte::update(Uint32& timeStep, SingletonSysteme* sing_syst)
 {
     //jouerMusique();
-    for(long long unsigned int i = 0; i < tuiles.size(); i++)
+    for(long long unsigned int i = 0; i < elementCarte.size(); i++)
     {
-        this->tuiles[i].update(timeStep, sing_syst);
+        this->elementCarte[i]->update(timeStep, sing_syst);
     }
 }

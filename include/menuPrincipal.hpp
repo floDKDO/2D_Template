@@ -12,6 +12,7 @@
 #include "selectionnable.hpp"
 #include "bouton.hpp"
 #include "texte.hpp"
+#include "boiteDeDialogue.hpp"
 
 #include "singleton_systeme.hpp"
 
@@ -27,6 +28,8 @@ class MenuPrincipal
         Bouton bouton_nouvelle_partie;
         Bouton bouton_options;
         Bouton bouton_quitter;
+
+        //BoiteDeDialogue b;
 
         //static sinon probleme de type avec le pointeur de fonction
         static void fonc_bouton_quitter(SingletonSysteme* sing_syst, Selectionnable* bouton);

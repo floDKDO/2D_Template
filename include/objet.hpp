@@ -8,17 +8,16 @@
 #include <SDL2/SDL_mixer.h>
 
 #include "singleton_systeme.hpp"
+#include "elementCarte.hpp"
 
 
-class Objet
+class Objet : public ElementCarte
 {
     public:
         Objet(std::string chemin, SDL_Renderer* rendu, SDL_Rect position);
         Objet(SDL_Renderer* rendu, SDL_Color couleur, SDL_Rect position);
 
         std::string nom_objet;
-        std::string chemin;
-        SDL_Rect position; //pos_x et pos_y
         SDL_Rect srcRect;
         SDL_Texture* texture;
         SDL_Color couleur;

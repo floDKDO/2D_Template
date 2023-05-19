@@ -49,7 +49,6 @@ int main(int argc, char* argv[])
             std::cout << "Name: " << name[i]["x"] << std::endl;
     */
 
-
     SingletonSysteme::instance().charger();
     SingletonSysteme::instance().init();
 
