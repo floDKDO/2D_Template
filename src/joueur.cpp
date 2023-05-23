@@ -1,8 +1,7 @@
 #include "joueur.hpp"
 
-Joueur::Joueur(unsigned int pv, SDL_Color couleur, SDL_Rect position, mode_affichage mode)
+Joueur::Joueur(SDL_Color couleur, SDL_Rect position, mode_affichage mode)
 {
-    this->pv = pv;
     this->couleur = couleur;
     this->position = position;
     for(int i = 0; i < 4; i++)
@@ -12,6 +11,33 @@ Joueur::Joueur(unsigned int pv, SDL_Color couleur, SDL_Rect position, mode_affic
     this->multiplication_vitesse = 1; //de base, vitesse*1
     this->mode = mode;
     this->interagit = false;
+    this->orientation = 0; //HAUT
+
+    this->isAnimated = false;
+
+    // Que pour mode vue de cote
+    /*this->surSol = true;
+    this->vitesseDeChute = 0;
+    this->hauteur_saut = 12;*/
+    ////////////////////////////
+}
+
+Joueur::Joueur(std::string chemin, SDL_Rect position, mode_affichage mode, SDL_Renderer* rendu)
+{
+    this->chemin = chemin;
+    this->position = position;
+    for(int i = 0; i < 4; i++)
+    {
+        this->dep[i] = false;
+    }
+    this->multiplication_vitesse = 1; //de base, vitesse*1
+    this->mode = mode;
+    this->interagit = false;
+    this->orientation = 0; //HAUT
+
+    this->isAnimated = true;
+
+    NCHK(this->texture = IMG_LoadTexture(rendu, this->chemin.c_str()), IMG_GetError());
 
     // Que pour mode vue de cote
     /*this->surSol = true;
@@ -32,13 +58,24 @@ void Joueur::setValue(int indice)
 {
     resetAllValues();
     dep[indice] = true;
+    orientation = indice;
 }
 
 void Joueur::draw(SDL_Renderer* rendu, SDL_Rect camera)
 {
-    CHK(SDL_SetRenderDrawColor(rendu, this->couleur.r, this->couleur.g, this->couleur.b, this->couleur.a), SDL_GetError());
     SDL_Rect temp = {position.x - camera.x, position.y - camera.y, position.w, position.h};
-    CHK(SDL_RenderFillRect(rendu, &(temp)), SDL_GetError());
+
+    if(this->isAnimated == false)
+    {
+        CHK(SDL_SetRenderDrawColor(rendu, this->couleur.r, this->couleur.g, this->couleur.b, this->couleur.a), SDL_GetError());
+        CHK(SDL_RenderFillRect(rendu, &(temp)), SDL_GetError());
+    }
+    else
+    {
+        if(orientation == 3)
+            CHK(SDL_RenderCopyEx(rendu, this->texture, &(this->srcRect), &temp, 0, nullptr, SDL_FLIP_HORIZONTAL), SDL_GetError());
+        else CHK(SDL_RenderCopy(rendu, this->texture, &(this->srcRect), &temp), SDL_GetError());
+    }
 }
 
 void Joueur::handleEvents(SDL_Event e, SingletonSysteme* sing_syst)
@@ -213,6 +250,62 @@ void Joueur::update(Uint32& timeStep, SingletonSysteme* sing_syst/*, std::vector
             }
         }
     }*/
+
+    //std::cout << this->orientation << std::endl;
+
+    if(isAnimated == true)
+    {
+        if(dep[0] == true || dep[1] == true || dep[2] == true || dep[3] == true)
+        {
+            Uint32 seconds = SDL_GetTicks() / 200; //200 => rapidité de l'animation
+            int sprite = seconds % 3;
+            switch(orientation)
+            {
+                case 0:
+                    this->srcRect = {15 * 1, 22 * sprite, 14, 21};
+                    break;
+
+                case 1:
+                    this->srcRect = {15 * 0, 22 * sprite, 14, 21};
+                    break;
+
+                case 2:
+                    this->srcRect = {15 * 2, 22 * sprite, 14, 21};
+                    break;
+
+                case 3:
+                    this->srcRect = {15 * 2, 22 * sprite, 14, 21};
+                    break;
+
+                default:
+                    break;
+            }
+        }
+        else
+        {
+            switch(orientation)
+            {
+                case 0:
+                    this->srcRect = {15 * 1, 0, 14, 21};
+                    break;
+
+                case 1:
+                    this->srcRect = {15 * 0, 0, 14, 21};
+                    break;
+
+                case 2:
+                    this->srcRect = {15 * 2, 0, 14, 21};
+                    break;
+
+                case 3:
+                    this->srcRect = {15 * 2, 0, 14, 21};
+                    break;
+
+                default:
+                    break;
+            }
+        }
+    }
 
     //pour la sauvegarde de la position du joueur
     sing_syst->posX_joueur = this->position.x;

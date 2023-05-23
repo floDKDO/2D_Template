@@ -38,7 +38,7 @@ class EnJeu
         bool une_fois; //pour son collision : collision entre une tuile et le joueur
 
         bool collision(SDL_Rect dest_joueur, SDL_Rect position);
-        bool estACote(SDL_Rect dest_joueur, SDL_Rect position);
+        bool estACote(Joueur joueur, SDL_Rect position);
         bool estDedans(SDL_Rect dest_joueur, SDL_Rect position);
 
         void checkCollisionsPlayerMap(Uint32& timeStep, SingletonSysteme* sing_syst);

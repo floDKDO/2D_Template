@@ -17,7 +17,7 @@
 class BoiteDeDialogue
 {
     public:
-        BoiteDeDialogue(SDL_Color couleur, SDL_Rect position, std::vector<std::string> textes, int taille_police, SDL_Renderer* rendu, std::string name);
+        BoiteDeDialogue(SDL_Color couleur, SDL_Rect position, std::string textes, int taille_police, SDL_Renderer* rendu, std::string name);
 
         std::vector<Texte> textes_defilement;
         SDL_Rect position;
@@ -32,6 +32,9 @@ class BoiteDeDialogue
         Uint8 alpha_carre;
 
         long long unsigned int indice_texte_courant;
+
+        bool replace(std::string& str, const std::string& from, const std::string& to);
+        std::vector<std::string> split(std::string s, std::string delimiter);
 
         void draw(SDL_Renderer* rendu);
         void handleEvents(SDL_Event e, SingletonSysteme* sing_syst);

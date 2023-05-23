@@ -25,6 +25,7 @@
   "object_events": [
    {
       "id_objet": "OBJ_EVENT_GFX_MAN_1",
+      "name": "Objet 3",
       "graphics": "./img/objet.png",
       "pos_x": 13,
       "pos_y": 114,
@@ -34,6 +35,7 @@
     },
     {
       "id_objet": "OBJ_EVENT_GFX_BERRY_TREE",
+      "name": "Objet 4",
       "graphics": "./img/objet.png",
       "pos_x": 19,
       "pos_y": 5,

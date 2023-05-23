@@ -8,6 +8,8 @@ Objet::Objet(std::string chemin, SDL_Renderer* rendu, SDL_Rect position)
     this->estPassable = false;
     this->collisionAvecJoueur = false;
 
+    this->nom_objet = "TEST";
+
     NCHK(this->texture = IMG_LoadTexture(rendu, this->chemin.c_str()), IMG_GetError());
 }
 
@@ -19,6 +21,8 @@ Objet::Objet(SDL_Renderer* rendu, SDL_Color couleur, SDL_Rect position)
     this->position = position;
     this->estPassable = false;
     this->collisionAvecJoueur = false;
+
+    this->nom_objet = "TEST";
 }
 
 

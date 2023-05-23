@@ -69,6 +69,8 @@ class SingletonSysteme
             return *instance;
         }
 
+        const std::string string_obtention_objet = "Vous avez obtenu objet {ITEM_NAME}!\nBravo!";
+
         void init();
         void sauvegarder();
         void charger();

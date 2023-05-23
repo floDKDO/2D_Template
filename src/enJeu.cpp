@@ -1,7 +1,7 @@
 #include "enJeu.hpp"
 
 EnJeu::EnJeu(SingletonSysteme* sing_syst)
-:joueur(100, BLEU, {0, 0, 64, 64}, VUE_DESSUS)
+:joueur("./img/spritesheet.png", {0, 0, 64, 64}, VUE_DESSUS, sing_syst->rendu)
 {
     (void)sing_syst;
     this->carte_actuelle = sing_syst->cartes["toto.map"];
@@ -9,6 +9,7 @@ EnJeu::EnJeu(SingletonSysteme* sing_syst)
     this->carre_noir = {0, 0, LONGUEUR_FENETRE, HAUTEUR_FENETRE};
     this->alpha = 255;
     this->dialogue = false;
+    this->enTransition = false;
 }
 
 bool EnJeu::collision(SDL_Rect dest_joueur, SDL_Rect position)
@@ -27,12 +28,12 @@ bool EnJeu::collision(SDL_Rect dest_joueur, SDL_Rect position)
 }
 
 
-bool EnJeu::estACote(SDL_Rect dest_joueur, SDL_Rect position)
+bool EnJeu::estACote(Joueur joueur, SDL_Rect position)
 {
-    if((dest_joueur.x + dest_joueur.w == position.x && dest_joueur.y == position.y)
-    || (dest_joueur.y + dest_joueur.h == position.y && dest_joueur.x == position.x)
-    || (dest_joueur.x == position.x + position.w && dest_joueur.y == position.y)
-    || (dest_joueur.y == position.y + position.h && dest_joueur.x == position.x))
+    if((joueur.position.x + joueur.position.w == position.x && joueur.position.y == position.y && joueur.orientation == 3)
+    || (joueur.position.y + joueur.position.h == position.y && joueur.position.x == position.x && joueur.orientation == 1)
+    || (joueur.position.x == position.x + position.w && joueur.position.y == position.y && joueur.orientation == 2)
+    || (joueur.position.y == position.y + position.h && joueur.position.x == position.x && joueur.orientation == 0))
     {
         return true;
     }
@@ -69,11 +70,8 @@ void EnJeu::draw(SDL_Renderer* rendu, SDL_Rect camera)
     this->carte_actuelle->draw(rendu, camera);
     this->joueur.draw(rendu, camera);
 
-
     if(this->dialogue == true)
         b->draw(rendu);
-
-
 
     if(this->enTransition == true)
     {
@@ -81,6 +79,17 @@ void EnJeu::draw(SDL_Renderer* rendu, SDL_Rect camera)
         SDL_RenderFillRect(rendu, &this->carre_noir);
     }
 }
+
+
+bool replace(std::string& str, const std::string& from, const std::string& to)
+{
+    size_t start_pos = str.find(from);
+    if(start_pos == std::string::npos)
+        return false;
+    str.replace(start_pos, from.length(), to);
+    return true;
+}
+
 
 
 void EnJeu::checkCollisionsPlayerMap(Uint32& timeStep, SingletonSysteme* sing_syst)
@@ -110,11 +119,15 @@ void EnJeu::checkCollisionsPlayerMap(Uint32& timeStep, SingletonSysteme* sing_sy
                 if(o != nullptr)
                 {
                     //si le joueur est à une case de l'objet
-                    if(estACote(this->joueur.position, this->carte_actuelle->elementCarte[i]->position) == true
+                    if(estACote(this->joueur, this->carte_actuelle->elementCarte[i]->position) == true
                     && this->joueur.interagit == true)
                     {
                         std::cout << "objet obtenu !" << std::endl;
-                        b = new BoiteDeDialogue({0, 255, 255, 255}, {300, 300, 300, 100}, {"Vous avez obtenu objet X!", "Bravo!"}, 30, sing_syst->rendu, "boite A");
+
+                        b = new BoiteDeDialogue({0, 255, 255, 255}, {300, 300, 300, 100}, sing_syst->string_obtention_objet, 30, sing_syst->rendu, "boite A");
+                        for(long long unsigned int i = 0; i < b->textes_defilement.size(); i++)
+                            replace(b->textes_defilement[i].texte, "{ITEM_NAME}", o->nom_objet);
+
                         this->dialogue = true;
                         collisionEnCours = false;
                         this->carte_actuelle->elementCarte[i]->collisionAvecJoueur = false;

@@ -1,6 +1,7 @@
 #include "boiteDeDialogue.hpp"
 
-BoiteDeDialogue::BoiteDeDialogue(SDL_Color couleur, SDL_Rect position, std::vector<std::string> textes, int taille_police, SDL_Renderer* rendu, std::string name)
+
+BoiteDeDialogue::BoiteDeDialogue(SDL_Color couleur, SDL_Rect position, std::string textes, int taille_police, SDL_Renderer* rendu, std::string name)
 {
     this->position = position;
     this->petit_carre = {position.x + position.w - 30, position.y + position.h - 30, 20, 20};
@@ -11,16 +12,45 @@ BoiteDeDialogue::BoiteDeDialogue(SDL_Color couleur, SDL_Rect position, std::vect
     this->couleur = couleur;
     NCHK(this->click_sound = Mix_LoadWAV("./sound/select.ogg"), Mix_GetError());
 
+    //obtenir chaque ligne de dialogue
+    std::vector<std::string> temp = split(textes, "\n");
+
     //textes et textes_defilement ont la meme taille
-    for(long long unsigned int i = 0; i < textes.size(); i++)
+    for(long long unsigned int i = 0; i < temp.size(); i++)
     {
-        textes_defilement.push_back(Texte(textes[i], "./font/lazy.ttf", taille_police, BLANC, position, rendu, "texte de " + name, true));
+        textes_defilement.push_back(Texte(temp[i], "./font/lazy.ttf", taille_police, BLANC, position, rendu, "texte de " + name, true));
         std::cout << textes_defilement[i].texteDefilement << std::endl;
         this->textes_defilement[i].wrapLength = position.w;
     }
     indice_texte_courant = 0; //indice du texte a afficher (d'abord = 0)
 }
 
+
+std::vector<std::string> BoiteDeDialogue::split(std::string s, std::string delimiter)
+{
+    size_t pos_start = 0, pos_end, delim_len = delimiter.length();
+    std::string token;
+    std::vector<std::string> res;
+
+    while ((pos_end = s.find(delimiter, pos_start)) != std::string::npos) {
+        token = s.substr (pos_start, pos_end - pos_start);
+        pos_start = pos_end + delim_len;
+        res.push_back (token);
+    }
+
+    res.push_back (s.substr (pos_start));
+    return res;
+}
+
+
+bool BoiteDeDialogue::replace(std::string& str, const std::string& from, const std::string& to)
+{
+    size_t start_pos = str.find(from);
+    if(start_pos == std::string::npos)
+        return false;
+    str.replace(start_pos, from.length(), to);
+    return true;
+}
 
 
 void BoiteDeDialogue::draw(SDL_Renderer* rendu)
@@ -49,6 +79,21 @@ void BoiteDeDialogue::handleEvents(SDL_Event e, SingletonSysteme* sing_syst)
         if(e.type == SDL_MOUSEBUTTONDOWN && e.button.button == SDL_BUTTON_LEFT)
         {
             if(collision(this->position, x, y) == true)
+            {
+                if(sing_syst->son_active == true)
+                {
+                    CHK(Mix_PlayChannel(1, click_sound, 0), Mix_GetError());
+                }
+                if(textes_defilement.size() - 1 > indice_texte_courant) //on incrémente uniquement s'il y a encore au moins un élément dans le vector
+                    indice_texte_courant += 1;
+                else indice_texte_courant = textes_defilement.size(); //dernier appui qui ferme la boite
+
+                this->un_dialogue_fini = false;
+            }
+        }
+        else if(e.type == SDL_KEYDOWN)
+        {
+            if(e.key.keysym.sym == SDLK_RETURN || e.key.keysym.sym == SDLK_SPACE)
             {
                 if(sing_syst->son_active == true)
                 {

@@ -79,6 +79,7 @@ void Carte::initJson(std::string fichier_carte, SingletonSysteme* sing_syst)
         {
             //std::string id_objet = object_events_carte[i]["id_objet"];
             std::string graphics = object_events_carte[i]["graphics"];
+            std::string name = object_events_carte[i]["name"];
             int pos_x = object_events_carte[i]["pos_x"];
             pos_x = (pos_x * (16 * 4)) - (16 * 4); //16*4 = largeur d'une tuile, -16*4 car on veut l'indice (tuile 0 position 0,0)
             int pos_y = object_events_carte[i]["pos_y"];
@@ -86,6 +87,7 @@ void Carte::initJson(std::string fichier_carte, SingletonSysteme* sing_syst)
             SDL_Rect position = {pos_x, pos_y, 64, 64};
 
             Objet o(graphics, sing_syst->rendu, position);
+            o.nom_objet = name;
             //o.id_objet = id_objet;
 
             this->objects.push_back(o);
