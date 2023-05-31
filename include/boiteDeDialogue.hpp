@@ -1,15 +1,9 @@
 #ifndef __BOITE__DE__DIALOGUE__HPP__
 #define __BOITE__DE__DIALOGUE__HPP__
 
-#include <iostream>
-#include <SDL2/SDL.h>
-#include <SDL2/SDL_image.h>
-#include <SDL2/SDL_ttf.h>
-#include <SDL2/SDL_mixer.h>
-
 #include "texte.hpp"
-
 #include "singleton_systeme.hpp"
+
 #include <vector>
 
 //texte + carré
@@ -25,17 +19,14 @@ class BoiteDeDialogue
         std::string name;
         SDL_Color couleur;
         Mix_Chunk* click_sound;
-
         SDL_Rect petit_carre;
         bool un_dialogue_fini;
         bool tous_dialogues_finis;
         Uint8 alpha_carre;
-
         long long unsigned int indice_texte_courant;
 
-        bool replace(std::string& str, const std::string& from, const std::string& to);
         std::vector<std::string> split(std::string s, std::string delimiter);
-
+        void interactionBoite(SingletonSysteme* sing_syst);
         void draw(SDL_Renderer* rendu);
         void handleEvents(SDL_Event e, SingletonSysteme* sing_syst);
         void update(Uint32& timeStep);

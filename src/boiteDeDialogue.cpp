@@ -19,20 +19,20 @@ BoiteDeDialogue::BoiteDeDialogue(SDL_Color couleur, SDL_Rect position, std::stri
     for(long long unsigned int i = 0; i < temp.size(); i++)
     {
         textes_defilement.push_back(Texte(temp[i], "./font/lazy.ttf", taille_police, BLANC, position, rendu, "texte de " + name, true));
-        std::cout << textes_defilement[i].texteDefilement << std::endl;
         this->textes_defilement[i].wrapLength = position.w;
     }
     indice_texte_courant = 0; //indice du texte a afficher (d'abord = 0)
 }
 
-
+//cette fonction va prendre chaque ligne de "textes" séparée par un \n et mettre chacune dans le std::vector en retour de fonction
 std::vector<std::string> BoiteDeDialogue::split(std::string s, std::string delimiter)
 {
     size_t pos_start = 0, pos_end, delim_len = delimiter.length();
     std::string token;
     std::vector<std::string> res;
 
-    while ((pos_end = s.find(delimiter, pos_start)) != std::string::npos) {
+    while ((pos_end = s.find(delimiter, pos_start)) != std::string::npos)
+    {
         token = s.substr (pos_start, pos_end - pos_start);
         pos_start = pos_end + delim_len;
         res.push_back (token);
@@ -40,16 +40,6 @@ std::vector<std::string> BoiteDeDialogue::split(std::string s, std::string delim
 
     res.push_back (s.substr (pos_start));
     return res;
-}
-
-
-bool BoiteDeDialogue::replace(std::string& str, const std::string& from, const std::string& to)
-{
-    size_t start_pos = str.find(from);
-    if(start_pos == std::string::npos)
-        return false;
-    str.replace(start_pos, from.length(), to);
-    return true;
 }
 
 
@@ -68,6 +58,19 @@ void BoiteDeDialogue::draw(SDL_Renderer* rendu)
     }
 }
 
+void BoiteDeDialogue::interactionBoite(SingletonSysteme* sing_syst)
+{
+    if(sing_syst->son_active == true)
+    {
+        CHK(Mix_PlayChannel(1, click_sound, 0), Mix_GetError());
+    }
+    if(textes_defilement.size() - 1 > indice_texte_courant) //on incrémente uniquement s'il y a encore au moins un élément dans le vector
+        indice_texte_courant += 1;
+    else indice_texte_courant = textes_defilement.size(); //dernier appui qui ferme la boite
+
+    this->un_dialogue_fini = false;
+}
+
 
 void BoiteDeDialogue::handleEvents(SDL_Event e, SingletonSysteme* sing_syst)
 {
@@ -79,32 +82,12 @@ void BoiteDeDialogue::handleEvents(SDL_Event e, SingletonSysteme* sing_syst)
         if(e.type == SDL_MOUSEBUTTONDOWN && e.button.button == SDL_BUTTON_LEFT)
         {
             if(collision(this->position, x, y) == true)
-            {
-                if(sing_syst->son_active == true)
-                {
-                    CHK(Mix_PlayChannel(1, click_sound, 0), Mix_GetError());
-                }
-                if(textes_defilement.size() - 1 > indice_texte_courant) //on incrémente uniquement s'il y a encore au moins un élément dans le vector
-                    indice_texte_courant += 1;
-                else indice_texte_courant = textes_defilement.size(); //dernier appui qui ferme la boite
-
-                this->un_dialogue_fini = false;
-            }
+                interactionBoite(sing_syst);
         }
         else if(e.type == SDL_KEYDOWN)
         {
             if(e.key.keysym.sym == SDLK_RETURN || e.key.keysym.sym == SDLK_SPACE)
-            {
-                if(sing_syst->son_active == true)
-                {
-                    CHK(Mix_PlayChannel(1, click_sound, 0), Mix_GetError());
-                }
-                if(textes_defilement.size() - 1 > indice_texte_courant) //on incrémente uniquement s'il y a encore au moins un élément dans le vector
-                    indice_texte_courant += 1;
-                else indice_texte_courant = textes_defilement.size(); //dernier appui qui ferme la boite
-
-                this->un_dialogue_fini = false;
-            }
+                interactionBoite(sing_syst);
         }
     }
 }
@@ -133,7 +116,7 @@ void BoiteDeDialogue::update(Uint32& timeStep)
     }
     else
     {
-        //tous les dialogues ont été affiché donc on peut cacher la boite de dialogue
+        //tous les dialogues ont été affichés donc on peut cacher la boite de dialogue
         this->tous_dialogues_finis = true;
     }
 }

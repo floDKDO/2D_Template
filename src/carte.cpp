@@ -50,6 +50,11 @@ void Carte::initJson(std::string fichier_carte, SingletonSysteme* sing_syst)
                 this->connection_gauche = sing_syst->cartes[connections_carte[i]["map"]];
             else if(connections_carte[i]["direction"] == "right")
                 this->connection_droite = sing_syst->cartes[connections_carte[i]["map"]];
+
+            int offset_x = connections_carte[i]["x_offset"];
+            offset_x = (offset_x * (16 * 4)) - (16 * 4); //16*4 = largeur d'une tuile, -16*4 car on veut l'indice (tuile 0 position 0,0)
+            int offset_y = connections_carte[i]["y_offset"];
+            offset_y = (offset_y * (16 * 4)) - (16 * 4);
         }
     }
 

@@ -6,7 +6,6 @@ Objet::Objet(std::string chemin, SDL_Renderer* rendu, SDL_Rect position)
     this->has_image = true;
     this->position = position;
     this->estPassable = false;
-    this->collisionAvecJoueur = false;
 
     this->nom_objet = "TEST";
 
@@ -20,7 +19,6 @@ Objet::Objet(SDL_Renderer* rendu, SDL_Color couleur, SDL_Rect position)
     this->has_image = false;
     this->position = position;
     this->estPassable = false;
-    this->collisionAvecJoueur = false;
 
     this->nom_objet = "TEST";
 }

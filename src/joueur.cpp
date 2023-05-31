@@ -14,6 +14,7 @@ Joueur::Joueur(SDL_Color couleur, SDL_Rect position, mode_affichage mode)
     this->orientation = 0; //HAUT
 
     this->isAnimated = false;
+    this->je_peux_marcher = true;
 
     // Que pour mode vue de cote
     /*this->surSol = true;
@@ -36,6 +37,7 @@ Joueur::Joueur(std::string chemin, SDL_Rect position, mode_affichage mode, SDL_R
     this->orientation = 0; //HAUT
 
     this->isAnimated = true;
+    this->je_peux_marcher = true;
 
     NCHK(this->texture = IMG_LoadTexture(rendu, this->chemin.c_str()), IMG_GetError());
 
@@ -204,55 +206,8 @@ void Joueur::handleEvents(SDL_Event e, SingletonSysteme* sing_syst)
 }
 
 
-void Joueur::update(Uint32& timeStep, SingletonSysteme* sing_syst/*, std::vector<Tuile> tuiles*/)
+void Joueur::update(Uint32& timeStep, SingletonSysteme* sing_syst)
 {
-    /*for(long long unsigned int i = 0; i < tuiles.size(); i++)
-    {
-        //on regarde les collisions uniquement avec les tuiles non passables
-        if(tuiles[i].estPassable == false)
-        {
-            SDL_Rect copie = this->position;
-            if(dep[0] == true)
-            {
-                copie.y -= 16 * 4; //taille d'une tuile
-                if(collision(copie, tuiles[i].position) == true)
-                {
-                    playSoundCollision(timeStep, sing_syst);
-                    this->dep[0] = false;
-                }
-            }
-            else if(dep[1] == true)
-            {
-                copie.y += 16 * 4;
-                if(collision(copie, tuiles[i].position) == true)
-                {
-                    playSoundCollision(timeStep, sing_syst);
-                    this->dep[1] = false;
-                }
-            }
-            else if(dep[2] == true)
-            {
-                copie.x -= 16 * 4;
-                if(collision(copie, tuiles[i].position) == true)
-                {
-                    playSoundCollision(timeStep, sing_syst);
-                    this->dep[2] = false;
-                }
-            }
-            else if(dep[3] == true)
-            {
-                copie.x += 16 * 4;
-                if(collision(copie, tuiles[i].position) == true)
-                {
-                    playSoundCollision(timeStep, sing_syst);
-                    this->dep[3] = false;
-                }
-            }
-        }
-    }*/
-
-    //std::cout << this->orientation << std::endl;
-
     if(isAnimated == true)
     {
         if(dep[0] == true || dep[1] == true || dep[2] == true || dep[3] == true)
@@ -315,25 +270,29 @@ void Joueur::update(Uint32& timeStep, SingletonSysteme* sing_syst/*, std::vector
     {
         if(SDL_GetTicks() - timeStep > (80 / this->multiplication_vitesse))
         {
-            if(this->dep[0] == true)
+            if(je_peux_marcher == true)
             {
-                this->position.y -= 16 * 4; //taille d'une tuile
-                timeStep = SDL_GetTicks();
-            }
-            else if(this->dep[1] == true)
-            {
-                this->position.y += 16 * 4;
-                timeStep = SDL_GetTicks();
-            }
-            else if(this->dep[2] == true)
-            {
-                this->position.x -= 16 * 4;
-                timeStep = SDL_GetTicks();
-            }
-            else if(this->dep[3] == true)
-            {
-                this->position.x += 16 * 4;
-                timeStep = SDL_GetTicks();
+                if(this->dep[0] == true)
+                {
+                    this->position.y -= 16 * 4; //taille d'une tuile
+                    timeStep = SDL_GetTicks();
+                }
+                else if(this->dep[1] == true)
+                {
+                    this->position.y += 16 * 4;
+                    timeStep = SDL_GetTicks();
+                }
+                else if(this->dep[2] == true)
+                {
+                    this->position.x -= 16 * 4;
+                    timeStep = SDL_GetTicks();
+                }
+                else if(this->dep[3] == true)
+                {
+                    this->position.x += 16 * 4;
+                    timeStep = SDL_GetTicks();
+                }
+
             }
         }
     }

@@ -4,7 +4,6 @@
 #include <iostream>
 #include <sstream>
 #include <vector>
-#include <algorithm>
 
 #include <SDL2/SDL.h>
 #include <SDL2/SDL_image.h>
@@ -44,24 +43,16 @@ class Carte
         Carte* connection_bas;
         Carte* connection_gauche;
         Carte* connection_droite;
-
         std::vector<struct carte_warp> warp_cartes; //contient les cartes atteignables par warp, x_warp, y_warp, x_arrive et y_arrive
-
-
         std::vector<ElementCarte*> elementCarte;
-
         std::vector<Objet> objects;
         ////////////////////////////////
-
         int limite_haut;
         int limite_bas;
         int limite_gauche;
         int limite_droite;
-
         bool une_fois;
-
         bool est_carte_principale; //ce booléen est inutile mais il permet de dire que la carte principale n'a pas de connexions
-
         std::vector<Tuile> tuiles;
 
         void initJson(std::string fichier_carte, SingletonSysteme* sing_syst);

@@ -11,43 +11,10 @@
 #include "enJeu.hpp"
 
 
-/* Algo de modification de taille de fenetre
-1. Partir d'une taille de résolution de base et donc d'une taille de fenetre de base (ex : 1280 * 720)
-=> fenetre = SDL_CreateWindow("Mon jeu", SDL_WINDOWPOS_CENTERED, SDL_WINDOWPOS_CENTERED, LONGUEUR_FENETRE, 1280, 720)
-=> SDL_RenderSetLogicalSize(rendu, 1280, 720)
-2. Quand la fenetre sera redimensionnée (soit avec SDL_WINDOW_RESIZABLE en flag de SDL_CreateWindow, ou avec SDL_SetWindowSize()) :
-   tous les éléments seront eux aussi redimensionnés en accord avec la résolution
-Il faudra créer les images en se basant sur la taille de l'étape 1 et cela sera bon pour toutes les autres tailles avec cet algo
-*/
-
-
 int main(int argc, char* argv[])
 {
     (void)argc;
     (void)argv;
-
-    /* //un champ qui possède une seule valeur
-
-        std::ifstream f("base.json");
-        //Créer l'objet json contenant tous les champs du fichier
-        json data = json::parse(f);
-        //récupérer la valeur écrite après "name":, si non trouvé, alors afficher "not found"
-        std::string name = data.value("name", "not found");
-        // Print the value
-        std::cout << "Name: " << name << std::endl;
-    */
-
-      /*  //un champ qui possède plusieurs valeurs contenant plusieurs champs (un tableau) : ici on récupère x
-
-        std::ifstream f("base.json");
-        //Créer l'objet json contenant tous les champs du fichier
-        json data = json::parse(f);
-        //récupérer les valeurs écrites après "warp_events":
-        json name = data["warp_events"];
-        // Print the values
-        for(long long unsigned int i = 0; i < name.size(); i++)
-            std::cout << "Name: " << name[i]["x"] << std::endl;
-    */
 
     SingletonSysteme::instance().charger();
     SingletonSysteme::instance().init();
@@ -109,8 +76,6 @@ int main(int argc, char* argv[])
                 enJeu.handleEvents(e, sing_syst);
             }
         }
-
-        //std::cout << "camera : " << sing_syst->camera.x << std::endl;
 
         CHK(SDL_SetRenderDrawColor(rendu, 0, 0, 0, 255), SDL_GetError());
         CHK(SDL_RenderClear(rendu), SDL_GetError());

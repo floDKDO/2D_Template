@@ -65,13 +65,11 @@ void MenuPrincipal::draw(SDL_Renderer* rendu, SingletonSysteme* sing_syst)
     bouton_options.draw(rendu);
     bouton_quitter.draw(rendu);
     this->titre.draw(rendu);
-    //b.draw(rendu);
 }
 
 void MenuPrincipal::update(Uint32& timeStep)
 {
     (void)timeStep;
-    //b.update(timeStep);
 }
 
 
@@ -92,7 +90,6 @@ void MenuPrincipal::handleEvents(SDL_Event e, SingletonSysteme* sing_syst)
         }
         s->handleEvents(e, sing_syst);
     }
-    //b.handleEvents(e, sing_syst);
 }
 
 

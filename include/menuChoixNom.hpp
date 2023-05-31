@@ -1,12 +1,7 @@
 #ifndef __MENU__CHOIX__NOM__HPP__
 #define __MENU__CHOIX__NOM__HPP__
 
-#include <iostream>
 #include <vector>
-#include <SDL2/SDL.h>
-#include <SDL2/SDL_image.h>
-#include <SDL2/SDL_ttf.h>
-#include <SDL2/SDL_mixer.h>
 
 #include "selectionnable.hpp"
 #include "bouton.hpp"
@@ -21,7 +16,6 @@ class MenuChoixNom
         MenuChoixNom(SingletonSysteme* sing_syst);
 
         std::vector<Selectionnable*> ui; //contient tous les boutons du menu
-
         Inputfield inputfield;
         Texte demande_nom;
         Bouton bouton_valider;
@@ -29,10 +23,8 @@ class MenuChoixNom
         //static sinon probleme de type avec le pointeur de fonction
         static void fonc_bouton_fin_demande_nom(SingletonSysteme* sing_syst, Selectionnable* bouton);
         static void fonc_inputfield_nom_joueur(SingletonSysteme* sing_syst, Selectionnable* inputfield);
-
         void resetSelected(void);
         Selectionnable* getSelected(void);
-
         void draw(SDL_Renderer* rendu, SingletonSysteme* sing_syst);
         void handleEvents(SDL_Event e, SingletonSysteme* sing_syst);
         void update(Uint32& timeStep);

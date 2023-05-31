@@ -10,7 +10,9 @@
   "connections": [
     {
       "direction": "down",
-      "map": "toto.map"
+      "map": "toto.map",
+      "x_offset": 10,
+      "y_offset": 10
     }
   ],
   "warp_events": [

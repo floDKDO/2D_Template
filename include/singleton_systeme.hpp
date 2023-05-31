@@ -71,16 +71,9 @@ class SingletonSysteme
 
         const std::string string_obtention_objet = "Vous avez obtenu objet {ITEM_NAME}!\nBravo!";
 
-        void init();
-        void sauvegarder();
-        void charger();
-        void supprimmer();
-        void destroy();
-
         touches_clavier touches;
         touches_manette touches_1;
         SDL_GameController* manette;
-
         SDL_Window* fenetre;
         SDL_Renderer* rendu;
         etat_jeu etat;
@@ -91,14 +84,16 @@ class SingletonSysteme
         int posX_joueur;
         int posY_joueur;
         Mix_Chunk* son_collision;
-
         SDL_Rect camera;
-
         std::map<std::string, Carte*> cartes;
-
         //TODO : attribut Etat*
-
         std::fstream fichier_sauvegarde;
+
+        void init();
+        void sauvegarder();
+        void charger();
+        void supprimmer();
+        void destroy();
 
     protected:
 

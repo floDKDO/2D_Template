@@ -3,6 +3,15 @@
 #include <carte.hpp>
 
 
+/* Algo de modification de taille de fenetre
+1. Partir d'une taille de résolution de base et donc d'une taille de fenetre de base (ex : 1280 * 720)
+=> fenetre = SDL_CreateWindow("Mon jeu", SDL_WINDOWPOS_CENTERED, SDL_WINDOWPOS_CENTERED, LONGUEUR_FENETRE, 1280, 720)
+=> SDL_RenderSetLogicalSize(rendu, 1280, 720)
+2. Quand la fenetre sera redimensionnée (soit avec SDL_WINDOW_RESIZABLE en flag de SDL_CreateWindow, ou avec SDL_SetWindowSize()) :
+   tous les éléments seront eux aussi redimensionnés en accord avec la résolution
+Il faudra créer les images en se basant sur la taille de l'étape 1 et cela sera bon pour toutes les autres tailles avec cet algo
+*/
+
 //initialise les librairies (SDL2, SDL_TTF, SDL_Mixer, SDL_IMG), créer la fenêtre et le rendu, met l'état du jeu en MENU_PRINCIPAL et active les entrées au clavier pour les inputfields
 void SingletonSysteme::init(void)
 {
@@ -29,15 +38,6 @@ void SingletonSysteme::init(void)
     CHK(SDL_RenderSetLogicalSize(this->rendu, 1280, 720), SDL_GetError()); //720!
 
     this->camera = {0, 0, LONGUEUR_FENETRE, HAUTEUR_FENETRE};
-
-    /* Algo de modification de taille de fenetre
-1. Partir d'une taille de résolution de base et donc d'une taille de fenetre de base (ex : 1280 * 720)
-=> fenetre = SDL_CreateWindow("Mon jeu", SDL_WINDOWPOS_CENTERED, SDL_WINDOWPOS_CENTERED, LONGUEUR_FENETRE, 1280, 720)
-=> SDL_RenderSetLogicalSize(rendu, 1280, 720)
-2. Quand la fenetre sera redimensionnée (soit avec SDL_WINDOW_RESIZABLE en flag de SDL_CreateWindow, ou avec SDL_SetWindowSize()) :
-   tous les éléments seront eux aussi redimensionnés en accord avec la résolution
-Il faudra créer les images en se basant sur la taille de l'étape 1 et cela sera bon pour toutes les autres tailles avec cet algo
-*/
 
 
     this->manette = SDL_GameControllerOpen(0);

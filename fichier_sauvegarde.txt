@@ -1,5 +1,5 @@
 //Nom joueur
-d
+totot
 //Mode fenetre
 0
 //Musique activee ?

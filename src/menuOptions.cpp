@@ -30,10 +30,13 @@ MenuOptions::MenuOptions(SingletonSysteme* sing_syst)
         bouton_options_fenetre.texte.editText("PLEIN-ECRAN", sing_syst->rendu);
     }
 
+    bouton_options_fenetre.setSelectedIfMove(&bouton_options_touche_droite, nullptr, &bouton_options_retour, nullptr);
+    bouton_options_retour.setSelectedIfMove(nullptr, nullptr, nullptr, &bouton_options_fenetre);
+    bouton_options_retour.setSelected(&bouton_options_retour);
+    toggle_sound.setSelectedIfMove(nullptr, nullptr, nullptr, &bouton_options_touche_haut);
+
     if(sing_syst->manette != nullptr)
     {
-        bouton_options_fenetre.setSelectedIfMove(&bouton_options_touche_droite, nullptr, &bouton_options_retour, nullptr);
-        bouton_options_retour.setSelectedIfMove(nullptr, nullptr, nullptr, &bouton_options_fenetre);
         bouton_options_touche_haut.setSelectedIfMove(nullptr, &bouton_options_touche_bas, &toggle_sound, &bouton_options_manette_haut);
         bouton_options_touche_bas.setSelectedIfMove(&bouton_options_touche_haut, &bouton_options_touche_gauche, nullptr, &bouton_options_manette_bas);
         bouton_options_touche_gauche.setSelectedIfMove(&bouton_options_touche_bas, &bouton_options_touche_droite, nullptr, &bouton_options_manette_gauche);
@@ -42,9 +45,6 @@ MenuOptions::MenuOptions(SingletonSysteme* sing_syst)
         bouton_options_manette_bas.setSelectedIfMove(&bouton_options_manette_haut, &bouton_options_manette_gauche, &bouton_options_touche_bas, nullptr);
         bouton_options_manette_gauche.setSelectedIfMove(&bouton_options_manette_bas, &bouton_options_manette_droite, &bouton_options_touche_gauche, nullptr);
         bouton_options_manette_droite.setSelectedIfMove(&bouton_options_manette_gauche, nullptr, &bouton_options_touche_droite, nullptr);
-        bouton_options_retour.setSelected(&bouton_options_retour);
-
-        toggle_sound.setSelectedIfMove(nullptr, nullptr, nullptr, &bouton_options_touche_haut);
         toggle_musique.setSelectedIfMove(nullptr, nullptr, &bouton_options_manette_haut, nullptr);
 
         this->ui.push_back(&(this->bouton_options_manette_haut));
@@ -54,15 +54,11 @@ MenuOptions::MenuOptions(SingletonSysteme* sing_syst)
     }
     else
     {
-        bouton_options_fenetre.setSelectedIfMove(&bouton_options_touche_droite, nullptr, &bouton_options_retour, nullptr);
-        bouton_options_retour.setSelectedIfMove(nullptr, nullptr, nullptr, &bouton_options_fenetre);
         bouton_options_touche_haut.setSelectedIfMove(nullptr, &bouton_options_touche_bas, &toggle_sound, &toggle_musique);
         bouton_options_touche_bas.setSelectedIfMove(&bouton_options_touche_haut, &bouton_options_touche_gauche, nullptr, nullptr);
         bouton_options_touche_gauche.setSelectedIfMove(&bouton_options_touche_bas, &bouton_options_touche_droite, nullptr, nullptr);
         bouton_options_touche_droite.setSelectedIfMove(&bouton_options_touche_gauche, &bouton_options_fenetre, nullptr, nullptr);
-        toggle_sound.setSelectedIfMove(nullptr, nullptr, nullptr, &bouton_options_touche_haut);
         toggle_musique.setSelectedIfMove(nullptr, nullptr, &bouton_options_touche_haut, nullptr);
-        bouton_options_retour.setSelected(&bouton_options_retour);
     }
     this->ui.push_back(&(this->bouton_options_fenetre));
     this->ui.push_back(&(this->bouton_options_retour));
@@ -103,12 +99,12 @@ void MenuOptions::draw(SDL_Renderer* rendu, SingletonSysteme* sing_syst)
     {
         s->draw(rendu);
     }
+
     texte_touche_haut.draw(rendu);
     texte_touche_bas.draw(rendu);
     texte_touche_gauche.draw(rendu);
     texte_touche_droite.draw(rendu);
     mode_ecran.draw(rendu);
-
     if(sing_syst->manette != nullptr)
     {
         texte_clavier.draw(rendu);
@@ -197,8 +193,6 @@ void MenuOptions::fonc_choix_touche(SingletonSysteme* sing_syst, Selectionnable*
                         && e.key.keysym.sym != sing_syst->touches.dep_droite)
                         {
                             sing_syst->touches.dep_haut = e.key.keysym.sym;
-                            b->texte.editText(SDL_GetKeyName(e.key.keysym.sym), sing_syst->rendu);
-                            quitter = true;
                         }
                     }
                     else if (b->name.find("bas") != std::string::npos)
@@ -208,8 +202,6 @@ void MenuOptions::fonc_choix_touche(SingletonSysteme* sing_syst, Selectionnable*
                         && e.key.keysym.sym != sing_syst->touches.dep_droite)
                         {
                             sing_syst->touches.dep_bas = e.key.keysym.sym;
-                            b->texte.editText(SDL_GetKeyName(e.key.keysym.sym), sing_syst->rendu);
-                            quitter = true;
                         }
                     }
                     else if (b->name.find("gauche") != std::string::npos)
@@ -219,8 +211,6 @@ void MenuOptions::fonc_choix_touche(SingletonSysteme* sing_syst, Selectionnable*
                         && e.key.keysym.sym != sing_syst->touches.dep_droite)
                         {
                             sing_syst->touches.dep_gauche = e.key.keysym.sym;
-                            b->texte.editText(SDL_GetKeyName(e.key.keysym.sym), sing_syst->rendu);
-                            quitter = true;
                         }
                     }
                     else if (b->name.find("droite") != std::string::npos)
@@ -230,10 +220,18 @@ void MenuOptions::fonc_choix_touche(SingletonSysteme* sing_syst, Selectionnable*
                         && e.key.keysym.sym != sing_syst->touches.dep_gauche)
                         {
                             sing_syst->touches.dep_droite = e.key.keysym.sym;
-                            b->texte.editText(SDL_GetKeyName(e.key.keysym.sym), sing_syst->rendu);
-                            quitter = true;
                         }
                     }
+
+                    if(b->name.find("haut") != std::string::npos
+                    || b->name.find("bas") != std::string::npos
+                    || b->name.find("gauche") != std::string::npos
+                    || b->name.find("droite") != std::string::npos)
+                    {
+                        b->texte.editText(SDL_GetKeyName(e.key.keysym.sym), sing_syst->rendu);
+                        quitter = true;
+                    }
+
                     break;
 
                 default :

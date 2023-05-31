@@ -8,7 +8,6 @@ Tuile::Tuile(std::string chemin, SDL_Rect position, bool estPassable, bool isWar
     this->chemin = chemin;
     this->isAnimated = false;
     this->isWarp = isWarp;
-    this->collisionAvecJoueur = false;
 
     NCHK(this->texture = IMG_LoadTexture(rendu, this->chemin.c_str()), IMG_GetError());
 }
@@ -21,7 +20,6 @@ Tuile::Tuile(std::string chemin, SDL_Rect position, unsigned int nb_images, int 
     this->estPassable = estPassable;
     this->chemin = chemin;
     this->isAnimated = true;
-    this->collisionAvecJoueur = false;
 
     this->nb_images = nb_images;
     this->espacement_tuiles_x = espacement_tuiles_x;
@@ -35,13 +33,9 @@ void Tuile::draw(SDL_Renderer* rendu, SDL_Rect camera)
     SDL_Rect temp = {this->position.x - camera.x, this->position.y - camera.y, this->position.w, this->position.h};
 
     if(isAnimated == true)
-    {
         CHK(SDL_RenderCopy(rendu, this->texture, &(this->srcRect), &temp), SDL_GetError());
-    }
     else
-    {
         CHK(SDL_RenderCopy(rendu, this->texture, nullptr, &temp), SDL_GetError());
-    }
 }
 
 
