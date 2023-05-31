@@ -30,7 +30,7 @@ Tuile::Tuile(std::string chemin, SDL_Rect position, unsigned int nb_images, int 
 }
 
 
-Tuile::Tuile(std::string chemin, SDL_Rect position, SDL_Rect srcRect, bool estPassable, SingletonSysteme* sing_syst)
+Tuile::Tuile(std::string chemin, SDL_Rect position, SDL_Rect srcRect, bool estPassable, SDL_Renderer* rendu, SDL_Texture* tileset)
 {
     this->position = position;
     this->estPassable = estPassable;
@@ -40,7 +40,7 @@ Tuile::Tuile(std::string chemin, SDL_Rect position, SDL_Rect srcRect, bool estPa
 
     this->srcRect = srcRect;
 
-    this->texture = sing_syst->tileset_exterior;
+    this->texture = tileset;
 }
 
 

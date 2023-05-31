@@ -12,6 +12,10 @@ Carte::Carte(std::string fichier_carte, bool est_carte_principale, SingletonSyst
     this->connection_gauche = nullptr;
     this->connection_droite = nullptr;
 
+    //on ne peut pas se permettre de chager une texture du tileset par tuile
+    //on donne une unique texture du tileset à toutes les tuiles
+    NCHK(this->tileset = IMG_LoadTexture(sing_syst->rendu, "./img/tileset.png"), IMG_GetError());
+
     //this->initTuiles(this->fichier_carte, sing_syst);
     this->limite_haut = 0;
     this->limite_gauche = 0;
@@ -143,7 +147,7 @@ void Carte::initJson(std::string fichier_carte, SingletonSysteme* sing_syst)
                     int src_x = ieme_tuile * taille_tuile;
 
                     int facteur = 4;
-                    this->tuiles.push_back(Tuile(chemin_tileset, {dest_x, dest_y, taille_tuile * facteur, taille_tuile * facteur},{src_x, src_y, taille_tuile, taille_tuile}, true, sing_syst));
+                    this->tuiles.push_back(Tuile(chemin_tileset, {dest_x, dest_y, taille_tuile * facteur, taille_tuile * facteur},{src_x, src_y, taille_tuile, taille_tuile}, true, sing_syst->rendu, this->tileset));
 
                     dest_x += taille_tuile * facteur;
                     if(dest_x == nombre_tuile_x * taille_tuile * facteur)

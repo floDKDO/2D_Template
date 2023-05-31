@@ -89,9 +89,6 @@ class SingletonSysteme
         //TODO : attribut Etat*
         std::fstream fichier_sauvegarde;
 
-        SDL_Texture* tileset_exterior;
-
-
 
         void init();
         void sauvegarder();

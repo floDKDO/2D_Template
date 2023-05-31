@@ -54,6 +54,7 @@ class Carte
         bool une_fois;
         bool est_carte_principale; //ce booléen est inutile mais il permet de dire que la carte principale n'a pas de connexions
         std::vector<Tuile> tuiles;
+        SDL_Texture* tileset;
 
         void initJson(std::string fichier_carte, SingletonSysteme* sing_syst);
         void initTuiles(std::string fichier_carte, SingletonSysteme* sing_syst);
