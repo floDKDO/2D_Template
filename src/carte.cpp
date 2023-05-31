@@ -12,7 +12,7 @@ Carte::Carte(std::string fichier_carte, bool est_carte_principale, SingletonSyst
     this->connection_gauche = nullptr;
     this->connection_droite = nullptr;
 
-    this->initTuiles(this->fichier_carte, sing_syst);
+    //this->initTuiles(this->fichier_carte, sing_syst);
     this->limite_haut = 0;
     this->limite_gauche = 0;
     this->une_fois = true;
@@ -99,6 +99,68 @@ void Carte::initJson(std::string fichier_carte, SingletonSysteme* sing_syst)
         }
     }
 
+
+    /*
+    int num = 89;
+    int nb_colonnes = 88;
+    int nb_lignes = 69;
+    int taille_tuile = 16;
+
+    int indice_ligne = (num-1)/nb_colonnes;
+    int y = indice_ligne * taille_tuile;
+
+    int ieme_tuile = (num-1) - indice_ligne*nb_colonnes;
+    int x = ieme_tuile * taille_tuile;
+    printf("ligne : %d et elem : %d\n", indice_ligne, ieme_tuile);
+    printf("x : %d et y : %d\n", x, y);
+    */
+
+    json object_carte = data["map"];
+    if(object_carte.is_null() == false)
+    {
+        for(long long unsigned int i = 0; i < object_carte.size(); i++)
+        {
+            std::string chemin_tileset = object_carte[i]["tileset"];
+            int taille_tuile = object_carte[i]["taille_tuile"];
+            int nombre_tuile_x = object_carte[i]["width"];
+            int nombre_tuile_y = object_carte[i]["height"];
+            json object_tuiles = object_carte[i]["tuiles"];
+            if(object_tuiles.is_null() == false)
+            {
+                for(long long unsigned int i = 0; i < object_tuiles.size(); i++)
+                {
+                    static int dest_x = 0;
+                    static int dest_y = 0;
+
+                    int num = object_tuiles[i];
+                    int nb_colonnes = 88;
+                    int nb_lignes = 69;
+
+                    int indice_ligne = (num-1)/nb_colonnes;
+                    int src_y = indice_ligne * taille_tuile;
+
+                    int ieme_tuile = (num-1) - indice_ligne*nb_colonnes;
+                    int src_x = ieme_tuile * taille_tuile;
+
+                    int facteur = 4;
+                    this->tuiles.push_back(Tuile(chemin_tileset, {dest_x, dest_y, taille_tuile * facteur, taille_tuile * facteur},{src_x, src_y, taille_tuile, taille_tuile}, true, sing_syst));
+
+                    dest_x += taille_tuile * facteur;
+                    if(dest_x == nombre_tuile_x * taille_tuile * facteur)
+                    {
+                        dest_x = 0;
+                        dest_y += taille_tuile * facteur;
+                    }
+                }
+            }
+        }
+    }
+
+    for(long long unsigned int i = 0; i < this->tuiles.size(); i++)
+    {
+        this->elementCarte.push_back(&this->tuiles[i]);
+    }
+
     for(long long unsigned int i = 0; i < this->objects.size(); i++)
     {
         this->elementCarte.push_back(&this->objects[i]);
@@ -110,7 +172,7 @@ void Carte::initJson(std::string fichier_carte, SingletonSysteme* sing_syst)
 
 void Carte::initTuiles(std::string fichier_carte, SingletonSysteme* sing_syst)
 {
-    const int TILE_WIDTH = 16;
+    /*const int TILE_WIDTH = 16;
     const int TILE_HEIGHT = 16;
 
     //de combien la taille des tuiles (16*16) sera multipliée sur l'écran
@@ -199,7 +261,7 @@ void Carte::initTuiles(std::string fichier_carte, SingletonSysteme* sing_syst)
         this->elementCarte.push_back(&this->tuiles[i]);
     }
 
-    fichier.close();
+    fichier.close();*/
 }
 
 void Carte::jouerMusique(void)

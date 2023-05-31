@@ -49,10 +49,15 @@ void SingletonSysteme::init(void)
     //pour les inputfield
     SDL_StartTextInput();
 
+    //on ne peut pas se permettre de chager une texture du tileset par tuile
+    //on donne une unique texture du tileset à toutes les tuiles
+    NCHK(this->tileset_exterior = IMG_LoadTexture(rendu, "./img/tileset.png"), IMG_GetError());
+
 
     this->cartes.insert(std::make_pair("toto.map", new Carte("toto.map", true, this)));
     this->cartes.insert(std::make_pair("tutu.map", new Carte("tutu.map", false, this)));
     this->cartes.insert(std::make_pair("titi.map", new Carte("titi.map", false, this)));
+
 
     this->cartes["toto.map"]->initJson("toto.json", this);
     this->cartes["tutu.map"]->initJson("tutu.json", this);

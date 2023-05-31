@@ -11,6 +11,7 @@ class Tuile : public ElementCarte
         //chemin : endroit où la tuile est stockée
         Tuile(std::string chemin, SDL_Rect position, bool estPassable, bool isWarp, SDL_Renderer* rendu);
         Tuile(std::string chemin, SDL_Rect position, unsigned int nb_images, int espacement_tuiles_x, bool estPassable, SDL_Renderer* rendu);
+        Tuile(std::string chemin, SDL_Rect position, SDL_Rect srcRect, bool estPassable, SingletonSysteme* sing_syst);
 
         unsigned int nb_images;
         //espacement des tuiles dans le tilesheet
@@ -19,6 +20,7 @@ class Tuile : public ElementCarte
         SDL_Texture* texture;
         bool isAnimated;
         bool isWarp;
+        bool isTileset;
 
         void draw(SDL_Renderer* rendu, SDL_Rect camera);
         void handleEvents(SDL_Event e, SingletonSysteme* sing_syst);

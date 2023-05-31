@@ -7,6 +7,7 @@ Tuile::Tuile(std::string chemin, SDL_Rect position, bool estPassable, bool isWar
     this->estPassable = estPassable;
     this->chemin = chemin;
     this->isAnimated = false;
+    this->isTileset = false;
     this->isWarp = isWarp;
 
     NCHK(this->texture = IMG_LoadTexture(rendu, this->chemin.c_str()), IMG_GetError());
@@ -20,6 +21,7 @@ Tuile::Tuile(std::string chemin, SDL_Rect position, unsigned int nb_images, int 
     this->estPassable = estPassable;
     this->chemin = chemin;
     this->isAnimated = true;
+    this->isTileset = false;
 
     this->nb_images = nb_images;
     this->espacement_tuiles_x = espacement_tuiles_x;
@@ -28,14 +30,35 @@ Tuile::Tuile(std::string chemin, SDL_Rect position, unsigned int nb_images, int 
 }
 
 
+Tuile::Tuile(std::string chemin, SDL_Rect position, SDL_Rect srcRect, bool estPassable, SingletonSysteme* sing_syst)
+{
+    this->position = position;
+    this->estPassable = estPassable;
+    this->chemin = chemin;
+    this->isAnimated = false;
+    this->isTileset = true;
+
+    this->srcRect = srcRect;
+
+    this->texture = sing_syst->tileset_exterior;
+}
+
+
 void Tuile::draw(SDL_Renderer* rendu, SDL_Rect camera)
 {
     SDL_Rect temp = {this->position.x - camera.x, this->position.y - camera.y, this->position.w, this->position.h};
 
-    if(isAnimated == true)
+    if(this->isTileset == true)
+    {
         CHK(SDL_RenderCopy(rendu, this->texture, &(this->srcRect), &temp), SDL_GetError());
+    }
     else
-        CHK(SDL_RenderCopy(rendu, this->texture, nullptr, &temp), SDL_GetError());
+    {
+        if(isAnimated == true)
+            CHK(SDL_RenderCopy(rendu, this->texture, &(this->srcRect), &temp), SDL_GetError());
+        else
+            CHK(SDL_RenderCopy(rendu, this->texture, nullptr, &temp), SDL_GetError());
+    }
 }
 
 
