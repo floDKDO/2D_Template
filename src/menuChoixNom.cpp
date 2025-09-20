@@ -1,4 +1,4 @@
-#include "menuChoixNom.hpp"
+#include "../include/menuChoixNom.hpp"
 
 MenuChoixNom::MenuChoixNom(SingletonSysteme* sing_syst)
 :inputfield("./font/lazy.ttf", 30, ROUGE, {300, 400, 200, 50}, &fonc_inputfield_nom_joueur, sing_syst->rendu, "inputfield choix nom")
@@ -40,7 +40,7 @@ void MenuChoixNom::resetSelected(void)
 
 Selectionnable* MenuChoixNom::getSelected(void)
 {
-    Selectionnable* ui_selected;
+    Selectionnable* ui_selected = nullptr;
     for(Selectionnable* s : ui)
     {
         if(s->etat == SELECTED)

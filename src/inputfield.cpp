@@ -1,4 +1,4 @@
-#include "inputfield.hpp"
+#include "../include/inputfield.hpp"
 
 Inputfield::Inputfield(std::string police, int taille_police, SDL_Color couleur, SDL_Rect position, eventFunction funcPtr, SDL_Renderer* rendu, std::string name)
 :texte("", police, taille_police, couleur, position, rendu, "texte de " + name, false), texte_placeHolder("Votre nom...", police, 30, {127, 127, 127, 255}, position, rendu, "texte placeholder de " + name, false)
@@ -25,17 +25,7 @@ Inputfield::Inputfield(std::string police, int taille_police, SDL_Color couleur,
 
 bool Inputfield::collision(SDL_Rect dest, int x, int y)
 {
-    if(dest.y + dest.h > y
-    && dest.y < y
-    && dest.x + dest.w > x
-    && dest.x < x)
-    {
-        return true;
-    }
-    else
-    {
-        return false;
-    }
+    return Selectionnable::collision(dest, x, y);
 }
 
 
@@ -251,31 +241,21 @@ void Inputfield::handleEvents(SDL_Event e, SingletonSysteme* sing_syst)
 
 void Inputfield::setSelectedIfMove(Selectionnable* selectOnUp, Selectionnable* selectOnDown, Selectionnable* selectOnLeft, Selectionnable* selectOnRight)
 {
-    this->selectOnUp = selectOnUp;
-    this->selectOnDown = selectOnDown;
-    this->selectOnLeft = selectOnLeft;
-    this->selectOnRight = selectOnRight;
+    Selectionnable::setSelectedIfMove(selectOnUp, selectOnDown, selectOnLeft, selectOnRight);
 }
 
 void Inputfield::setSelected(Selectionnable* ui)
 {
-    if(ui != nullptr)
-        ui->etat = SELECTED;
+    Selectionnable::setSelected(ui);
 }
 
 void Inputfield::setUnselected(Selectionnable* previous)
 {
-    if(previous != nullptr)
-        previous->etat = NORMAL;
+    Selectionnable::setUnselected(previous);
 }
 
 
 void Inputfield::selectNew(Selectionnable* ui, SingletonSysteme* sing_syst)
 {
-    this->setUnselected(this);
-    this->setSelected(ui);
-    if(sing_syst->son_active == true && etat != SELECTED)
-    {
-        CHK(Mix_PlayChannel(1, hover_sound, 0), Mix_GetError());
-    }
+    Selectionnable::selectNew(ui, sing_syst);
 }

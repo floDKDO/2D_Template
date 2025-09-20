@@ -10,10 +10,10 @@
 #include <SDL2/SDL_ttf.h>
 #include <SDL2/SDL_mixer.h>
 
-#include "tuile.hpp"
-#include "objet.hpp"
+#include "../include/tuile.hpp"
+#include "../include/objet.hpp"
 
-#include <../json.hpp>
+#include "../json.hpp"
 using json = nlohmann::json;
 
 

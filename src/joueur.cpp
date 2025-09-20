@@ -1,4 +1,4 @@
-#include "joueur.hpp"
+#include "../include/joueur.hpp"
 
 Joueur::Joueur(SDL_Color couleur, SDL_Rect position, mode_affichage mode)
 {
@@ -11,7 +11,7 @@ Joueur::Joueur(SDL_Color couleur, SDL_Rect position, mode_affichage mode)
     this->multiplication_vitesse = 1; //de base, vitesse*1
     this->mode = mode;
     this->interagit = false;
-    this->orientation = 0; //HAUT
+    this->orientation = HAUT;
 
     this->isAnimated = false;
     this->je_peux_marcher = true;
@@ -34,7 +34,7 @@ Joueur::Joueur(std::string chemin, SDL_Rect position, mode_affichage mode, SDL_R
     this->multiplication_vitesse = 1; //de base, vitesse*1
     this->mode = mode;
     this->interagit = false;
-    this->orientation = 0; //HAUT
+    this->orientation = HAUT;
 
     this->isAnimated = true;
     this->je_peux_marcher = true;
@@ -60,7 +60,14 @@ void Joueur::setValue(int indice)
 {
     resetAllValues();
     dep[indice] = true;
-    orientation = indice;
+    if(indice == 0)
+        orientation = HAUT;
+    else if(indice == 1)
+        orientation = BAS;
+    else if(indice == 2)
+        orientation = GAUCHE;
+    else if(indice == 3)
+        orientation = DROITE;
 }
 
 void Joueur::draw(SDL_Renderer* rendu, SDL_Rect camera)
@@ -74,7 +81,7 @@ void Joueur::draw(SDL_Renderer* rendu, SDL_Rect camera)
     }
     else
     {
-        if(orientation == 3)
+        if(orientation == DROITE)
             CHK(SDL_RenderCopyEx(rendu, this->texture, &(this->srcRect), &temp, 0, nullptr, SDL_FLIP_HORIZONTAL), SDL_GetError());
         else CHK(SDL_RenderCopy(rendu, this->texture, &(this->srcRect), &temp), SDL_GetError());
     }
@@ -274,22 +281,22 @@ void Joueur::update(Uint32& timeStep, SingletonSysteme* sing_syst)
             {
                 if(this->dep[0] == true)
                 {
-                    this->position.y -= 16 * 4; //taille d'une tuile
+                    this->position.y -= TAILLE_TUILE * FACTEUR_MULTIPLICATION; //taille d'une tuile
                     timeStep = SDL_GetTicks();
                 }
                 else if(this->dep[1] == true)
                 {
-                    this->position.y += 16 * 4;
+                    this->position.y += TAILLE_TUILE * FACTEUR_MULTIPLICATION;
                     timeStep = SDL_GetTicks();
                 }
                 else if(this->dep[2] == true)
                 {
-                    this->position.x -= 16 * 4;
+                    this->position.x -= TAILLE_TUILE * FACTEUR_MULTIPLICATION;
                     timeStep = SDL_GetTicks();
                 }
                 else if(this->dep[3] == true)
                 {
-                    this->position.x += 16 * 4;
+                    this->position.x += TAILLE_TUILE * FACTEUR_MULTIPLICATION;
                     timeStep = SDL_GetTicks();
                 }
 

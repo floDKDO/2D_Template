@@ -1,8 +1,12 @@
 #ifndef __TUILE__HPP__
 #define __TUILE__HPP__
 
-#include "singleton_systeme.hpp"
-#include "elementCarte.hpp"
+#include "../include/singleton_systeme.hpp"
+#include "../include/elementCarte.hpp"
+
+
+#define TAILLE_TUILE 16
+#define FACTEUR_MULTIPLICATION 4
 
 
 class Tuile : public ElementCarte
@@ -21,6 +25,14 @@ class Tuile : public ElementCarte
         bool isAnimated;
         bool isWarp;
         bool isTileset;
+
+        //TODO : zorder
+        /*
+        Niveau 1 : classique
+        Niveau 2 : que des 0 et les tuiles voulues
+        */
+
+        int zorder;
 
         void draw(SDL_Renderer* rendu, SDL_Rect camera);
         void handleEvents(SDL_Event e, SingletonSysteme* sing_syst);

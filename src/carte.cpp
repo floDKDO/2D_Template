@@ -1,6 +1,7 @@
-#include "carte.hpp"
+#include "../include/carte.hpp"
 
-#include <singleton_systeme.hpp>
+#include "../include/singleton_systeme.hpp"
+//#include <filesystem>
 
 Carte::Carte(std::string fichier_carte, bool est_carte_principale, SingletonSysteme* sing_syst)
 {
@@ -22,10 +23,13 @@ Carte::Carte(std::string fichier_carte, bool est_carte_principale, SingletonSyst
 void Carte::initJson(std::string fichier_carte, SingletonSysteme* sing_syst)
 {
     std::ifstream fichier(fichier_carte);
+    //if (!fichier)
+        //std::cout << "ERREUR ! : " << fichier_carte << std::filesystem::current_path() << std::endl;
+
     json data = json::parse(fichier);
 
     std::string id_carte = data.value("id", "not found");
-    if(sscanf(id_carte.c_str(), "%d", &(this->id_carte)) != 0)
+    if(sscanf_s(id_carte.c_str(), "%d", &(this->id_carte)) != 0)
     {
         std::cerr << "Erreur" << std::endl;
         exit(EXIT_FAILURE);

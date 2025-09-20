@@ -1,7 +1,7 @@
-#include "enJeu.hpp"
+#include "../include/enJeu.hpp"
 
 EnJeu::EnJeu(SingletonSysteme* sing_syst)
-:joueur("./img/spritesheet.png", {0, 0, 64, 64}, VUE_DESSUS, sing_syst->rendu)
+:joueur("./img/spritesheet.png", {0, 0, TAILLE_TUILE * FACTEUR_MULTIPLICATION, TAILLE_TUILE * FACTEUR_MULTIPLICATION}, VUE_DESSUS, sing_syst->rendu)
 {
     (void)sing_syst;
     this->carte_actuelle = sing_syst->cartes["toto.map"];
@@ -15,10 +15,10 @@ EnJeu::EnJeu(SingletonSysteme* sing_syst)
 
 bool EnJeu::estACote(Joueur joueur, SDL_Rect position)
 {
-    if((joueur.position.x + joueur.position.w == position.x && joueur.position.y == position.y && joueur.orientation == 3)
-    || (joueur.position.y + joueur.position.h == position.y && joueur.position.x == position.x && joueur.orientation == 1)
-    || (joueur.position.x == position.x + position.w && joueur.position.y == position.y && joueur.orientation == 2)
-    || (joueur.position.y == position.y + position.h && joueur.position.x == position.x && joueur.orientation == 0))
+    if((joueur.position.x + joueur.position.w == position.x && joueur.position.y == position.y && joueur.orientation == DROITE)
+    || (joueur.position.y + joueur.position.h == position.y && joueur.position.x == position.x && joueur.orientation == BAS)
+    || (joueur.position.x == position.x + position.w && joueur.position.y == position.y && joueur.orientation == GAUCHE)
+    || (joueur.position.y == position.y + position.h && joueur.position.x == position.x && joueur.orientation == HAUT))
     {
         return true;
     }
@@ -85,13 +85,13 @@ void EnJeu::checkCollisionsPlayerMap(Uint32& timeStep, SingletonSysteme* sing_sy
     {
         SDL_Rect copie = this->joueur.position;
         if(this->joueur.dep[0] == true)
-            copie.y -= 16 * 4; //taille d'une tuile
+            copie.y -= TAILLE_TUILE * FACTEUR_MULTIPLICATION; //taille d'une tuile
         else if(this->joueur.dep[1] == true)
-            copie.y += 16 * 4;
+            copie.y += TAILLE_TUILE * FACTEUR_MULTIPLICATION;
         else if(this->joueur.dep[2] == true)
-            copie.x -= 16 * 4;
+            copie.x -= TAILLE_TUILE * FACTEUR_MULTIPLICATION;
         else if(this->joueur.dep[3] == true)
-            copie.x += 16 * 4;
+            copie.x += TAILLE_TUILE * FACTEUR_MULTIPLICATION;
 
         for(long long unsigned int i = 0; i < carte_actuelle->elementCarte.size()/* && joueur.je_peux_marcher == true*/; i++)
         {
@@ -157,21 +157,21 @@ void EnJeu::gereJoueurPrendWarp()
             //aller vers la nouvelle carte
             if(vient_de_changer_de_carte == false)
             {
-                for(long long unsigned int k = 0; k < this->carte_actuelle->warp_cartes.size(); k++)
+                for(long long unsigned int j = 0; j < this->carte_actuelle->warp_cartes.size(); j++)
                 {
                     //trouver le warp_event que le joueur a déclenché
-                    if(this->carte_actuelle->warp_cartes[k].x_warp >= joueur.position.x
-                    && this->carte_actuelle->warp_cartes[k].x_warp <= joueur.position.x + joueur.position.w
-                    && this->carte_actuelle->warp_cartes[k].y_warp >= joueur.position.y
-                    && this->carte_actuelle->warp_cartes[k].y_warp <= joueur.position.y + joueur.position.h)
+                    if(this->carte_actuelle->warp_cartes[j].x_warp >= joueur.position.x
+                    && this->carte_actuelle->warp_cartes[j].x_warp <= joueur.position.x + joueur.position.w
+                    && this->carte_actuelle->warp_cartes[j].y_warp >= joueur.position.y
+                    && this->carte_actuelle->warp_cartes[j].y_warp <= joueur.position.y + joueur.position.h)
                     {
                         //placer le joueur au bon endroit dans la nouvelle carte
-                        this->joueur.position.x = this->carte_actuelle->warp_cartes[k].x_arrive;
-                        this->joueur.position.y = this->carte_actuelle->warp_cartes[k].y_arrive;
-                        arrivee_x = this->carte_actuelle->warp_cartes[k].x_arrive;
-                        arrivee_y = this->carte_actuelle->warp_cartes[k].y_arrive;
+                        this->joueur.position.x = this->carte_actuelle->warp_cartes[j].x_arrive;
+                        this->joueur.position.y = this->carte_actuelle->warp_cartes[j].y_arrive;
+                        arrivee_x = this->carte_actuelle->warp_cartes[j].x_arrive;
+                        arrivee_y = this->carte_actuelle->warp_cartes[j].y_arrive;
                         this->enTransition = true;
-                        this->carte_actuelle = this->carte_actuelle->warp_cartes[k].warp_carte;
+                        this->carte_actuelle = this->carte_actuelle->warp_cartes[j].warp_carte;
                     }
                 }
                 vient_de_changer_de_carte = true;
@@ -184,8 +184,8 @@ void EnJeu::gereJoueurPrendWarp()
     if(vient_de_changer_de_carte == true) //si j'ai changé de carte et que je me trouve sur une porte, alors pas de changement immédiat de carte
     {
         //si j'ai bougé
-        if(this->joueur.position.x >= arrivee_x + (16 * 4) || this->joueur.position.x <= arrivee_x - (16 * 4)
-        || this->joueur.position.y >= arrivee_y + (16 * 4) || this->joueur.position.y <= arrivee_y - (16 * 4))
+        if(this->joueur.position.x >= arrivee_x + (TAILLE_TUILE * FACTEUR_MULTIPLICATION) || this->joueur.position.x <= arrivee_x - (TAILLE_TUILE * FACTEUR_MULTIPLICATION)
+        || this->joueur.position.y >= arrivee_y + (TAILLE_TUILE * FACTEUR_MULTIPLICATION) || this->joueur.position.y <= arrivee_y - (TAILLE_TUILE * FACTEUR_MULTIPLICATION))
         {
             vient_de_changer_de_carte = false;
         }
@@ -211,9 +211,9 @@ void EnJeu::gereJoueurSortExtremite()
 
 
         int val = this->carte_actuelle->limite_droite / 2;
-        if(val % (16 * 4) != 0)
+        if(val % (TAILLE_TUILE * FACTEUR_MULTIPLICATION) != 0)
         {
-            val /= (16 * 4); //ramener à la valeur inférieure (ex : val == 224 et 224 / 64 = 3.5, on a que val = 3)
+            val /= (TAILLE_TUILE * FACTEUR_MULTIPLICATION); //ramener à la valeur inférieure (ex : val == 224 et 224 / 64 = 3.5, on a que val = 3)
         }
 
         this->joueur.position.x = val;
@@ -228,9 +228,9 @@ void EnJeu::gereJoueurSortExtremite()
         //arrive centré sur la carte d'arrivée en x et tout en haut de la carte en y
 
         int val = this->carte_actuelle->limite_droite / 2;
-        if(val % (16 * 4) != 0)
+        if(val % (TAILLE_TUILE * FACTEUR_MULTIPLICATION) != 0)
         {
-            val /= (16 * 4); //ramener à la valeur inférieure (ex : val == 224 et 224 / 64 = 3.5, on a que val = 3)
+            val /= (TAILLE_TUILE * FACTEUR_MULTIPLICATION); //ramener à la valeur inférieure (ex : val == 224 et 224 / 64 = 3.5, on a que val = 3)
         }
 
         this->joueur.position.x = val;
@@ -245,9 +245,9 @@ void EnJeu::gereJoueurSortExtremite()
         //arrive tout à droite sur la carte d'arrivée en x et centré en y
 
         int val = this->carte_actuelle->limite_bas / 2;
-        if(val % (16 * 4) != 0)
+        if(val % (TAILLE_TUILE * FACTEUR_MULTIPLICATION) != 0)
         {
-            val /= (16 * 4); //ramener à la valeur inférieure (ex : val == 224 et 224 / 64 = 3.5, on a que val = 3)
+            val /= (TAILLE_TUILE * FACTEUR_MULTIPLICATION); //ramener à la valeur inférieure (ex : val == 224 et 224 / 64 = 3.5, on a que val = 3)
         }
 
         this->joueur.position.x = this->carte_actuelle->limite_droite;
@@ -262,9 +262,9 @@ void EnJeu::gereJoueurSortExtremite()
         //arrive tout à gauche sur la carte d'arrivée en x et centré en y
 
         int val = this->carte_actuelle->limite_bas / 2;
-        if(val % (16 * 4) != 0)
+        if(val % (TAILLE_TUILE * FACTEUR_MULTIPLICATION) != 0)
         {
-            val /= (16 * 4); //ramener à la valeur inférieure (ex : val == 224 et 224 / 64 = 3.5, on a que val = 3)
+            val /= (TAILLE_TUILE * FACTEUR_MULTIPLICATION); //ramener à la valeur inférieure (ex : val == 224 et 224 / 64 = 3.5, on a que val = 3)
         }
 
         this->joueur.position.x = this->carte_actuelle->limite_gauche;

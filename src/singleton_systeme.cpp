@@ -1,6 +1,6 @@
 #include "singleton_systeme.hpp"
 
-#include <carte.hpp>
+#include "carte.hpp"
 
 
 /* Algo de modification de taille de fenetre
@@ -32,10 +32,12 @@ void SingletonSysteme::init(void)
     CHK(IMG_Init(IMG_INIT_PNG | IMG_INIT_JPG), IMG_GetError());
     CHK(Mix_Init(MIX_INIT_MP3 | MIX_INIT_OGG), Mix_GetError());
     CHK(Mix_OpenAudio(MIX_DEFAULT_FREQUENCY, MIX_DEFAULT_FORMAT, MIX_CHANNELS, 1024), Mix_GetError());
+
     NCHK(this->fenetre = SDL_CreateWindow("Mon jeu", SDL_WINDOWPOS_CENTERED, SDL_WINDOWPOS_CENTERED, LONGUEUR_FENETRE, HAUTEUR_FENETRE, flags), SDL_GetError());
     NCHK(this->rendu = SDL_CreateRenderer(this->fenetre, -1, SDL_RENDERER_ACCELERATED | SDL_RENDERER_PRESENTVSYNC), SDL_GetError());
+
     CHK(SDL_SetRenderDrawBlendMode(this->rendu, SDL_BLENDMODE_BLEND), SDL_GetError()); //permettre la transparence
-    CHK(SDL_RenderSetLogicalSize(this->rendu, 1280, 720), SDL_GetError()); //720!
+    CHK(SDL_RenderSetLogicalSize(this->rendu, 1280, 720), SDL_GetError());
 
     this->camera = {0, 0, LONGUEUR_FENETRE, HAUTEUR_FENETRE};
 
@@ -255,6 +257,7 @@ void SingletonSysteme::destroy(void)
 {
     SDL_GameControllerClose(manette);
     Mix_FreeChunk(son_collision);
+    Mix_CloseAudio();
     SDL_StopTextInput();
     SDL_DestroyRenderer(rendu);
     SDL_DestroyWindow(fenetre);

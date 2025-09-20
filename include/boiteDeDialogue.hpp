@@ -1,8 +1,8 @@
 #ifndef __BOITE__DE__DIALOGUE__HPP__
 #define __BOITE__DE__DIALOGUE__HPP__
 
-#include "texte.hpp"
-#include "singleton_systeme.hpp"
+#include "../include/texte.hpp"
+#include "../include/singleton_systeme.hpp"
 
 #include <vector>
 

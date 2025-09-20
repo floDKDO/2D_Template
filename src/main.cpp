@@ -1,14 +1,14 @@
-#include "singleton_systeme.hpp"
-#include "inputfield.hpp"
-#include "bouton.hpp"
-#include "texte.hpp"
-#include "joueur.hpp"
-#include "toggle.hpp"
-#include "menuPrincipal.hpp"
-#include "menuOptions.hpp"
-#include "menuChoixNom.hpp"
-#include "tuile.hpp"
-#include "enJeu.hpp"
+#include "../include/singleton_systeme.hpp"
+#include "../include/inputfield.hpp"
+#include "../include/bouton.hpp"
+#include "../include/texte.hpp"
+#include "../include/joueur.hpp"
+#include "../include/toggle.hpp"
+#include "../include/menuPrincipal.hpp"
+#include "../include/menuOptions.hpp"
+#include "../include/menuChoixNom.hpp"
+#include "../include/tuile.hpp"
+#include "../include/enJeu.hpp"
 
 
 int main(int argc, char* argv[])
@@ -101,6 +101,7 @@ int main(int argc, char* argv[])
         }
 
         SDL_RenderPresent(rendu);
+        SDL_Delay(16); //limiter la boucle de jeu à 60 FPS
     }
     sing_syst->sauvegarder();
     sing_syst->destroy();

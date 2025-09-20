@@ -1,4 +1,4 @@
-#include "objet.hpp"
+#include "../include/objet.hpp"
 
 Objet::Objet(std::string chemin, SDL_Renderer* rendu, SDL_Rect position)
 {

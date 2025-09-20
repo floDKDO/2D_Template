@@ -3,12 +3,12 @@
 
 #include <vector>
 
-#include "selectionnable.hpp"
-#include "bouton.hpp"
-#include "texte.hpp"
-#include "boiteDeDialogue.hpp"
+#include "../include/selectionnable.hpp"
+#include "../include/bouton.hpp"
+#include "../include/texte.hpp"
+#include "../include/boiteDeDialogue.hpp"
 
-#include "singleton_systeme.hpp"
+#include "../include/singleton_systeme.hpp"
 
 class MenuPrincipal
 {

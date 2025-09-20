@@ -1,4 +1,4 @@
-#include "tuile.hpp"
+#include "../include/tuile.hpp"
 
 //Tuile fixe
 Tuile::Tuile(std::string chemin, SDL_Rect position, bool estPassable, bool isWarp, SDL_Renderer* rendu)
@@ -70,7 +70,7 @@ void Tuile::update(Uint32& timeStep, SingletonSysteme* sing_syst)
     {
         Uint32 seconds = SDL_GetTicks() / 200; //200 => rapidité de l'animation
         int sprite = seconds % nb_images;
-        this->srcRect = {espacement_tuiles_x * sprite, 0, 16, 16};
+        this->srcRect = {espacement_tuiles_x * sprite, 0, TAILLE_TUILE, TAILLE_TUILE};
     }
 }
 

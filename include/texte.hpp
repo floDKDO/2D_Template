@@ -1,7 +1,7 @@
 #ifndef __TEXTE__HPP__
 #define __TEXTE__HPP__
 
-#include "singleton_systeme.hpp"
+#include "../include/singleton_systeme.hpp"
 
 class Texte
 {

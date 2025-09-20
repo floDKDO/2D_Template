@@ -1,4 +1,4 @@
-#include "menuOptions.hpp"
+#include "../include/menuOptions.hpp"
 
 MenuOptions::MenuOptions(SingletonSysteme* sing_syst)
 :texte_touche_haut("Haut", "./font/lazy.ttf", 30, BLANC, {420, 100, 150, 60}, sing_syst->rendu, "texte touche_haut", false)
@@ -81,7 +81,7 @@ void MenuOptions::resetSelected(void)
 
 Selectionnable* MenuOptions::getSelected(void)
 {
-    Selectionnable* ui_selected;
+    Selectionnable* ui_selected = nullptr;
     for(Selectionnable* s : ui)
     {
         if(s->etat == SELECTED)

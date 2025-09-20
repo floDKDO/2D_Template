@@ -1,9 +1,9 @@
 #ifndef __TOGGLE__HPP__
 #define __TOGGLE__HPP__
 
-#include "selectionnable.hpp"
-#include "texte.hpp"
-#include "singleton_systeme.hpp"
+#include "../include/selectionnable.hpp"
+#include "../include/texte.hpp"
+#include "../include/singleton_systeme.hpp"
 
 
 class Toggle : public Selectionnable
@@ -22,11 +22,11 @@ class Toggle : public Selectionnable
         SDL_Texture* image_selected;
         bool hasImage;
         Texte texte;
-        Mix_Chunk* hover_sound;
-        Mix_Chunk* click_sound;
-        bool son_joue;
-        int previousEtat;
-        bool clicAvantCollision;
+        //Mix_Chunk* hover_sound;
+        //Mix_Chunk* click_sound;
+        //bool son_joue;
+        //int previousEtat;
+        //bool clicAvantCollision;
         SDL_Texture* check;
         bool isChecked;
 

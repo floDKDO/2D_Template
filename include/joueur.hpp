@@ -1,8 +1,8 @@
 #ifndef JOUEUR_HPP
 #define JOUEUR_HPP
 
-#include "tuile.hpp"
-#include "singleton_systeme.hpp"
+#include "../include/tuile.hpp"
+#include "../include/singleton_systeme.hpp"
 
 #include <vector>
 
@@ -12,6 +12,16 @@ enum mode_affichage
     VUE_DESSUS,
     VUE_COTE
 };
+
+
+enum orientation
+{
+    HAUT,
+    BAS,
+    GAUCHE,
+    DROITE
+};
+
 
 class Joueur
 {
@@ -30,7 +40,7 @@ class Joueur
         SDL_Rect srcRect;
         bool je_peux_marcher;
         bool dep[4]; //dep[0] = HAUT, dep[1] = BAS, dep[2] = GAUCHE, dep[3] = DROITE
-        unsigned int orientation; //0 = HAUT, 1 = BAS, 2 = GAUCHE, 3 = DROITE
+        orientation orientation;
         bool interagit; //il appuie sur le bouton d'intéraction
         // Que pour mode vue de cote
         bool surSol;

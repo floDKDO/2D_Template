@@ -1,4 +1,4 @@
-#include "pnj.hpp"
+#include "../include/pnj.hpp"
 
 Pnj::Pnj()
 {

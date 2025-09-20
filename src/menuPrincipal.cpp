@@ -1,4 +1,4 @@
-#include "menuPrincipal.hpp"
+#include "../include/menuPrincipal.hpp"
 
 MenuPrincipal::MenuPrincipal(SingletonSysteme* sing_syst)
 :bouton_continuer(ROUGE, VERT, BLEU, GRIS, {550, 225, 200, 100}, &fonc_bouton_continuer, "Continuer", 30, sing_syst->rendu, "Bouton continuer")
@@ -41,7 +41,7 @@ void MenuPrincipal::resetSelected(void)
 
 Selectionnable* MenuPrincipal::getSelected(void)
 {
-    Selectionnable* ui_selected;
+    Selectionnable* ui_selected = nullptr;
     for(Selectionnable* s : ui)
     {
         if(s->etat == SELECTED)

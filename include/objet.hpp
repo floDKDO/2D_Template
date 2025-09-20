@@ -1,8 +1,8 @@
 #ifndef __OBJET__HPP__
 #define __OBJET__HPP__
 
-#include "singleton_systeme.hpp"
-#include "elementCarte.hpp"
+#include "../include/singleton_systeme.hpp"
+#include "../include/elementCarte.hpp"
 
 
 class Objet : public ElementCarte

@@ -1,4 +1,4 @@
-#include "texte.hpp"
+#include "../include/texte.hpp"
 
 Texte::Texte(std::string texte, std::string police, int taille_police, SDL_Color couleur, SDL_Rect position, SDL_Renderer* rendu, std::string name, bool isDialogue)
 {

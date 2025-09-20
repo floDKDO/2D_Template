@@ -1,9 +1,9 @@
 #ifndef __BOUTON__HPP__
 #define __BOUTON__HPP__
 
-#include "selectionnable.hpp"
-#include "singleton_systeme.hpp"
-#include "texte.hpp"
+#include "../include/selectionnable.hpp"
+#include "../include/singleton_systeme.hpp"
+#include "../include/texte.hpp"
 
 class Bouton : public Selectionnable
 {
@@ -22,11 +22,11 @@ class Bouton : public Selectionnable
         SDL_Texture* image_selected;
         bool hasImage;
         Texte texte;
-        Mix_Chunk* hover_sound;
-        Mix_Chunk* click_sound;
-        bool son_joue;
-        int previousEtat;
-        bool clicAvantCollision;
+        //Mix_Chunk* hover_sound;
+        //Mix_Chunk* click_sound;
+        //bool son_joue;
+        //int previousEtat;
+        //bool clicAvantCollision;
 
         void draw(SDL_Renderer* rendu);
         void handleEvents(SDL_Event e, SingletonSysteme* sing_syst);

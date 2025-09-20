@@ -3,12 +3,12 @@
 
 #include <vector>
 
-#include "selectionnable.hpp"
-#include "bouton.hpp"
-#include "texte.hpp"
-#include "toggle.hpp"
-#include "inputfield.hpp"
-#include "singleton_systeme.hpp"
+#include "../include/selectionnable.hpp"
+#include "../include/bouton.hpp"
+#include "../include/texte.hpp"
+#include "../include/toggle.hpp"
+#include "../include/inputfield.hpp"
+#include "../include/singleton_systeme.hpp"
 
 class MenuChoixNom
 {

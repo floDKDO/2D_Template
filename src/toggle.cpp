@@ -1,4 +1,4 @@
-#include "toggle.hpp"
+#include "../include/toggle.hpp"
 
 Toggle::Toggle(SDL_Color couleur_normal, SDL_Color couleur_hover, SDL_Color couleur_click, SDL_Color couleur_selected, SDL_Rect position, std::string texte, int taille_police, eventFunction funcPtr, bool isCheckedSave, SDL_Renderer* rendu, std::string name)
 :texte(texte, "./font/lazy.ttf", taille_police, {255, 255, 255, 255}, position, rendu, "texte de " + name, false)
@@ -54,17 +54,7 @@ Toggle::Toggle(std::string image_normal, std::string image_hover, std::string im
 
 bool Toggle::collision(SDL_Rect dest, int x, int y)
 {
-    if(dest.y + dest.h > y
-    && dest.y < y
-    && dest.x + dest.w > x
-    && dest.x < x)
-    {
-        return true;
-    }
-    else
-    {
-        return false;
-    }
+    return Selectionnable::collision(dest, x, y);
 }
 
 
@@ -120,50 +110,7 @@ void Toggle::draw(SDL_Renderer* rendu)
 
 void Toggle::handleEvents(SDL_Event e, SingletonSysteme* sing_syst)
 {
-    int x, y; //position x et y de la souris
-    SDL_GetMouseState(&x, &y);
-
-    if(e.type == SDL_KEYDOWN)
-    {
-        this->onKeyPressed(e, sing_syst);
-    }
-    else if(e.type == SDL_KEYUP)
-    {
-        this->onKeyReleased(e, sing_syst);
-    }
-    else if(e.type == SDL_CONTROLLERBUTTONDOWN)
-    {
-        this->onControllerButtonPressed(e, sing_syst);
-    }
-    else if(e.type == SDL_CONTROLLERBUTTONUP)
-    {
-        this->onControllerButtonReleased(e, sing_syst);
-    }
-    else if(e.type == SDL_MOUSEMOTION)
-    {
-        if(collision(this->position, x, y) == true)
-        {
-            this->onPointerEnter(e, sing_syst);
-        }
-        else
-        {
-            this->onPointerExit(e, sing_syst);
-        }
-    }
-    else if(e.type == SDL_MOUSEBUTTONDOWN)
-    {
-        if(e.button.button == SDL_BUTTON_LEFT)
-        {
-            this->onPointerDown(e, sing_syst);
-        }
-    }
-    else if(e.type == SDL_MOUSEBUTTONUP)
-    {
-        if(e.button.button == SDL_BUTTON_LEFT)
-        {
-            this->onClick(e, sing_syst);
-        }
-    }
+    Selectionnable::handleEvents(e, sing_syst);
 }
 
 void Toggle::onKeyPressed(SDL_Event e, SingletonSysteme* sing_syst)
@@ -218,9 +165,7 @@ void Toggle::onKeyPressed(SDL_Event e, SingletonSysteme* sing_syst)
 
 void Toggle::onKeyReleased(SDL_Event e, SingletonSysteme* sing_syst)
 {
-    (void)e;
-    (void)sing_syst;
-    this->verrou = true;
+    Selectionnable::onKeyReleased(e, sing_syst);
 }
 
 
@@ -275,31 +220,19 @@ void Toggle::onControllerButtonPressed(SDL_Event e, SingletonSysteme* sing_syst)
 
 void Toggle::onControllerButtonReleased(SDL_Event e, SingletonSysteme* sing_syst)
 {
-    (void)e;
-    (void)sing_syst;
-    this->verrou = true;
+    Selectionnable::onControllerButtonReleased(e, sing_syst);
 }
 
 
 void Toggle::onPointerEnter(SDL_Event e, SingletonSysteme* sing_syst)
 {
-    (void)e;
-    if(son_joue == false && sing_syst->son_active == true && previousEtat != SELECTED)
-    {
-        CHK(Mix_PlayChannel(1, hover_sound, 0), Mix_GetError());
-        son_joue = true;
-    }
-    this->etat = SELECTED;
-    this->previousEtat = etat;
+    Selectionnable::onPointerEnter(e, sing_syst);
 }
 
 
 void Toggle::onPointerExit(SDL_Event e, SingletonSysteme* sing_syst)
 {
-    (void)e;
-    (void)sing_syst;
-    son_joue = false;
-    previousEtat = etat;
+    Selectionnable::onPointerExit(e, sing_syst);
 }
 
 
@@ -326,50 +259,27 @@ void Toggle::onClick(SDL_Event e, SingletonSysteme* sing_syst)
 
 void Toggle::onPointerDown(SDL_Event e, SingletonSysteme* sing_syst)
 {
-    (void)e;
-    (void)sing_syst;
-    int x, y; //position x et y de la souris
-    SDL_GetMouseState(&x, &y);
-    if(collision(this->position, x, y) == true)
-    {
-        this->etat = CLICKED;
-        clicAvantCollision = false; //protection
-    }
-    else
-    {
-        clicAvantCollision = true; //protection
-    }
+    Selectionnable::onPointerDown(e, sing_syst);
 }
 
 
 void Toggle::setSelectedIfMove(Selectionnable* selectOnUp, Selectionnable* selectOnDown, Selectionnable* selectOnLeft, Selectionnable* selectOnRight)
 {
-    this->selectOnUp = selectOnUp;
-    this->selectOnDown = selectOnDown;
-    this->selectOnLeft = selectOnLeft;
-    this->selectOnRight = selectOnRight;
+    Selectionnable::setSelectedIfMove(selectOnUp, selectOnDown, selectOnLeft, selectOnRight);
 }
 
 
 void Toggle::setSelected(Selectionnable* ui)
 {
-    if(ui != nullptr)
-        ui->etat = SELECTED;
+    Selectionnable::setSelected(ui);
 }
 
 void Toggle::setUnselected(Selectionnable* previous)
 {
-    if(previous != nullptr)
-        previous->etat = NORMAL;
+    Selectionnable::setUnselected(previous);
 }
 
 void Toggle::selectNew(Selectionnable* ui, SingletonSysteme* sing_syst)
 {
-    this->setUnselected(this);
-    this->setSelected(ui);
-    if(sing_syst->son_active == true && etat != SELECTED)
-    {
-        CHK(Mix_PlayChannel(1, hover_sound, 0), Mix_GetError());
-        son_joue = true;
-    }
+    Selectionnable::selectNew(ui, sing_syst);
 }

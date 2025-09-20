@@ -21,8 +21,8 @@ class Inputfield : public Selectionnable
         Texte curseur;
         int place; //place prise par un seul caractère
         bool affiche_curseur;
-        Mix_Chunk* hover_sound;
-        Mix_Chunk* click_sound;
+        //Mix_Chunk* hover_sound;
+        //Mix_Chunk* click_sound;
 
         void draw(SDL_Renderer* rendu);
         void update(Uint32& timeStep);

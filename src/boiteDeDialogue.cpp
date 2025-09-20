@@ -1,4 +1,4 @@
-#include "boiteDeDialogue.hpp"
+#include "../include/boiteDeDialogue.hpp"
 
 
 BoiteDeDialogue::BoiteDeDialogue(SDL_Color couleur, SDL_Rect position, std::string textes, int taille_police, SDL_Renderer* rendu, std::string name)

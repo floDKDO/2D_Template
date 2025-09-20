@@ -1,11 +1,11 @@
 #ifndef __EN__JEU__HPP__
 #define __EN__JEU__HPP__
 
-#include "singleton_systeme.hpp"
-#include "joueur.hpp"
-#include "tuile.hpp"
-#include "carte.hpp"
-#include "boiteDeDialogue.hpp"
+#include "../include/singleton_systeme.hpp"
+#include "../include/joueur.hpp"
+#include "../include/tuile.hpp"
+#include "../include/carte.hpp"
+#include "../include/boiteDeDialogue.hpp"
 
 #include <vector>
 
